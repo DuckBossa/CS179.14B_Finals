@@ -47,11 +47,6 @@ public:
 	void render(sf::RenderTarget &g) override {
 		g.draw(rect);
 	}
-
-	void update() override {
-		//do nothing;
-	}
-
 	void virtual DoSomethingOnCollision(Entity* collided) = 0;
 };
 
@@ -59,10 +54,8 @@ class NormalTile : public Tile{
 
 public:
 	NormalTile(float size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, color,init_pos) {}
-	
-	void DoSomethingOnCollision(Entity* collided) override{
-		//nothing
-	}
+	void update() override {} //Do Nothing
+	void DoSomethingOnCollision(Entity* collided) override{}
 
 };
 
@@ -78,6 +71,8 @@ public:
 };
 
 
+
+
 int main() {
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Fight Me");
 	sf::Clock clock;
@@ -85,7 +80,6 @@ int main() {
 	for (int i = 0; i < 800 / TILE_SIZE; i++) {
 		entities.push_back(new NormalTile(TILE_SIZE,sf::Color::Magenta,sf::Vector2f(i * TILE_SIZE,WINDOW_HEIGHT - TILE_SIZE)));
 	}
-
 
 
 	while (window.isOpen()) {
