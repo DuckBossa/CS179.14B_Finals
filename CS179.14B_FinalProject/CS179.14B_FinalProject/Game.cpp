@@ -20,6 +20,8 @@ using namespace std;
 
 
 
+
+
 class Entity {
 public:
 	virtual void update() = 0;
@@ -30,6 +32,13 @@ public:
 protected:
 	sf::Vector2f pos;
 	sf::Vector2i s_size;
+};
+
+class EntityManager {
+public:
+	std::vector<Entity*> map;
+	//std::vector<Player*> players;
+	//std::vector<Weapons*> weap;
 };
 
 std::vector<Entity*> entities;
@@ -57,6 +66,13 @@ public:
 	void update() override {} //Do Nothing
 	void DoSomethingOnCollision(Entity* collided) override{}
 
+};
+
+class LavaTile : public Tile {
+public:
+	LavaTile(float size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, color, init_pos) {}
+	void update() override {} //Do Nothing
+	void DoSomethingOnCollision(Entity* collided) override {}
 };
 
 
