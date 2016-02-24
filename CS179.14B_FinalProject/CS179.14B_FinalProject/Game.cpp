@@ -37,11 +37,45 @@ protected:
 class EntityManager {
 public:
 	std::vector<Entity*> map;
-	//std::vector<Player*> players;
-	//std::vector<Weapons*> weap;
-};
+	std::vector<Entity*> players;
+	std::vector<Entity*> sobjects;
 
-std::vector<Entity*> entities;
+	void addPlayer(Entity* p) {
+		players.push_back(p);
+	}
+
+	void addMapTile(Entity* t) {
+		map.push_back(t);
+	}
+
+	void addSObject(Entity* so) {
+		sobjects.push_back(so);
+	}
+
+
+	void update() {
+		//
+	}
+
+	void logic() {
+		//collision
+	}
+
+	void render(sf::RenderTarget &g) {
+		for (auto e : map) {
+			e->render(g);
+		}
+		for (auto e : players) {
+			e->render(g);
+		}
+		for (auto e : sobjects) {
+			e->render(g);
+		}
+	}
+
+
+}em;
+
 
 class Tile : public Entity {
 protected:
@@ -93,8 +127,8 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Fight Me");
 	sf::Clock clock;
 	sf::Time lag = sf::seconds(0);
-	for (int i = 0; i < 800 / TILE_SIZE; i++) {
-		entities.push_back(new NormalTile(TILE_SIZE,sf::Color::Magenta,sf::Vector2f(i * TILE_SIZE,WINDOW_HEIGHT - TILE_SIZE)));
+	for (int i = 0; i < WINDOW_WIDTH / TILE_SIZE; i++) {
+		em.addMapTile(new NormalTile(TILE_SIZE,sf::Color::Magenta,sf::Vector2f(i * TILE_SIZE,WINDOW_HEIGHT - TILE_SIZE)));
 	}
 
 
@@ -108,16 +142,12 @@ int main() {
 		//input
 
 		//update entities
-		for (const auto e : entities)
-			e->update();
+		em.update();
 		//collision detection
-
+		em.logic();
 		//render
-
-
 		window.clear();
-		for (const auto e : entities)
-			e->render(window);
+		em.render(window);
 		window.display();
 
 		const auto elapsed = clock.getElapsedTime() + lag;
