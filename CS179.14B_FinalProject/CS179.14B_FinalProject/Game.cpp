@@ -12,15 +12,23 @@
 #define FPS 60.0
 #define SPF sf::seconds(1.0/FPS)
 
+namespace Keys {
+	const auto UP = 0x1A;     	// W
+	const auto DOWN = 0x16;		// S
+	const auto LEFT = 0x04;  	// A
+	const auto RIGHT = 0x07; 	// D
+}
+
 const auto TILE_SIZE = 32.0f;
 const auto WINDOW_WIDTH = 800;
 const auto WINDOW_HEIGHT = 600;
 
 using namespace std;
 
-
-
-
+bool isKeyDown(int key) {
+	auto state = GetAsyncKeyState(MapVirtualKey(key, MAPVK_VSC_TO_VK_EX));
+	return state >> 15 != 0;
+}
 
 class Entity {
 public:
@@ -118,6 +126,22 @@ private:
 public:
 	virtual void Attack() = 0;
 	virtual void SAttack() = 0;
+	void handleInput() {
+		vel.x = vel.y = 0.0;
+
+		if ( isKeyDown(Keys::UP)) {
+			//jump
+		} 
+		if (isKeyDown(Keys::DOWN)) {
+			//drop down?
+		}
+		if (isKeyDown(Keys::LEFT)) {
+			//move left
+		}
+		if (isKeyDown(Keys::RIGHT)) {
+			//move right
+		}
+	}
 };
 
 
@@ -140,7 +164,7 @@ int main() {
 		}
 
 		//input
-
+		character->handleInput();
 		//update entities
 		em.update();
 		//collision detection
