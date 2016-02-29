@@ -15,23 +15,23 @@
 const auto TILE_SIZE = 32.0f;
 const auto WINDOW_WIDTH = 800;
 const auto WINDOW_HEIGHT = 600;
-const float GRAV = 9.8f / FPS;
+const float GRAV = 10.0f; // 9.8f / FPS;
 
 using namespace std;
 
 
 namespace Keys {
-	const auto UP = 0x1A;     	// W
-	const auto DOWN = 0x16;		// S
-	const auto LEFT = 0x04;  	// A
-	const auto RIGHT = 0x07; 	// D
+	const auto UP = 0x11;     	// W
+	const auto DOWN = 0x1F;		// S
+	const auto LEFT = 0x1E;  	// A
+	const auto RIGHT = 0x20; 	// D
 }
 
 namespace CHARACTERS {
-	const auto BASE_SPEED = 0.5f;
+	const auto BASE_SPEED = 5.0f;
 	const auto SPRITE_WIDTH = 32;
 	const auto SPRITE_HEIGHT = 48;
-	const auto JUMP_RATE = -5.0f;
+	const auto JUMP_RATE = -200.0f;
 }
 
 class TextureLoader {
@@ -67,15 +67,12 @@ public:
 class Entity {
 protected:
 	sf::Sprite sprt;
-	bool isColliding[2]; //x y
+	bool isColliding[2]; 
 public:
 
 	Entity(string file_name){
 		sprt.setTexture(*tl.getTexture(file_name));
 		sprt.setTextureRect(sf::Rect<int>(0,0,CHARACTERS::SPRITE_WIDTH,CHARACTERS::SPRITE_HEIGHT));
-		for (auto e : isColliding) {
-			e = false;
-		}
 	}
 
 	virtual void update(float dt) = 0;
@@ -102,8 +99,6 @@ public:
 		isColliding[0] = x;
 		isColliding[1] = y;
 	}
-
-
 
 	sf::Vector2f getPosition() const {
 		return sprt.getPosition();
@@ -135,7 +130,7 @@ public:
 	void resolveColision(Entity* collided) {
 		sf::Rect<float> inter;
 		if (bounds().intersects(collided->bounds(), inter)) {
-			
+			//cout << "collided\n";
 			sf::Rect<float> temp_bounds = collided->bounds();
 			bool colX = false;
 			bool colY = false;
@@ -162,9 +157,10 @@ public:
 				cout << "COLLIDED 4\n";
 				collided->move(sf::Vector2f(temp_bounds.left - (inter.left + inter.width), 0));
 			}
-*/
 			collided->setCollision(colX, colY);
 			DoSomethingOnCollision(collided);
+*/
+
 		}
 		else {
 			collided->setCollision(false, false);
@@ -220,9 +216,9 @@ public:
 	virtual void Attack() = 0;
 	virtual void SAttack() = 0;
 
-	bool isKeyDown(int key) {
-		auto state = GetAsyncKeyState(MapVirtualKey(key, MAPVK_VSC_TO_VK_EX));
-		return state >> 15 != 0;
+	bool isKeyDown(const int &key) {
+	auto state = GetAsyncKeyState(MapVirtualKey(key, MAPVK_VSC_TO_VK_EX));
+	return state >> 15 != 0;
 	}
 
 
@@ -271,7 +267,7 @@ public:
 
 
 	void handleInput() {
-		//vel.x = 0.0;
+		vel.x = 0.0;
 		Face temp;
 		if (isKeyDown(Keys::UP)) {/*jump*/
 			temp = Face::FRONT;
@@ -281,7 +277,7 @@ public:
 		if (isKeyDown(Keys::LEFT)) {
 			temp = Face::LEFT;
 			cout << "LEFT";
-			vel.x = CHARACTERS::BASE_SPEED * agi;
+			vel.x = -CHARACTERS::BASE_SPEED * agi;
 		}
 		else if (isKeyDown(Keys::RIGHT)) {
 			temp = Face::RIGHT;
@@ -296,9 +292,7 @@ public:
 		}
 		else {
 			vel.y = 0;
-			cout << "reset \n";
 		}
-		//cout << vel.y << " " << isColliding[1] << "\n";
 		sprt.setPosition(sprt.getPosition() + vel*dt);
 	}
 
@@ -341,9 +335,8 @@ public:
 
 	void update(float dt) {
 		for (auto e : players) {
-			//e->handleInput();
+			e->handleInput();
 			e->update(dt);
-			//cout << e->getPosition().x << " " <<  e->getPosition().y << "\n";
 		}
 		for (auto e : map) {
 			e->update(dt);
