@@ -27,32 +27,94 @@ namespace Keys {
 	const auto RIGHT = 0x07; 	// D
 }
 
-
-bool isKeyDown(int key) {
-	auto state = GetAsyncKeyState(MapVirtualKey(key, MAPVK_VSC_TO_VK_EX));
-	return state >> 15 != 0;
+namespace CHARACTERS {
+	const auto BASE_SPEED = 0.5f;
+	const auto SPRITE_WIDTH = 32;
+	const auto SPRITE_HEIGHT = 48;
+	const auto JUMP_RATE = -5.0f;
 }
 
-class Entity {
-
+class TextureLoader {
+protected:
+	map<string, sf::Texture*> textures;
 public:
+	TextureLoader() {}
+	~TextureLoader() {
+		map<string, sf::Texture*>::iterator itr = textures.begin();
+		delete itr->second;
+		textures.erase(itr);
+	}
+
+	sf::Texture* getTexture(string n) {
+		sf::Texture* temp = NULL;
+		map<string, sf::Texture*>::const_iterator results = textures.find(n);
+		if (results != textures.end()) {
+			temp = results->second;
+		}
+		else {
+			temp = new sf::Texture();
+			if (!temp->loadFromFile(n))
+				cout << "SFML could not find texture. Check Path.";
+			temp->setSmooth(true);
+			textures.insert(pair<string, sf::Texture*>(n, temp));
+			return temp;
+		}
+		return temp;
+	}
+}tl;
+
+
+class Entity {
+protected:
+	sf::Sprite sprt;
+	bool isColliding[2]; //x y
+public:
+
+	Entity(string file_name){
+		sprt.setTexture(*tl.getTexture(file_name));
+		sprt.setTextureRect(sf::Rect<int>(0,0,CHARACTERS::SPRITE_WIDTH,CHARACTERS::SPRITE_HEIGHT));
+		for (auto e : isColliding) {
+			e = false;
+		}
+	}
+
 	virtual void update(float dt) = 0;
-	virtual void render(sf::RenderTarget &g) = 0;
-	virtual sf::Rect<float> bounds() = 0;
-	void move(const sf::Vector2f &amount) {
-		pos += amount;
+	virtual void render(sf::RenderTarget &g) {
+		g.draw(sprt);
+	}
+
+	virtual void move(const sf::Vector2f &amount) {
+		sprt.move(amount);
 	}
 	void setPos(const sf::Vector2f &newPos) {
-		pos = newPos;
+		sprt.setPosition(newPos);
 	}
-	//virtual sf::Vector2f getPosition() const = 0;
+	
+	void setTextRect(const sf::Rect<int> newRekt) {
+		sprt.setTextureRect(newRekt);
+	}
+
+	void setOrigin(const sf::Vector2f &newOrig) {
+		sprt.setOrigin(newOrig);
+	}
+
+	void setCollision(const bool &x, const bool &y) {
+		isColliding[0] = x;
+		isColliding[1] = y;
+	}
+
+
+
+	sf::Vector2f getPosition() const {
+		return sprt.getPosition();
+	}
+
+	sf::Rect<float> bounds() {
+		return sprt.getGlobalBounds();
+	}
 	virtual ~Entity() {}
 
-protected:
-	sf::Vector2f pos;
-	sf::Vector2i s_size;
-	sf::RectangleShape rect;
-	string tex;
+
 };
 
 
@@ -62,49 +124,55 @@ class Tile : public Entity {
 protected:
 
 public:
-	Tile(float size, const sf::Color &color, const sf::Vector2f &init_pos) {
-		rect = sf::RectangleShape(sf::Vector2f(size, size));
-		rect.setFillColor(color);
-		rect.setPosition(init_pos + sf::Vector2f(size / 2.0f, size / 2.0f));
-		rect.setOrigin(sf::Vector2f(size / 2.0f, size / 2.0f));
-		pos = init_pos;
+	Tile(float size,const sf::Vector2f &init_pos, string file_name) : Entity(file_name) {
+		setPos(init_pos + sf::Vector2f(size / 2.0f, size / 2.0f));
+		setOrigin(sf::Vector2f(size / 2.0f, size / 2.0f));
 	}
 
-	void render(sf::RenderTarget &g) override {
-		g.draw(rect);
-	}
 	void virtual DoSomethingOnCollision(Entity* collided) = 0;
 
 
 	void resolveColision(Entity* collided) {
 		sf::Rect<float> inter;
-		if (collided->bounds().intersects(bounds(), inter)) {
+		if (bounds().intersects(collided->bounds(), inter)) {
+			
 			sf::Rect<float> temp_bounds = collided->bounds();
-			if (pos.y > inter.top) {
+			bool colX = false;
+			bool colY = false;
+			if (getPosition().y > inter.top) {
 				//getAnimatedSprite().move(0,axis.y*((other.top + other.height) - inter.top));
-				collided->move(sf::Vector2f(0, temp_bounds.top + temp_bounds.height - inter.top));
+				collided->move(sf::Vector2f(0, - inter.height));
+				colY = true;
 			}
-			else if (pos.y <= inter.top) {
+			else if (getPosition().y <= inter.top) {
 				//(0,axis.y*(other.top - (inter.top + inter.height)));
-				collided->move(sf::Vector2f(0, temp_bounds.top - (inter.top + inter.height)));
+				//cout << "COLLIDED 2\n";
+				collided->move(sf::Vector2f(0, inter.height));
+				colY = true;
 			}
-
-			if (pos.x > inter.left) {
+/*
+			if (getPosition().x > inter.left) {
 				//getAnimatedSprite().move(axis.x*((other.left + other.width) - inter.left), 0);
+				cout << "COLLIDED 3\n";
 				collided->move(sf::Vector2f(temp_bounds.left + temp_bounds.width, 0));
+				colX = true;
 			}
-			else if (pos.x <= inter.left) {
+			else if (getPosition().x <= inter.left) {
 				//getAnimatedSprite().move(axis.x*(other.left - (inter.left + inter.width)),0);
+				cout << "COLLIDED 4\n";
 				collided->move(sf::Vector2f(temp_bounds.left - (inter.left + inter.width), 0));
 			}
+*/
+			collided->setCollision(colX, colY);
 			DoSomethingOnCollision(collided);
+		}
+		else {
+			collided->setCollision(false, false);
 		}
 
 	}
 
-	sf::Rect<float> bounds() {
-		return rect.getGlobalBounds();
-	}
+
 
 
 };
@@ -112,7 +180,7 @@ public:
 class NormalTile : public Tile {
 
 public:
-	NormalTile(float size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, color, init_pos) {}
+	NormalTile(const float &size, const sf::Vector2f &init_pos,string file_name) : Tile(size, init_pos,file_name) {}
 	void update(float dt) override {} //Do Nothing
 	void DoSomethingOnCollision(Entity* collided) override {}
 
@@ -120,7 +188,7 @@ public:
 
 class LavaTile : public Tile {
 public:
-	LavaTile(float size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, color, init_pos) {}
+	LavaTile(float size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos,"lava") {}
 	void update(float dt) override {}
 	void DoSomethingOnCollision(Entity* collided) override {}
 };
@@ -129,38 +197,135 @@ public:
 
 class Character : public Entity {
 private:
-	int str, agi, intel, pdef, mdef, currhealth, maxhealth;
+	enum Face {
+		UP, FRONT, LEFT, RIGHT
+	};
+	
+	int str, agi, intel, pdef, mdef, currhealth, maxhealth,seq;
+	Face currface;
 	sf::Vector2f vel;
 	sf::Vector2f acc;
 
 public:
+
+	Character(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
+		int currhealth, int maxhealth,const sf::Vector2f &startPos, string file_name) : Entity(file_name), str(str), agi(agi), intel(intel), pdef(pdef),
+		mdef(mdef), currhealth(currhealth), maxhealth(maxhealth) {
+		sprt.setPosition(startPos);
+		sprt.setOrigin(sf::Vector2f(CHARACTERS::SPRITE_WIDTH/2.0f,CHARACTERS::SPRITE_HEIGHT/2.0f));
+		currface = Face::FRONT;
+		seq;
+	}
+
 	virtual void Attack() = 0;
 	virtual void SAttack() = 0;
-	void handleInput() {
-		vel.x = vel.y = 0.0;
 
-		if ( isKeyDown(Keys::UP)) {
-			//jump
+	bool isKeyDown(int key) {
+		auto state = GetAsyncKeyState(MapVirtualKey(key, MAPVK_VSC_TO_VK_EX));
+		return state >> 15 != 0;
+	}
+
+
+	/*
+		public void move(int dir){
+		if(!attacking){
+			if(dir == Movement.UP.getCode()){
+				y-=vy;
+			}
+			else if(dir == Movement.DOWN.getCode()){
+				y+=vy;
+			}
+			else if(dir == Movement.LEFT.getCode()){
+				x-= vx;
+			}
+			else if(dir == Movement.RIGHT.getCode()){
+				x+= vx;
+			}
+			else if(dir == Movement.ATTACK.getCode()){
+				attacking = true;
+				seq = 0;
+				updateRectangle();
+				return;
+			}
+			if(dir == face){
+				seq++;
+				if(seq > 3)
+					seq = 0;
+			}
+			else{
+				seq = 0;
+				face = dir;
+			}
+		}
+		else{
+			seq++;
+			if(seq > GameWindow.ATTACK_FRAMES){
+				seq = 0;
+				attacking = false;
+			}
+		}
+		updateRectangle();
+	}
+	*/
+
+
+
+	void handleInput() {
+		//vel.x = 0.0;
+		Face temp;
+		if (isKeyDown(Keys::UP)) {/*jump*/
+			temp = Face::FRONT;
+			vel.y = CHARACTERS::JUMP_RATE;
 		} 
-		if (isKeyDown(Keys::DOWN)) {
-			//drop down?
-		}
+		else if (isKeyDown(Keys::DOWN)) {/*drop down?*/}
 		if (isKeyDown(Keys::LEFT)) {
-			//move left
+			temp = Face::LEFT;
+			cout << "LEFT";
+			vel.x = CHARACTERS::BASE_SPEED * agi;
 		}
-		if (isKeyDown(Keys::RIGHT)) {
-			//move right
+		else if (isKeyDown(Keys::RIGHT)) {
+			temp = Face::RIGHT;
+			cout << "RIGHT";
+			vel.x = CHARACTERS::BASE_SPEED * agi;
 		}
 	}
+
+	void update(float dt) override {
+		if (!isColliding[1]) {
+			vel.y += GRAV;
+		}
+		else {
+			vel.y = 0;
+			cout << "reset \n";
+		}
+		//cout << vel.y << " " << isColliding[1] << "\n";
+		sprt.setPosition(sprt.getPosition() + vel*dt);
+	}
+
+	
+
 };
 
+class War : public Character {
+public:
+	War(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
+		int currhealth, int maxhealth,const sf::Vector2f &startPos, string file_name) : Character(str,agi,intel,pdef,mdef,currhealth,maxhealth,startPos,file_name) {
 
+	}
+	void Attack() override {}
+	void SAttack() override {}
+};
 
 class EntityManager {
 public:
 	std::vector<Tile*> map;
 	std::vector<Character*> players;
 	std::vector<Entity*> sobjects;
+	sf::Sprite bg;
+
+	EntityManager() {
+		bg.setTexture(*tl.getTexture("Art/Maps/bg_temp.png"));
+	}
 
 	void addPlayer(Entity* p) {
 		players.push_back(dynamic_cast<Character*>(p));
@@ -174,12 +339,19 @@ public:
 		sobjects.push_back(so);
 	}
 
-	void handleInput() {
-		
-	}
-
 	void update(float dt) {
+		for (auto e : players) {
+			//e->handleInput();
+			e->update(dt);
+			//cout << e->getPosition().x << " " <<  e->getPosition().y << "\n";
+		}
+		for (auto e : map) {
+			e->update(dt);
+		}
 
+		for (auto e : sobjects) {
+			e->update(dt);
+		}
 	}
 
 	void logic() {
@@ -191,6 +363,7 @@ public:
 	}
 
 	void render(sf::RenderTarget &g) {
+		g.draw(bg);
 		for (auto e : map) {
 			e->render(g);
 		}
@@ -202,23 +375,21 @@ public:
 		}
 	}
 
-
 }em;
 
+void Init() {
+	for (int i = 0; i < WINDOW_WIDTH / TILE_SIZE; i++) {
+		em.addMapTile(new NormalTile(TILE_SIZE, sf::Vector2f(i * TILE_SIZE, WINDOW_HEIGHT - TILE_SIZE), "Art/Tiles/Tar_tile_32.png"));
+	}
+	em.addPlayer(new War(10,7,2,7,3,10,10,sf::Vector2f(50,400),"Art/Characters/1.png"));
+}
 
 
 int main() {
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Fight Me");
 	sf::Clock clock;
 	sf::Time lag = sf::seconds(0);
-	
-
-
-
-	for (int i = 0; i < WINDOW_WIDTH / TILE_SIZE; i++) {
-		em.addMapTile(new NormalTile(TILE_SIZE,sf::Color::Magenta,sf::Vector2f(i * TILE_SIZE,WINDOW_HEIGHT - TILE_SIZE)));
-	}
-
+	Init();
 
 	while (window.isOpen()) {
 		sf::Event event;
@@ -228,20 +399,14 @@ int main() {
 		}
 
 		//input
-		em.handleInput();
+		//em.handleInput();
 		//update entities
 		em.update(SPF.asSeconds());
 		//collision detection
 		em.logic();
 		//render
 		window.clear();
-		sf::Texture tex;
-		sf::Sprite img;
-		if (tex.loadFromFile("sample.png")) {
-			img.setTexture(tex);
-			window.draw(img);
-		}
-		//em.render(window);
+		em.render(window);
 		window.display();
 
 		const auto elapsed = clock.getElapsedTime() + lag;
