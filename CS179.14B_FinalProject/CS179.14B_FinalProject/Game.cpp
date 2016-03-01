@@ -194,7 +194,7 @@ public:
 class Character : public Entity {
 private:
 	enum Face {
-		UP, FRONT, LEFT, RIGHT
+		UP, FRONT, LEFT, RIGHT, NONE
 	};
 	
 	int str, agi, intel, pdef, mdef, currhealth, maxhealth,seq;
@@ -209,7 +209,7 @@ public:
 		mdef(mdef), currhealth(currhealth), maxhealth(maxhealth) {
 		sprt.setPosition(startPos);
 		sprt.setOrigin(sf::Vector2f(CHARACTERS::SPRITE_WIDTH/2.0f,CHARACTERS::SPRITE_HEIGHT/2.0f));
-		currface = Face::FRONT;
+		currface = Face::NONE;
 		seq;
 	}
 
@@ -217,8 +217,8 @@ public:
 	virtual void SAttack() = 0;
 
 	bool isKeyDown(const int &key) {
-	auto state = GetAsyncKeyState(MapVirtualKey(key, MAPVK_VSC_TO_VK_EX));
-	return state >> 15 != 0;
+		auto state = GetAsyncKeyState(MapVirtualKey(key, MAPVK_VSC_TO_VK_EX));
+		return state >> 15 != 0;
 	}
 
 
@@ -268,7 +268,7 @@ public:
 
 	void handleInput() {
 		vel.x = 0.0;
-		Face temp;
+		Face temp =  Face::NONE;
 		if (isKeyDown(Keys::UP)) {/*jump*/
 			temp = Face::FRONT;
 			vel.y = CHARACTERS::JUMP_RATE;
@@ -284,6 +284,37 @@ public:
 			cout << "RIGHT";
 			vel.x = CHARACTERS::BASE_SPEED * agi;
 		}
+
+		if (temp == currface) {
+			seq++;
+			if (seq > 3) {
+				seq = 0;
+			}
+		}
+		else {
+			currface = temp;
+			seq = 0;
+		}
+		int frameY = 0;
+		switch (currface) {
+			case UP:
+				frameY = 3 * CHARACTERS::SPRITE_HEIGHT;
+				break;
+			case FRONT:
+				frameY = 0;
+				break;
+			case NONE:
+				frameY = 0;
+				seq = 0;
+				break;
+			case LEFT:
+				frameY = CHARACTERS::SPRITE_HEIGHT;
+				break;
+			case RIGHT:
+				frameY = 2 * CHARACTERS::SPRITE_HEIGHT;
+				break;
+		}
+		sprt.setTextureRect(sf::Rect<int>(seq*CHARACTERS::SPRITE_WIDTH,frameY,CHARACTERS::SPRITE_WIDTH,CHARACTERS::SPRITE_HEIGHT));
 	}
 
 	void update(float dt) override {
