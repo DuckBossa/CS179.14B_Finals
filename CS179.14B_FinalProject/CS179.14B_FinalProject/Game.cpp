@@ -28,7 +28,7 @@ namespace Keys {
 }
 
 namespace CHARACTERS {
-	const auto BASE_SPEED = 5.0f;
+	const auto BASE_SPEED = 8.0f;
 	const auto SPRITE_WIDTH = 32;
 	const auto SPRITE_HEIGHT = 48;
 	const auto JUMP_RATE = -200.0f;
@@ -364,9 +364,13 @@ public:
 		sobjects.push_back(so);
 	}
 
-	void update(float dt) {
+	void handleInput() {
 		for (auto e : players) {
 			e->handleInput();
+		}
+	}
+	void update(float dt) {
+		for (auto e : players) {
 			e->update(dt);
 		}
 		for (auto e : map) {
@@ -423,7 +427,7 @@ int main() {
 		}
 
 		//input
-		//em.handleInput();
+		em.handleInput();
 		//update entities
 		em.update(SPF.asSeconds());
 		//collision detection
