@@ -4,11 +4,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-
-
 #define FPS 60.0f
 #define SPF sf::seconds(1.0f/FPS)
-
 const auto TILE_SIZE = 32.0f;
 const auto WINDOW_WIDTH = 800;
 const auto WINDOW_HEIGHT = 600;
@@ -29,113 +26,6 @@ namespace CHARACTERS {
 	const auto SPRITE_HEIGHT = 48;
 	const auto JUMP_RATE = -200.0f;
 }
-
-
-class TextureLoader {
-protected:
-	map<string, sf::Texture*> textures;
-public:
-	TextureLoader() {}
-	~TextureLoader() {
-		map<string, sf::Texture*>::iterator itr = textures.begin();
-		delete itr->second;
-		textures.erase(itr);
-	}
-
-	sf::Texture* getTexture(string n) {
-		sf::Texture* temp = NULL;
-		map<string, sf::Texture*>::const_iterator results = textures.find(n);
-		if (results != textures.end()) {
-			temp = results->second;
-		}
-		else {
-			temp = new sf::Texture();
-			if (!temp->loadFromFile(n))
-				cout << "SFML could not find texture. Check Path.";
-			temp->setSmooth(true);
-			textures.insert(pair<string, sf::Texture*>(n, temp));
-			return temp;
-		}
-		return temp;
-	}
-}tl;
-
-
-
-
-class Tile : public Entity {
-protected:
-
-public:
-	Tile(float size,const sf::Vector2f &init_pos, string file_name) : Entity(file_name) {
-		setPos(init_pos + sf::Vector2f(size / 2.0f, size / 2.0f));
-		setOrigin(sf::Vector2f(size / 2.0f, size / 2.0f));
-	}
-
-	void virtual DoSomethingOnCollision(Entity* collided) = 0;
-
-
-	void resolveColision(Entity* collided) {
-		sf::Rect<float> inter;
-		if (bounds().intersects(collided->bounds(), inter)) {
-			//cout << "collided\n";
-			sf::Rect<float> temp_bounds = collided->bounds();
-			bool colX = false;
-			bool colY = false;
-			if (getPosition().y > inter.top) {
-				//getAnimatedSprite().move(0,axis.y*((other.top + other.height) - inter.top));
-				collided->move(sf::Vector2f(0, - inter.height));
-				colY = true;
-			}
-			else if (getPosition().y <= inter.top) {
-				//(0,axis.y*(other.top - (inter.top + inter.height)));
-				//cout << "COLLIDED 2\n";
-				collided->move(sf::Vector2f(0, inter.height));
-				colY = true;
-			}
-/*
-			if (getPosition().x > inter.left) {
-				//getAnimatedSprite().move(axis.x*((other.left + other.width) - inter.left), 0);
-				cout << "COLLIDED 3\n";
-				collided->move(sf::Vector2f(temp_bounds.left + temp_bounds.width, 0));
-				colX = true;
-			}
-			else if (getPosition().x <= inter.left) {
-				//getAnimatedSprite().move(axis.x*(other.left - (inter.left + inter.width)),0);
-				cout << "COLLIDED 4\n";
-				collided->move(sf::Vector2f(temp_bounds.left - (inter.left + inter.width), 0));
-			}
-			collided->setCollision(colX, colY);
-			DoSomethingOnCollision(collided);
-*/
-
-		}
-		else {
-			collided->setCollision(false, false);
-		}
-
-	}
-
-
-
-
-};
-
-class NormalTile : public Tile {
-
-public:
-	NormalTile(const float &size, const sf::Vector2f &init_pos,string file_name) : Tile(size, init_pos,file_name) {}
-	void update(float dt) override {} //Do Nothing
-	void DoSomethingOnCollision(Entity* collided) override {}
-
-};
-
-class LavaTile : public Tile {
-public:
-	LavaTile(float size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos,"lava") {}
-	void update(float dt) override {}
-	void DoSomethingOnCollision(Entity* collided) override {}
-};
 
 
 
@@ -170,50 +60,6 @@ public:
 	}
 
 
-	/*
-		public void move(int dir){
-		if(!attacking){
-			if(dir == Movement.UP.getCode()){
-				y-=vy;
-			}
-			else if(dir == Movement.DOWN.getCode()){
-				y+=vy;
-			}
-			else if(dir == Movement.LEFT.getCode()){
-				x-= vx;
-			}
-			else if(dir == Movement.RIGHT.getCode()){
-				x+= vx;
-			}
-			else if(dir == Movement.ATTACK.getCode()){
-				attacking = true;
-				seq = 0;
-				updateRectangle();
-				return;
-			}
-			if(dir == face){
-				seq++;
-				if(seq > 3)
-					seq = 0;
-			}
-			else{
-				seq = 0;
-				face = dir;
-			}
-		}
-		else{
-			seq++;
-			if(seq > GameWindow.ATTACK_FRAMES){
-				seq = 0;
-				attacking = false;
-			}
-		}
-		updateRectangle();
-	}
-	*/
-
-
-
 	void handleInput() {
 		vel.x = 0.0;
 		Face temp =  Face::NONE;
@@ -224,12 +70,10 @@ public:
 		else if (isKeyDown(Keys::DOWN)) {/*drop down?*/}
 		if (isKeyDown(Keys::LEFT)) {
 			temp = Face::LEFT;
-			cout << "LEFT";
 			vel.x = -CHARACTERS::BASE_SPEED * agi;
 		}
 		else if (isKeyDown(Keys::RIGHT)) {
 			temp = Face::RIGHT;
-			cout << "RIGHT";
 			vel.x = CHARACTERS::BASE_SPEED * agi;
 		}
 
@@ -264,7 +108,6 @@ public:
 		}
 		sprt.setTextureRect(sf::Rect<int>(seq*CHARACTERS::SPRITE_WIDTH,frameY,CHARACTERS::SPRITE_WIDTH,CHARACTERS::SPRITE_HEIGHT));
 	}
-
 	void update(float dt) override {
 		if (!isColliding[1]) {
 			vel.y += GRAV;
@@ -274,8 +117,6 @@ public:
 		}
 		sprt.setPosition(sprt.getPosition() + vel*dt);
 	}
-
-	
 
 };
 
@@ -351,7 +192,7 @@ public:
 		}
 	}
 
-}em;
+};
 
 void Init() {
 	for (int i = 0; i < WINDOW_WIDTH / TILE_SIZE; i++) {
