@@ -1,6 +1,3 @@
-#include <SFML/System.hpp>
-#include <SFML/Graphics.hpp>
-
 #include <iostream>
 #include <algorithm>
 #include <string>
@@ -19,7 +16,6 @@ const float GRAV = 10.0f; // 9.8f / FPS;
 
 using namespace std;
 
-
 namespace Keys {
 	const auto UP = 0x11;     	// W
 	const auto DOWN = 0x1F;		// S
@@ -33,6 +29,7 @@ namespace CHARACTERS {
 	const auto SPRITE_HEIGHT = 48;
 	const auto JUMP_RATE = -200.0f;
 }
+
 
 class TextureLoader {
 protected:
@@ -62,55 +59,6 @@ public:
 		return temp;
 	}
 }tl;
-
-
-class Entity {
-protected:
-	sf::Sprite sprt;
-	bool isColliding[2]; 
-public:
-
-	Entity(string file_name){
-		sprt.setTexture(*tl.getTexture(file_name));
-		sprt.setTextureRect(sf::Rect<int>(0,0,CHARACTERS::SPRITE_WIDTH,CHARACTERS::SPRITE_HEIGHT));
-	}
-
-	virtual void update(float dt) = 0;
-	virtual void render(sf::RenderTarget &g) {
-		g.draw(sprt);
-	}
-
-	virtual void move(const sf::Vector2f &amount) {
-		sprt.move(amount);
-	}
-	void setPos(const sf::Vector2f &newPos) {
-		sprt.setPosition(newPos);
-	}
-	
-	void setTextRect(const sf::Rect<int> newRekt) {
-		sprt.setTextureRect(newRekt);
-	}
-
-	void setOrigin(const sf::Vector2f &newOrig) {
-		sprt.setOrigin(newOrig);
-	}
-
-	void setCollision(const bool &x, const bool &y) {
-		isColliding[0] = x;
-		isColliding[1] = y;
-	}
-
-	sf::Vector2f getPosition() const {
-		return sprt.getPosition();
-	}
-
-	sf::Rect<float> bounds() {
-		return sprt.getGlobalBounds();
-	}
-	virtual ~Entity() {}
-
-
-};
 
 
 
