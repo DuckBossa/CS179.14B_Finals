@@ -58,7 +58,7 @@ public:
 	void update(float dt) override;
 	void DoSomethingOnCollision(Entity* collided) override;
 };
-
+/*
 class TeleportationTile : public Tile {
 public:
 	TeleportationTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "teleport") {}
@@ -79,3 +79,4 @@ public:
 	void update(float dt) override;
 	void DoSomethingOnCollision(Entity* collided) override;
 };
+*/
