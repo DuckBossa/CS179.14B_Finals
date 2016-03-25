@@ -41,7 +41,6 @@ int main() {
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-
 		//input
 		em.handleInput();
 		//update entities

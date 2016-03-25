@@ -31,11 +31,7 @@ void EntityManager::update(float dt) {
 }
 
 void EntityManager::logic(float dt) {
-	for (auto e : map) {
-		for (auto c : players) {
-			e->resolveColision(c);
-		}
-	}
+	resolveCollisions(dt);
 }
 
 void EntityManager::render(sf::RenderTarget &g) {
@@ -48,6 +44,29 @@ void EntityManager::render(sf::RenderTarget &g) {
 	}
 	for (auto e : sobjects) {
 		e->render(g);
+	}
+}
+
+void EntityManager::resolveCollisions(float dt) {
+	for (auto t : map) {
+		for (auto p : players){
+			sf::Rect<float> inter;
+			if (t->bounds().intersects(p->bounds(), inter)) {
+				bool colX = false;
+				bool colY = false;
+
+				if (t->getPosition().y > inter.top) {
+					p->move(sf::Vector2f(0,-inter.height));
+					p->resetGravity();
+					colY = true;
+				}
+				else if (t->getPosition().y <= inter.top) {
+					p->move(sf::Vector2f(0, inter.height));
+					colY = true;
+				}
+			}
+
+		}
 	}
 }
 

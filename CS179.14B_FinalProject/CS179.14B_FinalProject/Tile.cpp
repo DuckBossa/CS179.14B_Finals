@@ -59,11 +59,10 @@ void LavaTile::DoSomethingOnCollision(Entity* collided){
 }
 
 void DestructibleTile::update(float dt) {
-	
 }
 void DestructibleTile::DoSomethingOnCollision(Entity* collided){
 	tileDurability--;
-	if(tileDurabilty <= 0){
+	if(tileDurability <= 0){
 		toDelete = true;
 	}
 }
@@ -79,8 +78,7 @@ void TarTile::update(float dt) {}
 void TarTile::DoSomethingOnCollision(Entity* collided){
 	if (auto e = dynamic_cast<Character*>(collided)) {
 			e->slow();
-		}
-	
+	}
 }
 /*
 void TeleportationTile::update(float dt) {}
