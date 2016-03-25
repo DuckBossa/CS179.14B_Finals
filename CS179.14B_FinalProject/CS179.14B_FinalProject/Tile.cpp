@@ -38,18 +38,10 @@ void Tile::resolveColision(Entity* collided) {
 }
 
 
-class NormalTile : public Tile {
 
-public:
-	NormalTile(const float &size, const sf::Vector2f &init_pos, string file_name) : Tile(size, init_pos, file_name) {}
-	void update(float dt) override {} //Do Nothing
-	void DoSomethingOnCollision(Entity* collided) override {}
 
-};
+void NormalTile::update(float dt) {}
+void NormalTile::DoSomethingOnCollision(Entity* collided) {}
 
-class LavaTile : public Tile {
-public:
-	LavaTile(float size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "lava") {}
-	void update(float dt) override {}
-	void DoSomethingOnCollision(Entity* collided) override {}
-};
+void LavaTile::update(float dt) {}
+void LavaTile::DoSomethingOnCollision(Entity* collided){}

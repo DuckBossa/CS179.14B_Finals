@@ -10,8 +10,10 @@ sf::Texture* TextureLoader::getTexture(string n) {
 	}
 	else {
 		temp = new sf::Texture();
-		if (!temp->loadFromFile(n))
+		if (!temp->loadFromFile(n)) {
 			cout << "SFML could not find texture. Check Path.";
+		}
+			
 		temp->setSmooth(true);
 		textures.insert(pair<string, sf::Texture*>(n, temp));
 		return temp;
