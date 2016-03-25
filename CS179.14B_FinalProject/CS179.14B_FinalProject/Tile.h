@@ -17,8 +17,6 @@ public:
 
 
 class NormalTile : public Tile {
-protected:
-	float timer = 0;
 public:
 	NormalTile(const int &size, const sf::Vector2f &init_pos, string file_name) : Tile(size, init_pos, file_name) {}
 	void update(float dt) override;
@@ -27,8 +25,13 @@ public:
 };
 
 class LavaTile : public Tile {
+protected:
+	float timer;
+	float damageTimer;
 public:
-	LavaTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "lava") {}
+	LavaTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos, const float &damageTimer) : Tile(size, init_pos, "lava") , damageTimer(damageTimer) {
+		timer = 0;
+	}
 	void update(float dt) override;
 	void DoSomethingOnCollision(Entity* collided) override;
 };

@@ -9,14 +9,15 @@ void NormalTile::DoSomethingOnCollision(Entity* collided) {
 }
 
 void LavaTile::update(float dt) {
-	timer += dt;
-	if(timer >= 2){
-		timer = 0;
+	
+	if(! timer >= damageTimer){
+		timer += dt;
 	}
 }
 void LavaTile::DoSomethingOnCollision(Entity* collided){
 	if (auto e = dynamic_cast<Character*>(collided)) {
-		if (timer == 0){
+		if (timer >= damageTimer){
+			timer = 0;
 			e->takeDamage(5);
 		}
 	}

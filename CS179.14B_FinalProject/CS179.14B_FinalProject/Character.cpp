@@ -58,7 +58,6 @@ void Character::handleInput(){
 void Character::update(float dt) {
 	if (!isColliding[1]) {
 		vel.y += GRAV;
-		
 	}
 	else {
 	}
