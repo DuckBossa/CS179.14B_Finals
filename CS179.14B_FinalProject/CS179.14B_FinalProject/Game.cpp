@@ -11,9 +11,13 @@
 
 #define FPS 60.0f
 #define SPF sf::seconds(1.0f/FPS)
-const auto WINDOW_WIDTH = 800;
-const auto WINDOW_HEIGHT = 600;
 
+
+namespace GAME {
+	const auto WINDOW_WIDTH = 800;
+	const auto WINDOW_HEIGHT = 600;
+	const auto LAVA_TIMER = 2.5f;
+}
 
 using namespace std;
 
@@ -22,15 +26,15 @@ EntityManager em;
 
 
 void Init() {
-	for (int i = 0; i < WINDOW_WIDTH / TILE_SIZE; i++) {
-		em.addMapTile(new NormalTile(32, sf::Vector2f(i * TILE_SIZE, WINDOW_HEIGHT - TILE_SIZE), "Art/Tiles/Tar_tile_32.png"));
+	for (int i = 0; i < GAME::WINDOW_WIDTH / TILE_SIZE; i++) {
+		em.addMapTile(new LavaTile(32, sf::Vector2f(i * TILE_SIZE, GAME::WINDOW_HEIGHT - TILE_SIZE), "Art/Tiles/Tar_tile_32.png", GAME::LAVA_TIMER ));
 	}
 	em.addPlayer(new War(10,7,2,7,3,10,10,sf::Vector2f(50,400),"Art/Characters/1.png"));
 }
 
 
 int main() {
-	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Fight Me");
+	sf::RenderWindow window(sf::VideoMode(GAME::WINDOW_WIDTH, GAME::WINDOW_HEIGHT), "Fight Me");
 	sf::Clock clock;
 	sf::Time lag = sf::seconds(0);
 	Init();
