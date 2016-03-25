@@ -8,11 +8,18 @@ void NormalTile::DoSomethingOnCollision(Entity* collided) {
 	//NOTHING? WHAT DOES HAPPEN HERE?
 }
 
-void LavaTile::update(float dt) {}
+void LavaTile::update(float dt) {
+	timer += dt;
+	if(timer >= 2){
+		timer = 0;
+	}
+}
 void LavaTile::DoSomethingOnCollision(Entity* collided){
 	if (auto e = dynamic_cast<Character*>(collided)) {
+		if (timer == 0){
 			e->takeDamage(5);
 		}
+	}
 }
 
 void DestructibleTile::update(float dt) {
