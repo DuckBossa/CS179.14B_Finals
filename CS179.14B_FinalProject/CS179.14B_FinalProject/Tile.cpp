@@ -43,9 +43,52 @@ void Tile::resolveColision(Entity* collided) {
 
 
 
+//added 9:12 pm 25/03/2016
+
 
 void NormalTile::update(float dt) {}
-void NormalTile::DoSomethingOnCollision(Entity* collided) {}
+void NormalTile::DoSomethingOnCollision(Entity* collided) {
+	//NOTHING? WHAT DOES HAPPEN HERE?
+}
 
 void LavaTile::update(float dt) {}
-void LavaTile::DoSomethingOnCollision(Entity* collided){}
+void LavaTile::DoSomethingOnCollision(Entity* collided){
+	if (auto e = dynamic_cast<Character*>(collided)) {
+			e->takeDamage(5);
+		}
+}
+
+void DestructibleTile::update(float dt) {
+	
+}
+void DestructibleTile::DoSomethingOnCollision(Entity* collided){
+	tileDurability--;
+	if(tileDurabilty <= 0){
+		toDelete = true;
+	}
+}
+
+void TrampolineTile::update(float dt) {}
+void TrampolineTile::DoSomethingOnCollision(Entity* collided){
+	if (auto e = dynamic_cast<Character*>(collided)) {
+			e->boosted();
+		}
+}
+
+void TarTile::update(float dt) {}
+void TarTile::DoSomethingOnCollision(Entity* collided){
+	if (auto e = dynamic_cast<Character*>(collided)) {
+			e->slow();
+		}
+	
+}
+/*
+void TeleportationTile::update(float dt) {}
+void TeleportationTile::DoSomethingOnCollision(Entity* collided){}
+
+void TrapTile::update(float dt) {}
+void TrapTile::DoSomethingOnCollision(Entity* collided){}
+
+void PermeableTile::update(float dt) {}
+void PermeableTile::DoSomethingOnCollision(Entity* collided){}
+*/
