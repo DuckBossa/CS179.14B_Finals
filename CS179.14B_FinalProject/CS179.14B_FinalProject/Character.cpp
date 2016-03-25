@@ -69,5 +69,17 @@ void Character::resetGravity() {
 	vel.y = 0;
 }
 
+void Character::boosted() {
+	vel.y = BOOST_JUMP;
+}
+
+void Character::slow() {
+	vel.x *= .5;
+}
+
+void Character::takeDamage(int damage){
+	currhealth -= damage;
+}
+
 void War::Attack() {}
 void War::SAttack() {}
