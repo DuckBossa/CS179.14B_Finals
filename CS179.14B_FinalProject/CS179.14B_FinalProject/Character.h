@@ -48,8 +48,7 @@ public:
 	virtual void SAttack() = 0;
 
 	bool isKeyDown(const int &key);
-
-
+	void resetGravity();
 	void handleInput();
 	void update(float dt) override;
 

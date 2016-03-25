@@ -1,5 +1,5 @@
 #include "Tile.h"
-
+#include "Character.h"
 void Tile::resolveColision(Entity* collided) {
 	sf::Rect<float> inter;
 	if (bounds().intersects(collided->bounds(), inter)) {
@@ -29,7 +29,11 @@ void Tile::resolveColision(Entity* collided) {
 		collided->setCollision(colX, colY);
 		DoSomethingOnCollision(collided);
 		*/
-
+		
+		if (auto e = dynamic_cast<Character*>(collided)) {
+			e->resetGravity();
+			cout << "COLLIDE Y" << endl;
+		}
 	}
 	else {
 		collided->setCollision(false, false);
