@@ -18,6 +18,7 @@ namespace CHARACTERS {
 	const auto SPRITE_WIDTH = 32;
 	const auto SPRITE_HEIGHT = 48;
 	const auto JUMP_RATE = -200.0f;
+	const auto BOOST_JUMP = 2*JUMP_RATE;
 }
 
 
@@ -50,6 +51,9 @@ public:
 	bool isKeyDown(const int &key);
 	void resetGravity();
 	void handleInput();
+	void takeDamage(int damage);
+	void slow();
+	void boosted();
 	void update(float dt) override;
 
 };
