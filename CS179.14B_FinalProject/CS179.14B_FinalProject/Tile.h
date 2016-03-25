@@ -36,3 +36,46 @@ public:
 	void update(float dt) override;
 	void DoSomethingOnCollision(Entity* collided) override;
 };
+
+//added 3:12 25/03/2016
+class DestructibleTile : public Tile {
+public:
+	DestrucTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "destructible") {}
+	void update(float dt) override;
+	void DoSomethingOnCollision(Entity* collided) override;
+};
+
+class TrampolineTile : public Tile {
+public:
+	TrampolineTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "trampoline") {}
+	void update(float dt) override;
+	void DoSomethingOnCollision(Entity* collided) override;
+};
+
+class TarTile : public Tile {
+public:
+	TarTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "tar") {}
+	void update(float dt) override;
+	void DoSomethingOnCollision(Entity* collided) override;
+};
+
+class TeleportationTile : public Tile {
+public:
+	TeleportationTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "teleport") {}
+	void update(float dt) override;
+	void DoSomethingOnCollision(Entity* collided) override;
+};
+
+class TrapTile : public Tile {
+public:
+	TrapTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "trap") {}
+	void update(float dt) override;
+	void DoSomethingOnCollision(Entity* collided) override;
+};
+
+class PermeableTile : public Tile {
+public:
+	PermeableTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "permeable") {}
+	void update(float dt) override;
+	void DoSomethingOnCollision(Entity* collided) override;
+};
