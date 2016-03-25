@@ -17,7 +17,8 @@ public:
 
 
 class NormalTile : public Tile {
-
+protected:
+	float timer = 0;
 public:
 	NormalTile(const int &size, const sf::Vector2f &init_pos, string file_name) : Tile(size, init_pos, file_name) {}
 	void update(float dt) override;
