@@ -70,7 +70,7 @@ void Character::resetGravity() {
 }
 
 void Character::boosted() {
-	vel.y = BOOST_JUMP;
+	vel.y = CHARACTERS::BOOST_JUMP;
 }
 
 void Character::slow() {

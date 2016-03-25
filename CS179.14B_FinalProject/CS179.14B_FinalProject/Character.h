@@ -43,11 +43,10 @@ public:
 		sprt.setOrigin(sf::Vector2f(CHARACTERS::SPRITE_WIDTH / 2.0f, CHARACTERS::SPRITE_HEIGHT / 2.0f));
 		currface = Face::NONE;
 		seq;
+		setCollision(false, false);
 	}
-
 	virtual void Attack() = 0;
 	virtual void SAttack() = 0;
-
 	bool isKeyDown(const int &key);
 	void resetGravity();
 	void handleInput();

@@ -64,8 +64,23 @@ void EntityManager::resolveCollisions(float dt) {
 					p->move(sf::Vector2f(0, inter.height));
 					colY = true;
 				}
-			}
+				
+				if(colY){
+					//intersect again
+					t->bounds().intersects(p->bounds(), inter);
+				}
 
+				if (t->getPosition().x > inter.left + inter.width && inter.width > 0) {
+					p->move(sf::Vector2f(-inter.width,0));
+					colX = true;
+				}
+				else if (t->getPosition().x < inter.left && inter.width > 0) {
+					p->move(sf::Vector2f(inter.width,0));
+					colX = true;
+				}
+				p->setCollision(colX, colY);
+				t->DoSomethingOnCollision(p);
+			}
 		}
 	}
 }
