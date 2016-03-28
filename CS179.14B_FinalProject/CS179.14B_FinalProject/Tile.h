@@ -29,7 +29,7 @@ protected:
 	float timer;
 	float damageTimer;
 public:
-	LavaTile(const int &size, const sf::Vector2f &init_pos, const float &damageTimer) : Tile(size, init_pos, "lava") , damageTimer(damageTimer) {
+	LavaTile(const int &size, const sf::Vector2f &init_pos, const string &file_name ,const float &damageTimer) : Tile(size, init_pos, file_name) , damageTimer(damageTimer) {
 		timer = 0;
 	}
 	void update(float dt) override;

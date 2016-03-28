@@ -81,6 +81,9 @@ void EntityManager::resolveCollisions(float dt) {
 				p->setCollision(colX, colY);
 				t->DoSomethingOnCollision(p);
 			}
+			else {
+				p->setCollision(false, false);
+			}
 		}
 	}
 }

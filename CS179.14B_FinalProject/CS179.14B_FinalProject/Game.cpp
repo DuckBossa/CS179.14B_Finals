@@ -26,8 +26,10 @@ EntityManager em;
 
 
 void Init() {
-	for (int i = 0; i < GAME::WINDOW_WIDTH / TILE_SIZE; i++) {
-		em.addMapTile(new LavaTile(32, sf::Vector2f(i * TILE_SIZE, GAME::WINDOW_HEIGHT - TILE_SIZE), "Art/Tiles/Tar_tile_32.png", GAME::LAVA_TIMER ));
+	for (int i = 0; i < GAME::WINDOW_WIDTH / TILE_SIZE -3 ; i++) {
+		em.addMapTile(new LavaTile(TILE_SIZE, sf::Vector2f(i * TILE_SIZE, GAME::WINDOW_HEIGHT - TILE_SIZE), "Art/Tiles/Tar_tile_32.png", GAME::LAVA_TIMER ));
+
+		em.addMapTile(new LavaTile(TILE_SIZE, sf::Vector2f(i * TILE_SIZE, GAME::WINDOW_HEIGHT - 10 * TILE_SIZE), "Art/Tiles/Tar_tile_32.png", GAME::LAVA_TIMER));
 	}
 	em.addPlayer(new War(10,7,2,7,3,10,10,sf::Vector2f(50,400),"Art/Characters/1.png"));
 }
