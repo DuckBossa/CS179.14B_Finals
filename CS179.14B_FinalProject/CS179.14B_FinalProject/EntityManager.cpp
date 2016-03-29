@@ -48,6 +48,9 @@ void EntityManager::render(sf::RenderTarget &g) {
 }
 
 void EntityManager::resolveCollisions(float dt) {
+	// 1. Check velocity of next frame? (advaned collision)
+	// 2. Cancel velocities if collide with tile
+	// 3. Nudge if colliding
 	for (auto t : map) {
 		for (auto p : players){
 			sf::Rect<float> inter;
@@ -66,10 +69,11 @@ void EntityManager::resolveCollisions(float dt) {
 				}
 				
 				if(colY){
-					//intersect again
 					t->bounds().intersects(p->bounds(), inter);
+					p->setCollision(colX, colY);
+					t->DoSomethingOnCollision(p);
+					continue;
 				}
-
 				if (t->getPosition().x > inter.left + inter.width && inter.width > 0) {
 					p->move(sf::Vector2f(-inter.width,0));
 					colX = true;

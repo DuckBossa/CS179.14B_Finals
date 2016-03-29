@@ -19,6 +19,7 @@ void LavaTile::DoSomethingOnCollision(Entity* collided){
 		if (timer >= damageTimer){
 			timer = 0;
 			e->takeDamage(5);
+			cout << "LOL\n";
 		}
 	}
 }
