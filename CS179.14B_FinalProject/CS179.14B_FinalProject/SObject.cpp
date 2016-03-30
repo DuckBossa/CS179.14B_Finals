@@ -1,6 +1,6 @@
 #include "SObject.h"
 #include "Character.h"
-void Tile::resolveColision(Entity* collided) {
+void SObject::resolveColision(Entity* collided) {
 	sf::Rect<float> inter;
 	if (bounds().intersects(collided->bounds(), inter)) {
 		sf::Rect<float> temp_bounds = collided->bounds();

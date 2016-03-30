@@ -6,6 +6,7 @@
 #include "TextureLoader.h"
 #include "Character.h"
 #include "Tile.h"
+#include "SObject.h"
 
 
 
