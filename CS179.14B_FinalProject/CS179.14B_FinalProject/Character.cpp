@@ -4,12 +4,10 @@ bool Character::isKeyDown(const int &key) {
 	auto state = GetAsyncKeyState(MapVirtualKey(key, MAPVK_VSC_TO_VK_EX));
 	return state >> 15 != 0;
 }
-
 void Character::handleMouse(int key) {
 	if (key == 1) {
-		Attack();
-		//cout << "PEWPEW" << endl;
-
+		//Attack();
+		cout << "PEWPEW" << endl;
 		key = 0;
 	}
 	if (key == 2) {
@@ -74,6 +72,7 @@ void Character::update(float dt) {
 		vel.y += GRAV;
 	}
 	sprt.setPosition(sprt.getPosition() + vel*dt);
+	view.setCenter(sprt.getPosition());
 }
 
 void Character::resetGravity() {
@@ -120,12 +119,11 @@ sf::Rect<float> Character::getYColBox() const {
 	return toRet;
 }
 
-void War::Attack()
-{
-	
+void Character::render(sf::RenderTarget &g) {
+	Entity::render(g);
+	g.setView(view);
 }
-void War::SAttack()
-{
 
-}
+void War::Attack() {}
+void War::SAttack() {}
 
