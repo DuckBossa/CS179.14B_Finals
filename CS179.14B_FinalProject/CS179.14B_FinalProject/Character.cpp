@@ -4,6 +4,18 @@ bool Character::isKeyDown(const int &key) {
 	auto state = GetAsyncKeyState(MapVirtualKey(key, MAPVK_VSC_TO_VK_EX));
 	return state >> 15 != 0;
 }
+void Character::handleMouse(int key) {
+	if (key == 1) {
+		//Attack();
+		cout << "PEWPEW" << endl;
+		key = 0;
+	}
+	if (key == 2) {
+		//SAttack();
+		cout << "KABLAM" << endl;
+		key = 0;
+	}
+}
 
 void Character::handleInput(){
 	vel.x = 0.0;

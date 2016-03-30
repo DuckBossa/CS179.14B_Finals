@@ -20,6 +20,7 @@ public:
 	void addMapTile(Tile* t);
 	void addSObject(Entity* so);
 	void handleInput();
+	void handleMouse(int key);
 	void update(float dt);
 	void logic(float dt);
 	void render(sf::RenderTarget &g);

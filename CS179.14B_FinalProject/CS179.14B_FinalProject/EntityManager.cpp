@@ -17,7 +17,11 @@ void EntityManager::handleInput() {
 		e->handleInput();
 	}
 }
-
+void EntityManager::handleMouse(int key) {
+	for (auto e : players) {
+		e->handleMouse(key);
+	}
+}
 void EntityManager::update(float dt) {
 	for (auto e : players) {
 		e->update(dt);

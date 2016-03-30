@@ -59,6 +59,14 @@ int main() {
 		while (window->pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				window->close();
+			if (event.type == sf::Event::MouseButtonPressed){
+				if (event.mouseButton.button == sf::Mouse::Left){
+					em.handleMouse(1);
+				}
+				if (event.mouseButton.button == sf::Mouse::Right) {
+					em.handleMouse(2);
+				}
+			}
 		}
 		//input
 		em.handleInput();

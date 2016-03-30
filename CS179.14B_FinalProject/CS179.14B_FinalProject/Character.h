@@ -49,6 +49,7 @@ public:
 	bool isKeyDown(const int &key);
 	void resetGravity();
 	void handleInput();
+	void handleMouse(int key);
 	void takeDamage(int damage);
 	void heal(int heal);
 	void slow();
