@@ -1,5 +1,6 @@
 #pragma once
 #include "Entities.h"
+#include "Weapon.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -68,6 +69,9 @@ public:
 
 
 class War : public Character {
+
+	Weapon sword = new Weapon("Art\Weapons\WarSword.png", 12, 24);
+
 public:
 	War(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
 		int currhealth, int maxhealth, const sf::Vector2f &startPos, string file_name) : Character(str, agi, intel, pdef, mdef, currhealth, maxhealth, startPos, file_name) {
