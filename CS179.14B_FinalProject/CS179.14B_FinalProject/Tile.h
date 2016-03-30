@@ -39,7 +39,7 @@ public:
 //added 3:12 25/03/2016
 class DestructibleTile : public Tile {
 protected:
-	int tileDurability;
+	int tileDurability = 2;
 	bool toDelete;
 public:
 	DestructibleTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "destructible") {}

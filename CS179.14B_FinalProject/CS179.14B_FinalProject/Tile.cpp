@@ -21,8 +21,7 @@ void LavaTile::DoSomethingOnCollision(Entity* collided){
 	}
 }
 
-void DestructibleTile::update(float dt) {
-}
+void DestructibleTile::update(float dt) {}
 void DestructibleTile::DoSomethingOnCollision(Entity* collided){
 	tileDurability--;
 	if(tileDurability <= 0){

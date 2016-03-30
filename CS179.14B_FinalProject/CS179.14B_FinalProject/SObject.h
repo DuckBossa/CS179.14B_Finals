@@ -22,10 +22,21 @@ public:
 
 
 class HealBarrel : public SObject {
-
+protected:
+	bool toDelete = false;
 public:
-	HealBarrel(const int &size, const sf::Vector2f &init_pos, string file_name) : Tile(size, init_pos, file_name) {}
+	HealBarrel(const int &size, const sf::Vector2f &init_pos, string file_name) : Tile(size, init_pos, "HealBarrel") {}
 	void update(float dt) override;
 	void DoSomethingOnCollision(Entity* collided) override;
 
+};
+
+class ExplodingBarrel : public Tile {
+protected:
+	int barrelDurability = 3;
+	bool toDelete = false;
+public:
+	ExplodingBarrel(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "ExplodingBarrel") {}
+	void update(float dt) override;
+	void DoSomethingOnCollision(Entity* collided) override;
 };
