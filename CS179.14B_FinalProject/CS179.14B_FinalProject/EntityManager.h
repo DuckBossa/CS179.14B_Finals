@@ -25,6 +25,8 @@ public:
 	void logic(float dt);
 	void render(sf::RenderTarget &g);
 	void resolveCollisions(float dt);
+	void collide(Tile* t, Character* p);
+	void collide(SObject* t, Character* p);
 };
 
 

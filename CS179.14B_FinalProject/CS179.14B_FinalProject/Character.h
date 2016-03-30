@@ -14,10 +14,11 @@ namespace Keys {
 }
 
 namespace CHARACTERS {
-	const auto BASE_SPEED = 8.0f;
+	const auto BASE_SPEED = 32.0f;
 	const auto SPRITE_WIDTH = 32;
 	const auto SPRITE_HEIGHT = 48;
-	const auto JUMP_RATE = -200.0f;
+	const auto JUMP_RATE = -300.0f;
+	const auto HEALTHBAR_HEIGHT = 10;
 	const auto BOOST_JUMP = 2*JUMP_RATE;
 }
 
