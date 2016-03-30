@@ -7,18 +7,11 @@
 #include "Character.h"
 #include "Tile.h"
 #include "SObject.h"
-
-
+#include "Game.h"
 
 #define FPS 60.0f
 #define SPF sf::seconds(1.0f/FPS)
 
-
-namespace GAME {
-	const auto WINDOW_WIDTH = 512;
-	const auto WINDOW_HEIGHT = 512;
-	const auto LAVA_TIMER = 2.5f;
-}
 
 using namespace std;
 
@@ -42,7 +35,6 @@ void Init() {
 					em.addSObject(new HealBarrel(SOBJECT_SIZE, sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE), "Art/SObjects/HealBarrel.png"));
 				}
 				else if (temp == sf::Color::Blue) {/*Player Spawn*/
-					
 					summon_loc.push_back(sf::Vector2f(x*TILE_SIZE, y * TILE_SIZE));
 				}
 			}
@@ -73,10 +65,10 @@ int main() {
 				window->close();
 			if (event.type == sf::Event::MouseButtonPressed){
 				if (event.mouseButton.button == sf::Mouse::Left){
-					em.handleMouse(1);
+					em.handleMouse(1,*window);
 				}
 				if (event.mouseButton.button == sf::Mouse::Right) {
-					em.handleMouse(2);
+					em.handleMouse(2,*window);
 				}
 			}
 		}

@@ -17,9 +17,9 @@ void EntityManager::handleInput() {
 		e->handleInput();
 	}
 }
-void EntityManager::handleMouse(int key) {
+void EntityManager::handleMouse(int key, sf::RenderWindow &g) {
 	for (auto e : players) {
-		e->handleMouse(key);
+		e->handleMouse(key,g);
 	}
 }
 void EntityManager::update(float dt) {
@@ -126,6 +126,9 @@ void EntityManager::collide(SObject* t, Character* p) {
 	p->setCollision(colX, colY);
 }
 
+void EntityManager::collide(Weapon* w, Character* c) {
+
+}
 
 void EntityManager::resolveCollisions(float dt) {
 	for (auto t : map) {

@@ -1,18 +1,28 @@
 #include "Character.h"
-
+#include "Game.h"
 bool Character::isKeyDown(const int &key) {
 	auto state = GetAsyncKeyState(MapVirtualKey(key, MAPVK_VSC_TO_VK_EX));
 	return state >> 15 != 0;
 }
-void Character::handleMouse(int key) {
+void Character::handleMouse(int key,sf::RenderWindow &win) {
 	if (key == 1) {
 		//Attack();
-		cout << "PEWPEW" << endl;
+		if (sf::Mouse::getPosition(win).x > 0 && sf::Mouse::getPosition(win).x <= GAME::WINDOW_WIDTH/2) {
+			cout << "Left Normal" << endl;
+		}
+		else if (sf::Mouse::getPosition(win).x >  GAME::WINDOW_WIDTH/2 && sf::Mouse::getPosition(win).x <= GAME::WINDOW_WIDTH) {
+			cout << "Right Normal" << endl;
+		}
 		key = 0;
 	}
 	if (key == 2) {
 		//SAttack();
-		cout << "KABLAM" << endl;
+		if (sf::Mouse::getPosition(win).x > 0 && sf::Mouse::getPosition(win).x <= GAME::WINDOW_WIDTH / 2) {
+			cout << "Left Special" << endl;
+		}
+		else if (sf::Mouse::getPosition(win).x >  GAME::WINDOW_WIDTH / 2 && sf::Mouse::getPosition(win).x <= GAME::WINDOW_WIDTH) {
+			cout << "Right Special" << endl;
+		}
 		key = 0;
 	}
 }
@@ -122,6 +132,10 @@ sf::Rect<float> Character::getYColBox() const {
 void Character::render(sf::RenderTarget &g) {
 	Entity::render(g);
 	g.setView(view);
+	sf::RectangleShape health(sf::Vector2f(currhealth*2.5, CHARACTERS::HEALTHBAR_HEIGHT));
+	health.setPosition(sprt.getPosition() + sf::Vector2f(-bounds().width/2, -bounds().height/2 - 5));
+	health.setFillColor(sf::Color::Green);
+	g.draw(health);
 }
 
 void War::Attack() {}

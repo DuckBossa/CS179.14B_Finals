@@ -19,7 +19,7 @@ namespace CHARACTERS {
 	const auto SPRITE_WIDTH = 32;
 	const auto SPRITE_HEIGHT = 48;
 	const auto JUMP_RATE = -300.0f;
-	const auto HEALTHBAR_HEIGHT = 10;
+	const auto HEALTHBAR_HEIGHT = 5;
 	const auto BOOST_JUMP = 2*JUMP_RATE;
 }
 
@@ -35,8 +35,8 @@ private:
 	sf::Vector2f vel;
 	sf::Vector2f acc;
 	sf::View view;
+	Weapon* weap;
 public:
-
 	Character(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
 		int currhealth, int maxhealth, const sf::Vector2f &startPos, string file_name) : 
 		Entity(file_name,sf::Vector2i(CHARACTERS::SPRITE_WIDTH,CHARACTERS::SPRITE_HEIGHT)), str(str), agi(agi), intel(intel), pdef(pdef),
@@ -54,7 +54,7 @@ public:
 	bool isKeyDown(const int &key);
 	void resetGravity();
 	void handleInput();
-	void handleMouse(int key);
+	void handleMouse(int key, sf::RenderWindow &win);
 	void takeDamage(int damage);
 	void heal(int heal);
 	void slow();
@@ -69,14 +69,10 @@ public:
 
 
 class War : public Character {
-
-	Weapon sword = new Weapon("Art\Weapons\WarSword.png", 12, 24);
-
 public:
 	War(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
-		int currhealth, int maxhealth, const sf::Vector2f &startPos, string file_name) : Character(str, agi, intel, pdef, mdef, currhealth, maxhealth, startPos, file_name) {
-
-	}
+		int currhealth, int maxhealth, const sf::Vector2f &startPos, string file_name) : 
+		Character(str, agi, intel, pdef, mdef, currhealth, maxhealth, startPos, file_name) {}
 	void Attack() override;
 	void SAttack() override;
 };
