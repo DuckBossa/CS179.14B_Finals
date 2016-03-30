@@ -52,42 +52,48 @@ void EntityManager::resolveCollisions(float dt) {
 	// 2. Cancel velocities if collide with tile
 	// 3. Nudge if colliding
 	for (auto t : map) {
-		for (auto p : players){
-			sf::Rect<float> inter;
-			if (t->bounds().intersects(p->bounds() , inter)) {
-				bool colX = false;
-				bool colY = false;
-
-				if (t->getPosition().y > inter.top) {
-					p->move(sf::Vector2f(0,-inter.height));
+		for (auto p : players) {
+			sf::Rect<float> interX;
+			sf::Rect<float> interY;
+			bool colX = false;
+			bool colY = false;
+			bool collided = false;
+			//Y
+			if (t->bounds().intersects(p->getYColBox(), interY)) {
+				cout << "enter Y\n";
+				cout << p->getPosition().x << " ? " << endl;
+				cout << p->getYColBox().left << " ???? " << endl;
+				if (t->getPosition().y > interY.top) {
+					p->move(sf::Vector2f(0, -interY.height));
 					p->resetGravity();
-					colY = true;
+					cout << "1\n";
 				}
-				else if (t->getPosition().y <= inter.top) {
-					p->move(sf::Vector2f(0, inter.height));
-					colY = true;
+				else if (t->getPosition().y <= interY.top) {
+					p->move(sf::Vector2f(0, interY.height));
+					cout << "2\n";
 				}
-				
-				if(colY){
-					t->bounds().intersects(p->bounds(), inter);
-					p->setCollision(colX, colY);
-					t->DoSomethingOnCollision(p);
-					continue;
-				}
-				if (t->getPosition().x > inter.left + inter.width && inter.width > 0) {
-					p->move(sf::Vector2f(-inter.width,0));
-					colX = true;
-				}
-				else if (t->getPosition().x < inter.left && inter.width > 0) {
-					p->move(sf::Vector2f(inter.width,0));
-					colX = true;
-				}
-				p->setCollision(colX, colY);
 				t->DoSomethingOnCollision(p);
+				collided = true;
+				colY = true;
 			}
-			else {
-				p->setCollision(false, false);
+			
+			//X
+			if (t->bounds().intersects(p->getXColBox(), interX)) {
+				cout << "enter X\n";
+				if (t->getPosition().x > interX.left + interX.width) {
+					p->move(sf::Vector2f(-interX.width, 0));
+					cout << "3\n";
+				}
+				else if (t->getPosition().x < interX.left) {
+					p->move(sf::Vector2f(interX.width, 0));
+					cout << "4\n";
+				}
+				colX = true;
+				if (!collided) {
+					t->DoSomethingOnCollision(p);
+				}
 			}
+			p->setCollision(colX, colY);
 		}
 	}
 }

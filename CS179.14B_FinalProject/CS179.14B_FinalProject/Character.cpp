@@ -88,6 +88,23 @@ sf::Rect<float> Character::bounds() const {
 	return toRet;
 }
 
+sf::Vector2f Character::getVel() const {
+	return vel;
+}
+
+sf::Rect<float> Character::getXColBox() const {
+	sf::Rect<float> toRet(sprt.getGlobalBounds());
+	toRet.height -= 10;
+	toRet.top += 5;
+	return toRet;
+}
+
+sf::Rect<float> Character::getYColBox() const {
+	sf::Rect<float> toRet(sprt.getGlobalBounds());
+	toRet.width -= 10;
+	toRet.left += 5;
+	return toRet;
+}
 
 void War::Attack() {}
 void War::SAttack() {}

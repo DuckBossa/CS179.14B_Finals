@@ -32,7 +32,6 @@ private:
 	Face currface;
 	sf::Vector2f vel;
 	sf::Vector2f acc;
-
 public:
 
 	Character(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
@@ -55,6 +54,9 @@ public:
 	void slow();
 	void boosted();
 	void update(float dt) override;
+	sf::Vector2f getVel() const;
+	sf::Rect<float> getXColBox() const;
+	sf::Rect<float> getYColBox() const;
 	sf::Rect<float> bounds() const;
 };
 
