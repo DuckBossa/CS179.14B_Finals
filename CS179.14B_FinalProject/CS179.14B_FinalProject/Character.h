@@ -32,6 +32,7 @@ private:
 	Face currface;
 	sf::Vector2f vel;
 	sf::Vector2f acc;
+	sf::View view;
 public:
 
 	Character(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
@@ -40,6 +41,8 @@ public:
 		mdef(mdef), currhealth(currhealth), maxhealth(maxhealth) {
 		sprt.setPosition(startPos);
 		sprt.setOrigin(sf::Vector2f(CHARACTERS::SPRITE_WIDTH / 2.0f, CHARACTERS::SPRITE_HEIGHT / 2.0f));
+		view.setSize(sf::Vector2f(512, 512));
+		view.setCenter(sprt.getPosition());
 		currface = Face::NONE;
 		seq;
 		setCollision(false, false);
@@ -55,6 +58,7 @@ public:
 	void slow();
 	void boosted();
 	void update(float dt) override;
+	void render(sf::RenderTarget &g) override;
 	sf::Vector2f getVel() const;
 	sf::Rect<float> getXColBox() const;
 	sf::Rect<float> getYColBox() const;

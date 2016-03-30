@@ -26,7 +26,7 @@ TextureLoader tl;
 EntityManager em;
 sf::RenderWindow* window;
 
-sf::View view1;
+
 void Init() {
 	sf::Texture* maptex = tl.getTexture("Art/Maps/sample3.png");
 	vector<sf::Vector2f> summon_loc;
@@ -57,7 +57,7 @@ void Init() {
 		em.addPlayer(new War(10, 7, 2, 7, 3, 10, 10, summon_loc[0], "Art/Characters/1.png"));
 	}
 
-	view1.reset(sf::Rect<float>(50, 50, GAME::WINDOW_WIDTH, GAME::WINDOW_HEIGHT));
+	
 }
 
 

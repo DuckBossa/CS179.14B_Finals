@@ -72,6 +72,7 @@ void Character::update(float dt) {
 		vel.y += GRAV;
 	}
 	sprt.setPosition(sprt.getPosition() + vel*dt);
+	view.setCenter(sprt.getPosition());
 }
 
 void Character::resetGravity() {
@@ -116,6 +117,11 @@ sf::Rect<float> Character::getYColBox() const {
 	toRet.width -= 10;
 	toRet.left += 5;
 	return toRet;
+}
+
+void Character::render(sf::RenderTarget &g) {
+	Entity::render(g);
+	g.setView(view);
 }
 
 void War::Attack() {}
