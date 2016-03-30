@@ -77,6 +77,8 @@ void Character::slow() {
 void Character::takeDamage(int damage){
 	currhealth -= damage;
 }
-
+void Character::heal(int heal){
+	currhealth += heal;
+}
 void War::Attack() {}
 void War::SAttack() {}

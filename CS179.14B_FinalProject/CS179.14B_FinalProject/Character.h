@@ -51,6 +51,7 @@ public:
 	void resetGravity();
 	void handleInput();
 	void takeDamage(int damage);
+	void heal(int heal);
 	void slow();
 	void boosted();
 	void update(float dt) override;

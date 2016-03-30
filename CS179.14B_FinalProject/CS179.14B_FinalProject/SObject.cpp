@@ -1,4 +1,4 @@
-#include "Tile.h"
+#include "SObject.h"
 #include "Character.h"
 void Tile::resolveColision(Entity* collided) {
 	sf::Rect<float> inter;
@@ -41,61 +41,10 @@ void Tile::resolveColision(Entity* collided) {
 
 }
 
-//added 9:12 pm 25/03/2016
-
-
-void NormalTile::update(float dt) {}
-void NormalTile::DoSomethingOnCollision(Entity* collided) {
-	//NOTHING? WHAT DOES HAPPEN HERE?
-}
-
-void LavaTile::update(float dt) {
-	timer += dt;
-	
-}
-void LavaTile::DoSomethingOnCollision(Entity* collided){
+void HealBarrel::update(float dt) {}
+void HealBarrel::DoSomethingOnCollision(Entity* collided) {
 	if (auto e = dynamic_cast<Character*>(collided)) {
-			timer = 0;
-			if (timer == 0){
-				e->takeDamage(5);
-			}
-			if(timer >= 2){
-				timer = 0;
-			}
-		}
-}
-
-void DestructibleTile::update(float dt) {
-	
-}
-void DestructibleTile::DoSomethingOnCollision(Entity* collided){
-	tileDurability--;
-	if(tileDurabilty <= 0){
-		toDelete = true;
+		e->boosted();
 	}
+	//DISAPPEARS, BUT HOW?
 }
-
-void TrampolineTile::update(float dt) {}
-void TrampolineTile::DoSomethingOnCollision(Entity* collided){
-	if (auto e = dynamic_cast<Character*>(collided)) {
-			e->boosted();
-		}
-}
-
-void TarTile::update(float dt) {}
-void TarTile::DoSomethingOnCollision(Entity* collided){
-	if (auto e = dynamic_cast<Character*>(collided)) {
-			e->slow();
-		}
-	
-}
-/*
-void TeleportationTile::update(float dt) {}
-void TeleportationTile::DoSomethingOnCollision(Entity* collided){}
-
-void TrapTile::update(float dt) {}
-void TrapTile::DoSomethingOnCollision(Entity* collided){}
-
-void PermeableTile::update(float dt) {}
-void PermeableTile::DoSomethingOnCollision(Entity* collided){}
-*/
