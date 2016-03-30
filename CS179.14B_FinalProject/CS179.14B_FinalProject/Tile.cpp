@@ -4,9 +4,7 @@
 
 //added 9:12 pm 25/03/2016
 void NormalTile::update(float dt) {}
-void NormalTile::DoSomethingOnCollision(Entity* collided) {
-	//NOTHING? WHAT DOES HAPPEN HERE?
-}
+void NormalTile::DoSomethingOnCollision(Entity* collided) {}
 
 void LavaTile::update(float dt) {
 	
@@ -19,7 +17,6 @@ void LavaTile::DoSomethingOnCollision(Entity* collided){
 		if (timer >= damageTimer){
 			timer = 0;
 			e->takeDamage(5);
-			cout << "LOL\n";
 		}
 	}
 }
@@ -56,3 +53,4 @@ void TrapTile::DoSomethingOnCollision(Entity* collided){}
 void PermeableTile::update(float dt) {}
 void PermeableTile::DoSomethingOnCollision(Entity* collided){}
 */
+
