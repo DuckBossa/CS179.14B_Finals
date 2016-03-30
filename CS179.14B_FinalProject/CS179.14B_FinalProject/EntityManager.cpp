@@ -8,7 +8,7 @@ void EntityManager::addMapTile(Tile* t) {
 	map.push_back(t);
 }
 
-void EntityManager::addSObject(Entity* so) {
+void EntityManager::addSObject(SObject* so) {
 	sobjects.push_back(so);
 }
 
@@ -39,7 +39,9 @@ void EntityManager::logic(float dt) {
 }
 
 void EntityManager::render(sf::RenderTarget &g) {
-	g.draw(bg);
+	sf::RectangleShape x(sf::Vector2f(2000,2000));
+	x.setFillColor(sf::Color::White);
+	g.draw(x);
 	for (auto e : map) {
 		e->render(g);
 	}
@@ -52,9 +54,6 @@ void EntityManager::render(sf::RenderTarget &g) {
 }
 
 void EntityManager::resolveCollisions(float dt) {
-	// 1. Check velocity of next frame? (advaned collision)
-	// 2. Cancel velocities if collide with tile
-	// 3. Nudge if colliding
 	for (auto t : map) {
 		for (auto p : players) {
 			sf::Rect<float> interX;
@@ -64,17 +63,12 @@ void EntityManager::resolveCollisions(float dt) {
 			bool collided = false;
 			//Y
 			if (t->bounds().intersects(p->getYColBox(), interY)) {
-				cout << "enter Y\n";
-				cout << p->getPosition().x << " ? " << endl;
-				cout << p->getYColBox().left << " ???? " << endl;
 				if (t->getPosition().y > interY.top) {
 					p->move(sf::Vector2f(0, -interY.height));
 					p->resetGravity();
-					cout << "1\n";
 				}
 				else if (t->getPosition().y <= interY.top) {
 					p->move(sf::Vector2f(0, interY.height));
-					cout << "2\n";
 				}
 				t->DoSomethingOnCollision(p);
 				collided = true;
@@ -83,14 +77,11 @@ void EntityManager::resolveCollisions(float dt) {
 			
 			//X
 			if (t->bounds().intersects(p->getXColBox(), interX)) {
-				cout << "enter X\n";
 				if (t->getPosition().x > interX.left + interX.width) {
 					p->move(sf::Vector2f(-interX.width, 0));
-					cout << "3\n";
 				}
 				else if (t->getPosition().x < interX.left) {
 					p->move(sf::Vector2f(interX.width, 0));
-					cout << "4\n";
 				}
 				colX = true;
 				if (!collided) {

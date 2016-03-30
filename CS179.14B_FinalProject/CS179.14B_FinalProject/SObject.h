@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Entities.h"
 
 const auto SOBJECT_SIZE = 32;
