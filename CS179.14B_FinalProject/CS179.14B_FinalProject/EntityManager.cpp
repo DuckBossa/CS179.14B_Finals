@@ -54,7 +54,7 @@ void EntityManager::resolveCollisions(float dt) {
 	for (auto t : map) {
 		for (auto p : players){
 			sf::Rect<float> inter;
-			if (t->bounds().intersects(p->bounds(), inter)) {
+			if (t->bounds().intersects(p->bounds() , inter)) {
 				bool colX = false;
 				bool colY = false;
 

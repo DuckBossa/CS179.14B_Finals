@@ -55,7 +55,7 @@ public:
 	void slow();
 	void boosted();
 	void update(float dt) override;
-
+	sf::Rect<float> bounds() const;
 };
 
 

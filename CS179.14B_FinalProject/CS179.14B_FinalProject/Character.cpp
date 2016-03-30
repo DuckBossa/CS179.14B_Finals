@@ -80,5 +80,15 @@ void Character::takeDamage(int damage){
 void Character::heal(int heal){
 	currhealth += heal;
 }
+
+sf::Rect<float> Character::bounds() const {
+	sf::Rect<float> toRet(sprt.getGlobalBounds());
+	toRet.width -= 9;
+	toRet.height -= 4;
+	return toRet;
+}
+
+
 void War::Attack() {}
 void War::SAttack() {}
+

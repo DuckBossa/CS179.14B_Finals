@@ -24,26 +24,23 @@ using namespace std;
 
 TextureLoader tl;
 EntityManager em;
-
+sf::RenderWindow* window;
 
 void Init() {
 	sf::Texture* maptex = tl.getTexture("Art/Maps/sample.png");
 	if (maptex != nullptr) {
-		cout << "FOUND" << "\n";
 		const sf::Image temps = maptex->copyToImage();
 		for (int x = 0; x < temps.getSize().x; x++) {
 			for (int y = 0; y < temps.getSize().y; y++) {
 				sf::Color temp = temps.getPixel(x, y);
 				if (temp == sf::Color::Black) {
-					cout << "FOUND BLACK " << x << "," << y <<"\n";
 					em.addMapTile(new  NormalTile(TILE_SIZE, sf::Vector2f(x*TILE_SIZE,y*TILE_SIZE), "Art/Tiles/Tar_tile_32.png"));
 				}
-				else if (temp == sf::Color::White) {
-					cout << "FOUND WHITE " << x << "," << y << "\n";
-				}
+				else if (temp == sf::Color::Magenta){/*SObjects Spawn*/}
+				else if (temp == sf::Color::Blue){/*Player Spawn*/}
 			}
 		}
-		
+		window = new sf::RenderWindow(sf::VideoMode(GAME::WINDOW_WIDTH, GAME::WINDOW_HEIGHT), "Fight Me");
 	}
 	else {
 		cout << "ERROR" << "\n";
@@ -54,16 +51,14 @@ void Init() {
 
 
 int main() {
-	sf::RenderWindow window(sf::VideoMode(GAME::WINDOW_WIDTH, GAME::WINDOW_HEIGHT), "Fight Me");
 	sf::Clock clock;
 	sf::Time lag = sf::seconds(0);
 	Init();
-
-	while (window.isOpen()) {
+	while (window->isOpen()) {
 		sf::Event event;
-		while (window.pollEvent(event)) {
+		while (window->pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
-				window.close();
+				window->close();
 		}
 		//input
 		em.handleInput();
@@ -72,9 +67,9 @@ int main() {
 		//collision detection
 		em.logic(SPF.asSeconds());
 		//render
-		window.clear();
-		em.render(window);
-		window.display();
+		window->clear();
+		em.render(*window);
+		window->display();
 
 		const auto elapsed = clock.getElapsedTime() + lag;
 		if (elapsed < SPF) {
@@ -86,5 +81,6 @@ int main() {
 		}
 		clock.restart();
 	}
+	window->close();
 	return 0;
 }

@@ -53,7 +53,7 @@ void ExplodingBarrel::update(float dt) {}
 void ExplodingBarrel::DoSomethingOnCollision(Entity* collided){
 	if (auto e = dynamic_cast<Character*>(collided)) {
 		barrelDurability--;
-		if(tileDurability <= 0){
+		if(barrelDurability <= 0){
 			toDelete = true;
 			//EXPLOSION ANIMATION?
 			e->takeDamage(10);
