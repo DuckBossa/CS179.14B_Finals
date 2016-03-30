@@ -1,5 +1,6 @@
 #pragma once
 #include "Entities.h"
+#include "Weapon.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -14,11 +15,10 @@ namespace Keys {
 }
 
 namespace CHARACTERS {
-	const auto BASE_SPEED = 32.0f;
+	const auto BASE_SPEED = 8.0f;
 	const auto SPRITE_WIDTH = 32;
 	const auto SPRITE_HEIGHT = 48;
-	const auto JUMP_RATE = -300.0f;
-	const auto HEALTHBAR_HEIGHT = 10;
+	const auto JUMP_RATE = -200.0f;
 	const auto BOOST_JUMP = 2*JUMP_RATE;
 }
 
@@ -33,7 +33,6 @@ private:
 	Face currface;
 	sf::Vector2f vel;
 	sf::Vector2f acc;
-	sf::View view;
 public:
 
 	Character(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
@@ -42,8 +41,6 @@ public:
 		mdef(mdef), currhealth(currhealth), maxhealth(maxhealth) {
 		sprt.setPosition(startPos);
 		sprt.setOrigin(sf::Vector2f(CHARACTERS::SPRITE_WIDTH / 2.0f, CHARACTERS::SPRITE_HEIGHT / 2.0f));
-		view.setSize(sf::Vector2f(512, 512));
-		view.setCenter(sprt.getPosition());
 		currface = Face::NONE;
 		seq;
 		setCollision(false, false);
@@ -59,7 +56,6 @@ public:
 	void slow();
 	void boosted();
 	void update(float dt) override;
-	void render(sf::RenderTarget &g) override;
 	sf::Vector2f getVel() const;
 	sf::Rect<float> getXColBox() const;
 	sf::Rect<float> getYColBox() const;
@@ -68,6 +64,9 @@ public:
 
 
 class War : public Character {
+
+	//Weapon sword("sword", )
+
 public:
 	War(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
 		int currhealth, int maxhealth, const sf::Vector2f &startPos, string file_name) : Character(str, agi, intel, pdef, mdef, currhealth, maxhealth, startPos, file_name) {
