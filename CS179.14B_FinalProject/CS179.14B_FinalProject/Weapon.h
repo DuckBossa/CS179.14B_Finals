@@ -10,6 +10,7 @@ public:
 	Weapon(string file_name, int weapon_width, int weapon_height) : Entity(file_name, sf::Vector2i(weapon_width, weapon_height)){}
 	~Weapon(){}
 	virtual void fire(sf::Vector2f player_pos) = 0;
+	void Weapon::handleMouse(int key,sf::RenderWindow &win);
 	void update(float dt) override;
 	currface = Face::NONE;
 };
