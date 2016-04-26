@@ -87,9 +87,7 @@ void EntityManager::collide(Tile* t, Character* p) {
 	}
 
 	if (colYTop) {
-		static int x = 0;
 		t->DoSomethingOnCollision(p);
-		cout << x++ << endl;
 	}
 
 
@@ -112,7 +110,6 @@ void EntityManager::collide(SObject* t, Character* p) {
 		else if (t->getPosition().y <= interY.top) {
 			p->move(sf::Vector2f(0, interY.height));
 		}
-		//t->DoSomethingOnCollision(p);
 		collided = true;
 		colY = true;
 	}
