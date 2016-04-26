@@ -10,7 +10,8 @@
 class EntityManager {
 public:
 	std::vector<Tile*> map;
-	std::vector<Character*> players;
+	Character* main_player;
+	std::vector<Character*> others;
 	std::vector<SObject*> sobjects;
 	sf::Sprite bg;
 
@@ -18,6 +19,7 @@ public:
 		bg.setTexture(*tl.getTexture("Art/Maps/bg_temp.png"));
 	}
 	void addPlayer(Character* p);
+	void setMain(Character* p);
 	void addMapTile(Tile* t);
 	void addSObject(SObject* so);
 	void handleInput();

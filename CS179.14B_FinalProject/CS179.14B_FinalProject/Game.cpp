@@ -46,7 +46,7 @@ void Init() {
 	}
 
 	if (!summon_loc.empty()) {
-		em.addPlayer(new War(10, 7, 2, 7, 3, 10, 10, summon_loc[0], "Art/Characters/1.png"));
+		em.setMain(new War(10, 7, 2, 7, 3, 10, 10, summon_loc[0], "Art/Characters/1.png"));
 	}
 
 	

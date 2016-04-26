@@ -1,7 +1,7 @@
 #include "EntityManager.h"
 
 void EntityManager::addPlayer(Character* p) {
-	players.push_back(p);
+	others.push_back(p);
 }
 
 void EntityManager::addMapTile(Tile* t) {
@@ -12,18 +12,19 @@ void EntityManager::addSObject(SObject* so) {
 	sobjects.push_back(so);
 }
 
+void EntityManager::setMain(Character* p) {
+	main_player = std::move(p);
+}
+
 void EntityManager::handleInput() {
-	for (auto e : players) {
-		e->handleInput();
-	}
+	main_player->handleInput();
 }
 void EntityManager::handleMouse(int key, sf::RenderWindow &g) {
-	for (auto e : players) {
-		e->handleMouse(key,g);
-	}
+	main_player->handleMouse(key, g);
 }
 void EntityManager::update(float dt) {
-	for (auto e : players) {
+	main_player->update(dt);
+	for (auto e : others) {
 		e->update(dt);
 	}
 	for (auto e : map) {
@@ -42,10 +43,11 @@ void EntityManager::render(sf::RenderTarget &g) {
 	sf::RectangleShape x(sf::Vector2f(2000,2000));
 	x.setFillColor(sf::Color::White);
 	g.draw(x);
+	main_player->render(g);
 	for (auto e : map) {
 		e->render(g);
 	}
-	for (auto e : players) {
+	for (auto e : others) {
 		e->render(g);
 	}
 	for (auto e : sobjects) {
@@ -59,18 +61,17 @@ void EntityManager::collide(Tile* t, Character* p) {
 	sf::Rect<float> interY;
 	bool colX = false;
 	bool colY = false;
-	bool collided = false;
+	bool colYTop = false;
 	//Y
 	if (t->bounds().intersects(p->getYColBox(), interY)) {
 		if (t->getPosition().y > interY.top) {
 			p->move(sf::Vector2f(0, -interY.height));
+			colYTop = true;
 			p->resetGravity();
 		}
 		else if (t->getPosition().y <= interY.top) {
 			p->move(sf::Vector2f(0, interY.height));
 		}
-		t->DoSomethingOnCollision(p);
-		collided = true;
 		colY = true;
 	}
 
@@ -83,10 +84,16 @@ void EntityManager::collide(Tile* t, Character* p) {
 			p->move(sf::Vector2f(interX.width, 0));
 		}
 		colX = true;
-		if (!collided) {
-			t->DoSomethingOnCollision(p);
-		}
 	}
+
+	if (colYTop) {
+		static int x = 0;
+		t->DoSomethingOnCollision(p);
+		cout << x++ << endl;
+	}
+
+
+
 	p->setCollision(colX, colY);
 }
 
@@ -119,10 +126,9 @@ void EntityManager::collide(SObject* t, Character* p) {
 			p->move(sf::Vector2f(interX.width, 0));
 		}
 		colX = true;
-		if (!collided) {
-			//t->DoSomethingOnCollision(p);
-		}
 	}
+
+
 	p->setCollision(colX, colY);
 }
 
@@ -131,14 +137,17 @@ void EntityManager::collide(Weapon* w, Character* c) {
 }
 
 void EntityManager::resolveCollisions(float dt) {
+	
 	for (auto t : map) {
-		for (auto p : players) {
+		collide(t, main_player);
+		for (auto p : others) {
 			collide(t, p);
 		}
 	}
 
 	for (auto s : sobjects) {
-		for (auto p : players) {
+		collide(s, main_player);
+		for (auto p : others) {
 			collide(s, p);
 		}
 	}
