@@ -28,10 +28,13 @@ void Init() {
 		for (int x = 0; x < map.getSize().x; x++) {
 			for (int y = 0; y < map.getSize().y; y++) {
 				const sf::Color temp = map.getPixel(x, y);
+				int b = (int)temp.b;
+				int r = (int)temp.r;
+				int g = (int)temp.g;
 				if (temp == sf::Color::Black) {
 					em.addMapTile(new  NormalTile(TILE_SIZE, sf::Vector2f(x*TILE_SIZE, y*TILE_SIZE), "Art/Tiles/Tar_tile_32.png"));
 				}
-				else if (temp == sf::Color::Yellow) {/*SObjects Spawn*/
+				else if (g == 150 && b == 150) {/*SObjects Spawn*/
 					em.addSObject(new HealBarrel(SOBJECT_SIZE, sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE), "Art/SObjects/HealBarrel.png"));
 				}
 				else if (temp == sf::Color::Blue) {/*Player Spawn*/
