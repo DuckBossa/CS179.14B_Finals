@@ -15,7 +15,7 @@ public:
 	std::vector<Character*> others;
 	std::vector<SObject*> sobjects;
 	sf::Sprite bg;
-
+	boost::asio::ip::udp::socket* socket;
 	EntityManager() {
 		bg.setTexture(*tl.getTexture("Art/Maps/bg_temp.png"));
 	}

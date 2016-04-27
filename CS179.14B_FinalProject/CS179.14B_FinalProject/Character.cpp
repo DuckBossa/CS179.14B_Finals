@@ -1,5 +1,8 @@
 #include "Character.h"
 #include "Game.h"
+
+using namespace CHARACTERS;
+
 bool Character::isKeyDown(const int &key) {
 	auto state = GetAsyncKeyState(MapVirtualKey(key, MAPVK_VSC_TO_VK_EX));
 	return state >> 15 != 0;

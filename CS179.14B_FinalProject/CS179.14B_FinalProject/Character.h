@@ -21,31 +21,33 @@ namespace CHARACTERS {
 	const auto JUMP_RATE = -300.0f;
 	const auto HEALTHBAR_HEIGHT = 5;
 	const auto BOOST_JUMP = 2*JUMP_RATE;
+	typedef uint32_t ID;
+	enum Face {
+		UP = 0, FRONT = 1, LEFT = 2, RIGHT = 3, NONE = 4
+	};
 }
 
+using namespace CHARACTERS;
 
 class Character : public Entity {
 private:
-	enum Face {
-		UP, FRONT, LEFT, RIGHT, NONE
-	};
-
+	ID id;
 	int str, agi, intel, pdef, mdef, currhealth, maxhealth, seq;
-	Face currface;
+	CHARACTERS::Face currface;
 	sf::Vector2f vel;
 	sf::Vector2f acc;
 	sf::View view;
 	Weapon* weap;
 public:
 	Character(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
-		int currhealth, int maxhealth, const sf::Vector2f &startPos, string file_name) : 
+		int currhealth, int maxhealth, const sf::Vector2f &startPos, string file_name,ID id) : 
 		Entity(file_name,sf::Vector2i(CHARACTERS::SPRITE_WIDTH,CHARACTERS::SPRITE_HEIGHT)), str(str), agi(agi), intel(intel), pdef(pdef),
-		mdef(mdef), currhealth(currhealth), maxhealth(maxhealth) {
+		mdef(mdef), currhealth(currhealth), maxhealth(maxhealth), id(id) {
 		sprt.setPosition(startPos);
 		sprt.setOrigin(sf::Vector2f(CHARACTERS::SPRITE_WIDTH / 2.0f, CHARACTERS::SPRITE_HEIGHT / 2.0f));
 		view.setSize(sf::Vector2f(512, 512));
 		view.setCenter(sprt.getPosition());
-		currface = Face::NONE;
+		currface = CHARACTERS::Face::NONE;
 		seq;
 		setCollision(false, false);
 	}
@@ -71,8 +73,8 @@ public:
 class War : public Character {
 public:
 	War(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
-		int currhealth, int maxhealth, const sf::Vector2f &startPos, string file_name) : 
-		Character(str, agi, intel, pdef, mdef, currhealth, maxhealth, startPos, file_name) {}
+		int currhealth, int maxhealth, const sf::Vector2f &startPos, string file_name,ID id) : 
+		Character(str, agi, intel, pdef, mdef, currhealth, maxhealth, startPos, file_name,id) {}
 	void Attack() override;
 	void SAttack() override;
 };

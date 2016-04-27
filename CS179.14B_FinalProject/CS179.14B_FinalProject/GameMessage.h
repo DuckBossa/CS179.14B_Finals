@@ -2,15 +2,8 @@
 #include <cstdlib>
 #include <cstdint>
 
-typedef uint32_t ID;
-
 enum class MessageType : uint8_t {
 	Connect = 0, Disconnect = 1, Reconnect = 2, Status = 3, Ping = 4, Pong = 5
-};
-
-
-enum Face : uint8_t {
-	UP = 0, FRONT = 1, LEFT = 2, RIGHT = 3, NONE = 4
 };
 
 #pragma pack(push, 1)
@@ -28,7 +21,7 @@ struct Status {
 };
 
 struct StatusMessage {
-	ID id;
+	CHARACTERS::ID id;
 	uint32_t order;
 	Status stat;
 };

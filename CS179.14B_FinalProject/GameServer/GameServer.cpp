@@ -68,15 +68,15 @@ int main(int argc, char **argv) {
 					clients.erase(it);
 				}
 				break;
-			case MessageType::Position: {
-				if (msg->size < sizeof(PositionMessage)) {
+			case MessageType::Status: {
+				if (msg->size < sizeof(StatusMessage)) {
 					cerr << "error" << endl;
 				}
 				else {
-					auto pm = reinterpret_cast<const PositionMessage*> (msg->data);
+					auto pm = reinterpret_cast<const StatusMessage*> (msg->data);
 					for (auto &client : clients) {
 						if (client.first != pm->id) {
-							client.second.send(MessageType::Position, msg->data, msg->size);
+							client.second.send(MessageType::Status, msg->data, msg->size);
 						}
 						else {
 							client.second.last_packet = Clock::now();
@@ -91,6 +91,7 @@ int main(int argc, char **argv) {
 		};
 
 		socket.async_receive_from(boost::asio::buffer(recv_buffer.data(), recv_buffer.size()), source, handler);
+		service.run();
 
 	}
 	catch (exception e) {

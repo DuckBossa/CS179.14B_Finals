@@ -1,13 +1,16 @@
 #include <iostream>
 #include <algorithm>
 #include <string>
-
+#include <SFML/Network.hpp>
 #include "EntityManager.h"
 #include "TextureLoader.h"
 #include "Character.h"
 #include "Tile.h"
 #include "SObject.h"
 #include "Game.h"
+#include "GameMessage.h"
+#include <boost/asio.hpp>
+
 
 #define FPS 60.0f
 #define SPF sf::seconds(1.0f/FPS)
@@ -20,7 +23,42 @@ EntityManager em;
 sf::RenderWindow* window;
 
 
-void Init() {
+bool Init(const char* ip, const unsigned short &port) {
+
+	CHARACTERS::ID player_id;
+	const unsigned short listen_port = port + 1;
+	sf::UdpSocket socket;
+	sf::IpAddress server_address(ip);
+	socket.bind(listen_port);
+	cout << "Connecting to Server...";
+	{
+		uint8_t buffer[sizeof(Message) + sizeof(CHARACTERS::ID)];
+		auto msg = reinterpret_cast<Message*>(buffer);
+		msg->type = MessageType::Connect;
+		msg->size = 0;
+		if (socket.send(buffer, sizeof(Message), server_address, port) != sf::Socket::Done) {
+			cerr << "Cannot connect to server." << endl;
+			system("pause");
+			return false;
+		}
+
+
+		size_t recv_size;
+		sf::IpAddress recv_addr;
+		unsigned short  recv_port;
+		socket.setBlocking(true);
+		if (socket.receive(buffer, sizeof(buffer), recv_size, recv_addr, recv_port) != sf::Socket::Done) {
+			cerr << "Cannot receive from server." << endl;
+			system("pause");
+			return false;
+		}
+
+		assert(recv_size == sizeof(buffer));
+		assert(msg->type == MessageType::Connect);
+		assert(msg->size == sizeof(CHARACTERS::ID));
+		player_id = *reinterpret_cast<CHARACTERS::ID*>(msg->data);
+	}
+
 	sf::Texture* maptex = tl.getTexture("Art/Maps/sample3.png");
 	vector<sf::Vector2f> summon_loc;
 	sf::Image map;
@@ -49,10 +87,11 @@ void Init() {
 	}
 
 	if (!summon_loc.empty()) {
-		em.setMain(new War(10, 7, 2, 7, 3, 10, 10, summon_loc[0], "Art/Characters/1.png"));
+		em.setMain(new War(10, 7, 2, 7, 3, 10, 10, summon_loc[0], "Art/Characters/1.png",player_id));
 	}
-
-	
+	cout << "Connected. Client id: " << player_id << endl;
+	socket.setBlocking(false);
+	return true;
 }
 
 
@@ -60,8 +99,8 @@ void Init() {
 int main() {
 	sf::Clock clock;
 	sf::Time lag = sf::seconds(0);
-	Init();
-	while (window->isOpen()) {
+	bool success = Init("localhost",8080);
+	while (window->isOpen () && success) {
 		sf::Event event;
 		while (window->pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
@@ -97,5 +136,8 @@ int main() {
 		clock.restart();
 	}
 	window->close();
+	if (!success) {
+		cout << "Failed to connect to server" << endl;
+	}
 	return 0;
 }
