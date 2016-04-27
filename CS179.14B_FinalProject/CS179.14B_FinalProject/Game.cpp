@@ -101,7 +101,10 @@ bool Init(const char* ip, const unsigned short &port) {
 int main() {
 	sf::Clock clock;
 	sf::Time lag = sf::seconds(0);
-	bool success = Init("localhost",8080);
+	string ip_ad;
+	cout << "Enter IP Address: ";
+	cin >> ip_ad;
+	bool success = Init(ip_ad.c_str(),8080);
 	while (window->isOpen () && success) {
 		sf::Event event;
 		while (window->pollEvent(event)) {
