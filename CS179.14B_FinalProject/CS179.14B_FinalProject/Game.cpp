@@ -52,12 +52,14 @@ bool Init(const char* ip, const unsigned short &port) {
 			system("pause");
 			return false;
 		}
-
+		cout << msg->size << endl;
 		assert(recv_size == sizeof(buffer));
 		assert(msg->type == MessageType::Connect);
 		assert(msg->size == sizeof(CHARACTERS::ID));
 		player_id = *reinterpret_cast<CHARACTERS::ID*>(msg->data);
 	}
+	cout << "Connected to Server!" << endl;
+
 
 	sf::Texture* maptex = tl.getTexture("Art/Maps/sample3.png");
 	vector<sf::Vector2f> summon_loc;
