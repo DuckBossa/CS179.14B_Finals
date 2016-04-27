@@ -4,6 +4,7 @@
 #include "Tile.h"
 #include "TextureLoader.h"
 #include "SObject.h"
+#include "boost/asio.hpp"
 #include <vector>
 
 
