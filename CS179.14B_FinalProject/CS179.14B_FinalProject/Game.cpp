@@ -23,44 +23,7 @@ EntityManager* em;
 sf::RenderWindow* window;
 
 
-bool Init(const char* ip, const unsigned short &port) {
-
-	ID player_id;
-	const unsigned short listen_port = port + 1;
-	sf::UdpSocket socket;
-	
-	sf::IpAddress server_address(ip);
-	socket.bind(listen_port);
-	cout << "Connecting to Server...";
-	{
-		uint8_t buffer[sizeof(Message) + sizeof(ID)];
-		auto msg = reinterpret_cast<Message*>(buffer);
-		msg->type = MessageType::Connect;
-		msg->size = 0;
-		if (socket.send(buffer, sizeof(Message), server_address, port) != sf::Socket::Done) {
-			cerr << "Cannot connect to server." << endl;
-			system("pause");
-			return false;
-		}
-
-
-		size_t recv_size;
-		sf::IpAddress recv_addr;
-		unsigned short  recv_port;
-		socket.setBlocking(true);
-		if (socket.receive(buffer, sizeof(buffer), recv_size, recv_addr, recv_port) != sf::Socket::Done) {
-			cerr << "Cannot receive from server." << endl;
-			system("pause");
-			return false;
-		}
-		assert(recv_size == sizeof(buffer));
-		assert(msg->type == MessageType::Connect);
-		assert(msg->size == sizeof(ID));
-		player_id = *reinterpret_cast<ID*>(msg->data);
-	}
-	cout << "Connected to Server!" << endl;
-	socket.setBlocking(false);
-	em = new EntityManager(socket, ip, port);
+bool Init(ID player_id) {
 	sf::Texture* maptex = tl.getTexture("Art/Maps/sample3.png");
 	vector<sf::Vector2f> summon_loc;
 	sf::Image map;
@@ -92,7 +55,7 @@ bool Init(const char* ip, const unsigned short &port) {
 		em->setMain(new War(10, 7, 2, 7, 3, 10, 10, summon_loc[0], "Art/Characters/1.png", player_id));
 	}
 	cout << "Connected. Client id: " << player_id << endl;
-	socket.setBlocking(false);
+
 	return true;
 }
 
@@ -101,10 +64,52 @@ bool Init(const char* ip, const unsigned short &port) {
 int main() {
 	sf::Clock clock;
 	sf::Time lag = sf::seconds(0);
+	sf::UdpSocket socket;
 	string ip;
 	cout << "IP Address: ";
 	cin >> ip;
-	bool success = Init(ip.c_str(), 8080);
+	const unsigned short port = 8080;
+	ID player_id;
+	const unsigned short listen_port = port + 1;
+
+
+	sf::IpAddress server_address(ip);
+	socket.bind(listen_port);
+	cout << "Connecting to Server...";
+	{
+		uint8_t buffer[sizeof(Message) + sizeof(ID)];
+		auto msg = reinterpret_cast<Message*>(buffer);
+		msg->type = MessageType::Connect;
+		msg->size = 0;
+		if (socket.send(buffer, sizeof(Message), server_address, port) != sf::Socket::Done) {
+			cerr << "Cannot connect to server." << endl;
+			system("pause");
+			return -1;
+		}
+
+
+		size_t recv_size;
+		sf::IpAddress recv_addr;
+		unsigned short  recv_port;
+		socket.setBlocking(true);
+		if (socket.receive(buffer, sizeof(buffer), recv_size, recv_addr, recv_port) != sf::Socket::Done) {
+			cerr << "Cannot receive from server." << endl;
+			system("pause");
+			return -1;
+		}
+		assert(recv_size == sizeof(buffer));
+		assert(msg->type == MessageType::Connect);
+		assert(msg->size == sizeof(ID));
+		player_id = *reinterpret_cast<ID*>(msg->data);
+
+	}
+	cout << "Connected to Server!" << endl;
+	socket.setBlocking(false);
+	em = new EntityManager(&socket, ip.c_str(), port);
+	bool success = Init(player_id);
+	
+
+
 	while (window->isOpen() && success) {
 		sf::Event event;
 		while (window->pollEvent(event)) {

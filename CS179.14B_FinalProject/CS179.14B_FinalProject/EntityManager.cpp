@@ -31,7 +31,7 @@ void EntityManager::update(float dt) {
 		sf::Packet packet;
 		sf::IpAddress remote_address;
 		unsigned short remote_port;
-		if (socket.receive(packet, remote_address, remote_port) == sf::Socket::Done) {
+		if (socket->receive(packet, remote_address, remote_port) == sf::Socket::Done) {
 			assert(packet.getDataSize() >= sizeof(Message));
 			auto msg = reinterpret_cast<const Message*>(packet.getData());
 			switch (msg->type) {
@@ -65,7 +65,6 @@ void EntityManager::update(float dt) {
 	}
 
 	{
-	
 		uint8_t buffer[sizeof(Message) + sizeof(StatusMessage)];
 		auto msg = reinterpret_cast<Message*>(buffer);
 		msg->type = MessageType::Status;
@@ -79,8 +78,12 @@ void EntityManager::update(float dt) {
 		sm->id = main_player->getId();
 		sm->stat.hp = main_player->getHealth();
 		sm->order = -1; //CHANGE THIS
-		socket.send(buffer, sizeof(buffer), ip, port);
-		//sm->stat.face = main_player->
+		if (socket->send(buffer, sizeof(buffer), address, port) == !sf::Socket::Done) {
+			cout << "Not sending data" << endl;
+		}
+		else {
+			cout << "sent success!" << endl;
+		}
 	}
 
 

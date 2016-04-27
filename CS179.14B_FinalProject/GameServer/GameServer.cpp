@@ -54,10 +54,11 @@ int main(int argc, char **argv) {
 
 		std::function<void(boost::system::error_code, size_t)> handler = [&](boost::system::error_code err, size_t length) {
 			auto msg = reinterpret_cast<const Message*>(recv_buffer.data());
+			cout << "INCOMMING" << endl;
 			switch (msg->type) {
 			case MessageType::Connect:{
 				ID id = id_counter++;
-				auto result = clients.emplace(id, Client{ id,source,socket,Clock::now() });
+				auto result = clients.emplace(id, Client{ id,source,socket,Clock::now()});
 				result.first->second.send(MessageType::Connect, &id, sizeof(id));
 				break;
 			}
@@ -73,7 +74,9 @@ int main(int argc, char **argv) {
 					cerr << "error" << endl;
 				}
 				else {
+
 					auto pm = reinterpret_cast<const StatusMessage*> (msg->data);
+					cout << "Recevied Status Message from: " << pm->id << endl;
 					for (auto &client : clients) {
 						if (client.first != pm->id) {
 							client.second.send(MessageType::Status, msg->data, msg->size);
