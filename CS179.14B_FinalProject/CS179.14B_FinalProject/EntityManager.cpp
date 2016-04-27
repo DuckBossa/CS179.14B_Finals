@@ -63,6 +63,27 @@ void EntityManager::update(float dt) {
 	for (auto e : sobjects) {
 		e->update(dt);
 	}
+
+	{
+	
+		uint8_t buffer[sizeof(Message) + sizeof(StatusMessage)];
+		auto msg = reinterpret_cast<Message*>(buffer);
+		msg->type = MessageType::Status;
+		msg->size = sizeof(StatusMessage);
+		auto sm = reinterpret_cast<StatusMessage*>(msg->data);
+		sm->stat.px = main_player->getPosition().x;
+		sm->stat.py = main_player->getPosition().y;
+		sm->stat.vx = main_player->getVel().x;
+		sm->stat.vy = main_player->getVel().y;
+		sm->stat.face = main_player->getFace();
+		sm->id = main_player->getId();
+		sm->stat.hp = main_player->getHealth();
+		sm->order = -1; //CHANGE THIS
+		socket.send(buffer, sizeof(buffer), ip, port);
+		//sm->stat.face = main_player->
+	}
+
+
 }
 
 void EntityManager::logic(float dt) {

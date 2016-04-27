@@ -60,6 +60,8 @@ public:
 	void update(sf::Vector2f pos, sf::Vector2f vel,Face face);
 	void render(sf::RenderTarget &g) override;
 	ID getId() const;
+	Face getFace() const;
+	int getHealth() const;
 	sf::Vector2f getVel() const;
 	sf::Rect<float> getXColBox() const;
 	sf::Rect<float> getYColBox() const;

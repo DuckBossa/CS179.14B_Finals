@@ -60,7 +60,7 @@ bool Init(const char* ip, const unsigned short &port) {
 	}
 	cout << "Connected to Server!" << endl;
 	socket.setBlocking(false);
-	em = new EntityManager(socket);
+	em = new EntityManager(socket, ip, port);
 	sf::Texture* maptex = tl.getTexture("Art/Maps/sample3.png");
 	vector<sf::Vector2f> summon_loc;
 	sf::Image map;

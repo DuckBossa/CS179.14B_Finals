@@ -150,7 +150,13 @@ void Character::update(sf::Vector2f pos, sf::Vector2f vel,Face face) {
 ID Character::getId() const{
 	return id;
 }
+Face Character::getFace() const {
+	return currface;
+}
 
+int Character::getHealth() const {
+	return currhealth;
+}
 void War::Attack() {}
 void War::SAttack() {}
 

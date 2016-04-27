@@ -16,7 +16,10 @@ public:
 	std::vector<SObject*> sobjects;
 	sf::Sprite bg;
 	sf::UdpSocket &socket;
-	EntityManager(sf::UdpSocket &sock) : socket(std::move(sock)){
+	const char* ip;
+	unsigned int port;
+	//    socket.send(buffer, sizeof(buffer), server_address, port);
+	EntityManager(sf::UdpSocket &sock,const char* ip,const unsigned int &port) : socket(std::move(sock)), ip(ip), port(port){
 		bg.setTexture(*tl.getTexture("Art/Maps/bg_temp.png"));
 	}
 	void addPlayer(Character* p);
