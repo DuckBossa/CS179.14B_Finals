@@ -1,8 +1,6 @@
 #include <string>
 #include <system_error>
 #include <iostream>
-#include <cstdlib>
-#include <cstdint>
 #include <vector>
 #include <chrono>
 #include <array>
@@ -11,35 +9,12 @@
 #include <unordered_map>
 #include <atomic>
 #include <boost/asio.hpp>
-
+#include "GameMessage.h"
 
 using namespace std;
 
 typedef chrono::steady_clock Clock;
-
-enum class MessageType : uint8_t {
-	Connect = 0, Disconnect = 1, Reconnect = 2, Position = 3, Ping = 4, Pong = 5
-};
-
-typedef uint32_t ID;
-
-#pragma pack(push, 1)
-struct Message {
-	MessageType type;
-	uint16_t size;
-	uint8_t data[];
-};
-
-struct Position {
-	float x, y;
-};
-
-struct PositionMessage {
-	ID id;
-	uint32_t order;
-	Position pos;
-};
-#pragma pack(pop)
+atomic<ID> id_counter = 0;
 
 
 struct Client{
@@ -62,7 +37,6 @@ struct Client{
 	}
 };
 
-atomic<ID> id_counter = 0;
 unordered_map<ID, Client> clients;
 
 int main(int argc, char **argv) {
