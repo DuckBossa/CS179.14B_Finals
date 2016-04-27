@@ -141,6 +141,16 @@ void Character::render(sf::RenderTarget &g) {
 	g.draw(health);
 }
 
+void Character::update(sf::Vector2f pos, sf::Vector2f vel,Face face) {
+	setPos(pos);
+	currface = face;
+	this->vel = vel;
+}
+
+ID Character::getId() const{
+	return id;
+}
+
 void War::Attack() {}
 void War::SAttack() {}
 

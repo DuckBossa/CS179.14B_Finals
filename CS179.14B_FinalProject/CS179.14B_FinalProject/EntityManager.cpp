@@ -1,7 +1,9 @@
 #include "EntityManager.h"
-
+#include "GameMessage.h"
+#include <cassert>
+#include <algorithm>
 void EntityManager::addPlayer(Character* p) {
-	others.push_back(p);
+	other_players.push_back(p);
 }
 
 void EntityManager::addMapTile(Tile* t) {
@@ -23,8 +25,36 @@ void EntityManager::handleMouse(int key, sf::RenderWindow &g) {
 	main_player->handleMouse(key, g);
 }
 void EntityManager::update(float dt) {
+
+
+	{
+		sf::Packet packet;
+		sf::IpAddress remote_address;
+		unsigned short remote_port;
+		if (socket.receive(packet, remote_address, remote_port) == sf::Socket::Done) {
+			assert(packet.getDataSize() >= sizeof(Message));
+			auto msg = reinterpret_cast<const Message*>(packet.getData());
+			switch (msg->type) {
+			case MessageType::Status: {
+				auto pos_data = reinterpret_cast<const StatusMessage*>(msg->data);
+				auto it = std::find_if(other_players.begin(), other_players.end(), [pos_data](const Character *p) {
+					return p->getId() == pos_data->id;
+				});
+				if (it == other_players.end()) {
+					other_players.emplace_back(new War(10, 7, 2, 7, 3, 10, 10, sf::Vector2f(pos_data->stat.px,pos_data->stat.py), "Art/Characters/1.png", pos_data->id));
+				}
+				else {
+					it[0]->update(sf::Vector2f(pos_data->stat.px, pos_data->stat.py), sf::Vector2f(pos_data->stat.vx, pos_data->stat.vy),pos_data->stat.face);
+				}
+				break;
+			}
+			}
+		}
+
+	}
+
 	main_player->update(dt);
-	for (auto e : others) {
+	for (auto e : other_players) {
 		e->update(dt);
 	}
 	for (auto e : map) {
@@ -47,7 +77,7 @@ void EntityManager::render(sf::RenderTarget &g) {
 	for (auto e : map) {
 		e->render(g);
 	}
-	for (auto e : others) {
+	for (auto e : other_players) {
 		e->render(g);
 	}
 	for (auto e : sobjects) {
@@ -137,16 +167,15 @@ void EntityManager::resolveCollisions(float dt) {
 	
 	for (auto t : map) {
 		collide(t, main_player);
-		for (auto p : others) {
+		for (auto p : other_players) {
 			collide(t, p);
 		}
 	}
 
 	for (auto s : sobjects) {
 		collide(s, main_player);
-		for (auto p : others) {
+		for (auto p : other_players) {
 			collide(s, p);
 		}
 	}
 }
-

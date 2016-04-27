@@ -4,7 +4,7 @@
 #include "Tile.h"
 #include "TextureLoader.h"
 #include "SObject.h"
-#include "boost/asio.hpp"
+#include "SFML/Network.hpp"
 #include <vector>
 
 
@@ -12,11 +12,11 @@ class EntityManager {
 public:
 	std::vector<Tile*> map;
 	Character* main_player;
-	std::vector<Character*> others;
+	std::vector<Character*> other_players;
 	std::vector<SObject*> sobjects;
 	sf::Sprite bg;
-	boost::asio::ip::udp::socket* socket;
-	EntityManager() {
+	sf::UdpSocket &socket;
+	EntityManager(sf::UdpSocket &sock) : socket(std::move(sock)){
 		bg.setTexture(*tl.getTexture("Art/Maps/bg_temp.png"));
 	}
 	void addPlayer(Character* p);

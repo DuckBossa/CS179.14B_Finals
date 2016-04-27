@@ -19,20 +19,21 @@
 using namespace std;
 
 TextureLoader tl;
-EntityManager em;
+EntityManager* em;
 sf::RenderWindow* window;
 
 
 bool Init(const char* ip, const unsigned short &port) {
 
-	CHARACTERS::ID player_id;
+	ID player_id;
 	const unsigned short listen_port = port + 1;
 	sf::UdpSocket socket;
+	
 	sf::IpAddress server_address(ip);
 	socket.bind(listen_port);
 	cout << "Connecting to Server...";
 	{
-		uint8_t buffer[sizeof(Message) + sizeof(CHARACTERS::ID)];
+		uint8_t buffer[sizeof(Message) + sizeof(ID)];
 		auto msg = reinterpret_cast<Message*>(buffer);
 		msg->type = MessageType::Connect;
 		msg->size = 0;
@@ -52,15 +53,14 @@ bool Init(const char* ip, const unsigned short &port) {
 			system("pause");
 			return false;
 		}
-		cout << msg->size << endl;
 		assert(recv_size == sizeof(buffer));
 		assert(msg->type == MessageType::Connect);
-		assert(msg->size == sizeof(CHARACTERS::ID));
-		player_id = *reinterpret_cast<CHARACTERS::ID*>(msg->data);
+		assert(msg->size == sizeof(ID));
+		player_id = *reinterpret_cast<ID*>(msg->data);
 	}
 	cout << "Connected to Server!" << endl;
-
-
+	socket.setBlocking(false);
+	em = new EntityManager(socket);
 	sf::Texture* maptex = tl.getTexture("Art/Maps/sample3.png");
 	vector<sf::Vector2f> summon_loc;
 	sf::Image map;
@@ -72,10 +72,10 @@ bool Init(const char* ip, const unsigned short &port) {
 				int r = (int)temp.r;
 				int g = (int)temp.g;
 				if (temp == sf::Color::Black) {
-					em.addMapTile(new  NormalTile(TILE_SIZE, sf::Vector2f(x*TILE_SIZE, y*TILE_SIZE), "Art/Tiles/Tar_tile_32.png"));
+					em->addMapTile(new  NormalTile(TILE_SIZE, sf::Vector2f(x*TILE_SIZE, y*TILE_SIZE), "Art/Tiles/Tar_tile_32.png"));
 				}
 				else if (g == 150 && b == 150) {/*SObjects Spawn*/
-					em.addSObject(new HealBarrel(SOBJECT_SIZE, sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE), "Art/SObjects/HealBarrel.png"));
+					em->addSObject(new HealBarrel(SOBJECT_SIZE, sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE), "Art/SObjects/HealBarrel.png"));
 				}
 				else if (temp == sf::Color::Blue) {/*Player Spawn*/
 					summon_loc.push_back(sf::Vector2f(x*TILE_SIZE, y * TILE_SIZE));
@@ -89,7 +89,7 @@ bool Init(const char* ip, const unsigned short &port) {
 	}
 
 	if (!summon_loc.empty()) {
-		em.setMain(new War(10, 7, 2, 7, 3, 10, 10, summon_loc[0], "Art/Characters/1.png",player_id));
+		em->setMain(new War(10, 7, 2, 7, 3, 10, 10, summon_loc[0], "Art/Characters/1.png", player_id));
 	}
 	cout << "Connected. Client id: " << player_id << endl;
 	socket.setBlocking(false);
@@ -101,38 +101,38 @@ bool Init(const char* ip, const unsigned short &port) {
 int main() {
 	sf::Clock clock;
 	sf::Time lag = sf::seconds(0);
-	string ip_ad;
-	cout << "Enter IP Address: ";
-	cin >> ip_ad;
-	bool success = Init(ip_ad.c_str(),8080);
-	while (window->isOpen () && success) {
+	string ip;
+	cout << "IP Address: ";
+	cin >> ip;
+	bool success = Init(ip.c_str(), 8080);
+	while (window->isOpen() && success) {
 		sf::Event event;
 		while (window->pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				window->close();
-			if (event.type == sf::Event::MouseButtonPressed){
-				if (event.mouseButton.button == sf::Mouse::Left){
-					em.handleMouse(1,*window);
+			if (event.type == sf::Event::MouseButtonPressed) {
+				if (event.mouseButton.button == sf::Mouse::Left) {
+					em->handleMouse(1, *window);
 				}
 				if (event.mouseButton.button == sf::Mouse::Right) {
-					em.handleMouse(2,*window);
+					em->handleMouse(2, *window);
 				}
 			}
 		}
 		//input
-		em.handleInput();
+		em->handleInput();
 		//update entities
-		em.update(SPF.asSeconds());
+		em->update(SPF.asSeconds());
 		//collision detection
-		em.logic(SPF.asSeconds());
+		em->logic(SPF.asSeconds());
 		//render
 		window->clear();
-		em.render(*window);
+		em->render(*window);
 		window->display();
 
 		const auto elapsed = clock.getElapsedTime() + lag;
 		if (elapsed < SPF) {
-			sf::sleep(SPF-elapsed);
+			sf::sleep(SPF - elapsed);
 			lag = sf::seconds(0);
 		}
 		else {
