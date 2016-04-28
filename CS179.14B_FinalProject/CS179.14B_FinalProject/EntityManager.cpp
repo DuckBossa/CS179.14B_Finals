@@ -158,11 +158,11 @@ void EntityManager::collide(SObject* t, Character* p) {
 	//Y
 	if (t->bounds().intersects(p->getYColBox(), interY)) {
 		if (t->getPosition().y > interY.top) {
-			p->move(sf::Vector2f(0, -interY.height));
-			p->resetGravity();
+			//p->move(sf::Vector2f(0, -interY.height));
+			//p->resetGravity();
 		}
 		else if (t->getPosition().y <= interY.top) {
-			p->move(sf::Vector2f(0, interY.height));
+			//p->move(sf::Vector2f(0, interY.height));
 		}
 		collided = true;
 		colY = true;
@@ -171,10 +171,10 @@ void EntityManager::collide(SObject* t, Character* p) {
 	//X
 	if (t->bounds().intersects(p->getXColBox(), interX)) {
 		if (t->getPosition().x > interX.left + interX.width) {
-			p->move(sf::Vector2f(-interX.width, 0));
+			//p->move(sf::Vector2f(-interX.width, 0));
 		}
 		else if (t->getPosition().x < interX.left) {
-			p->move(sf::Vector2f(interX.width, 0));
+			//p->move(sf::Vector2f(interX.width, 0));
 		}
 		colX = true;
 	}
