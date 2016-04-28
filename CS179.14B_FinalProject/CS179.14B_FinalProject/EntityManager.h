@@ -1,5 +1,6 @@
 #pragma once
 #include "Character.h"
+#include "Enemy.h"
 #include "Weapon.h"
 #include "Tile.h"
 #include "TextureLoader.h"
@@ -12,6 +13,7 @@ class EntityManager {
 public:
 	std::vector<Tile*> map;
 	Character* main_player;
+	std::vector<Enemy*> enemies;
 	std::vector<Character*> other_players;
 	std::vector<SObject*> sobjects;
 	sf::Sprite bg;
