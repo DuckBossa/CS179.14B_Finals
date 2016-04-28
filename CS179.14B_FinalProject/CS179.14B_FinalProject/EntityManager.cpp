@@ -149,7 +149,7 @@ void EntityManager::collide(Tile* t, Character* p) {
 	p->setCollision(colX, colY);
 }
 
-void EntityManager::collide(SObject* t, Character* p) {
+bool EntityManager::collide(SObject* t, Character* p) {
 	sf::Rect<float> interX;
 	sf::Rect<float> interY;
 	bool colX = false;
@@ -185,6 +185,7 @@ void EntityManager::collide(SObject* t, Character* p) {
 
 
 	p->setCollision(colX, colY);
+	return collided;
 }
 
 void EntityManager::collide(Weapon* w, Character* c) {
@@ -208,10 +209,19 @@ void EntityManager::resolveCollisions(float dt) {
 		}
 	}
 
-	for (auto s : sobjects) {
-		collide(s, main_player);
-		for (auto p : other_players) {
-			collide(s, p);
+	for (int i = 0; i < sobjects.size(); i++) {
+		if (collide(sobjects[i], main_player)) {
+			sobjects.erase(sobjects.begin() + i--);
 		}
 	}
+	/*
+
+	for (auto s : sobjects) {
+	collide(s, main_player);
+	for (auto p : other_players) {
+	collide(s, p);
+	}
+	}
+	*/
+
 }
