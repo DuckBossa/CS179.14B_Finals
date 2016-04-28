@@ -158,11 +158,13 @@ void EntityManager::collide(SObject* t, Character* p) {
 	//Y
 	if (t->bounds().intersects(p->getYColBox(), interY)) {
 		if (t->getPosition().y > interY.top) {
-			//p->move(sf::Vector2f(0, -interY.height));
-			//p->resetGravity();
+			p->move(sf::Vector2f(0, -interY.height));
+			p->resetGravity();
+			//delete t;
 		}
 		else if (t->getPosition().y <= interY.top) {
-			//p->move(sf::Vector2f(0, interY.height));
+			p->move(sf::Vector2f(0, interY.height));
+			//delete t;
 		}
 		collided = true;
 		colY = true;
@@ -171,10 +173,12 @@ void EntityManager::collide(SObject* t, Character* p) {
 	//X
 	if (t->bounds().intersects(p->getXColBox(), interX)) {
 		if (t->getPosition().x > interX.left + interX.width) {
-			//p->move(sf::Vector2f(-interX.width, 0));
+			p->move(sf::Vector2f(-interX.width, 0));
+			//delete t;
 		}
 		else if (t->getPosition().x < interX.left) {
-			//p->move(sf::Vector2f(interX.width, 0));
+			p->move(sf::Vector2f(interX.width, 0));
+			//delete t;
 		}
 		colX = true;
 	}
@@ -184,7 +188,15 @@ void EntityManager::collide(SObject* t, Character* p) {
 }
 
 void EntityManager::collide(Weapon* w, Character* c) {
+	if (w->bounds().intersects(w->bounds())) {
+		//do something
+	}
+}
 
+void EntityManager::collide(Weapon* w, SObject* t) {
+	if (t->bounds().intersects(w->bounds())) {
+		t->barrelDurability--;
+	}
 }
 
 void EntityManager::resolveCollisions(float dt) {
