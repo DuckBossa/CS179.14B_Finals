@@ -5,8 +5,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-const float GRAV = 10.0f; // 9.8f / FPS;
-
 namespace ENEMIES {
 	const auto BASE_SPEED = 32.0f;
 	const auto SPRITE_WIDTH = 32;
