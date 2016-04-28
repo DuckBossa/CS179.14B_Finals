@@ -14,7 +14,7 @@
 using namespace std;
 
 typedef chrono::steady_clock Clock;
-atomic<ID> id_counter = 0;
+atomic<ID> id_counter(0);
 
 
 struct Client{
