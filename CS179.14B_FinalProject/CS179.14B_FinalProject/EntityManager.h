@@ -35,6 +35,7 @@ public:
 	void collide(Tile* t, Character* p);
 	bool collide(SObject* t, Character* p);
 	void collide(Weapon* w, Character* p);
+	void collide(Weapon* w, SObject* t);
 };
 
 

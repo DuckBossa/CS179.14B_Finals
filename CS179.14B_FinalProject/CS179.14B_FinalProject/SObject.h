@@ -6,8 +6,10 @@ const auto SOBJECT_SIZE = 16;
 class SObject : public Entity {
 protected:
 	bool toDelete;
+	
 public:
-	SObject(int size, const sf::Vector2f &init_pos, std::string file_name) : Entity(file_name, sf::Vector2i(SOBJECT_SIZE, SOBJECT_SIZE)), toDelete(false) {
+	int barrelDurability;
+	SObject(int size, const sf::Vector2f &init_pos, std::string file_name, int barrelDurability) : Entity(file_name, sf::Vector2i(SOBJECT_SIZE, SOBJECT_SIZE)), toDelete(false), barrelDurability(barrelDurability) {
 		setPos(init_pos + sf::Vector2f(size / 2.0f, size / 2.0f));
 		setOrigin(sf::Vector2f(size / 2.0f, size / 2.0f));
 	}
@@ -19,17 +21,15 @@ public:
 class HealBarrel : public SObject {
 
 public:
-	HealBarrel(const int &size, const sf::Vector2f &init_pos, string file_name) : SObject(size, init_pos, file_name) {}
+	HealBarrel(const int &size, const sf::Vector2f &init_pos, string file_name) : SObject(size, init_pos, file_name, 1) {}
 	void update(float dt) override;
 	void DoSomethingOnCollision(Entity* collided) override;
 
 };
 
 class ExplodingBarrel : public SObject {
-protected:
-	int barrelDurability = 3;
 public:
-	ExplodingBarrel(const int &size, const sf::Vector2f &init_pos, string file_name) : SObject(size, init_pos, file_name) {}
+	ExplodingBarrel(const int &size, const sf::Vector2f &init_pos, string file_name) : SObject(size, init_pos, file_name, 3) {}
 	void update(float dt) override;
 	void DoSomethingOnCollision(Entity* collided) override;
 };
