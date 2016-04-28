@@ -7,6 +7,7 @@ public:
 	~Weapon(){}
 	virtual void fire(sf::Vector2f player_pos) = 0;
 	void update(float dt) override;
+	int power;
 };
 
 class Sword : public Weapon {

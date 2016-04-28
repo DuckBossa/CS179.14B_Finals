@@ -190,7 +190,7 @@ bool EntityManager::collide(SObject* t, Character* p) {
 
 void EntityManager::collide(Weapon* w, Character* c) {
 	if (w->bounds().intersects(w->bounds())) {
-		//do something
+		c->takeDamage(w->power);
 	}
 }
 
