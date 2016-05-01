@@ -42,7 +42,7 @@ void EntityManager::update(float dt) {
 					other_players.emplace_back(new War(10, 7, 2, 7, 3, 10, 10, sf::Vector2f(pos_data->stat.px,pos_data->stat.py), "Art/Characters/1.png", pos_data->id));
 				}
 				else {
-					it[0]->update(sf::Vector2f(pos_data->stat.px, pos_data->stat.py), sf::Vector2f(pos_data->stat.vx, pos_data->stat.vy),pos_data->stat.face);
+					(*it)->update(sf::Vector2f(pos_data->stat.px, pos_data->stat.py), sf::Vector2f(pos_data->stat.vx, pos_data->stat.vy), pos_data->stat.face);
 				}
 				break;
 			}
