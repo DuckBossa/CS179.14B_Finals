@@ -39,7 +39,7 @@ void EntityManager::update(float dt) {
 					return p->getId() == pos_data->id;
 				});
 				if (it == other_players.end()) {
-					other_players.emplace_back(new War(10, 7, 2, 7, 3, 10, 10, sf::Vector2f(pos_data->stat.px,pos_data->stat.py), "Art/Characters/1.png", pos_data->id));
+					other_players.emplace_back(new War(10, 7, 2, 7, 3, 10, sf::Vector2f(pos_data->stat.px,pos_data->stat.py), "Art/Characters/1.png", pos_data->id));
 				}
 				else {
 					(*it)->update(sf::Vector2f(pos_data->stat.px, pos_data->stat.py), sf::Vector2f(pos_data->stat.vx, pos_data->stat.vy), pos_data->stat.face);
@@ -108,7 +108,7 @@ void EntityManager::render(sf::RenderTarget &g) {
 }
 
 
-void EntityManager::collide(Tile* t, Character* p) {
+/* void EntityManager::collide(Tile* t, Character* p) {
 	sf::Rect<float> interX;
 	sf::Rect<float> interY;
 	bool colX = false;
@@ -142,12 +142,32 @@ void EntityManager::collide(Tile* t, Character* p) {
 		t->DoSomethingOnCollision(p);
 	}
 
-
-
 	p->setCollision(colX, colY);
+} */
+
+bool EntityManager::has_collided(Tile* t, Character* p) {
+	sf::Rect<float> collision;
+	if (t->bounds().intersects(p->bounds(), collision)) {
+		if (collision.height < collision.width) {
+			if (collision.top > p->bounds().top) {
+				p->move(sf::Vector2f(0, -collision.height));
+			} else {
+				p->move(sf::Vector2f(0, collision.height));
+			}
+			p->resetGravity();
+		} else {
+			if (collision.left > p->bounds().left) {
+				p->move(sf::Vector2f(-collision.width, 0));
+			} else {
+				p->move(sf::Vector2f(collision.width, 0));
+			}
+		}
+		return true;
+	}
+	return false;
 }
 
-bool EntityManager::collide(SObject* t, Character* p) {
+/* bool EntityManager::collide(SObject* t, Character* p) {
 	sf::Rect<float> interX;
 	sf::Rect<float> interY;
 	bool colX = false;
@@ -181,9 +201,30 @@ bool EntityManager::collide(SObject* t, Character* p) {
 		colX = true;
 	}
 
-
 	p->setCollision(colX, colY);
 	return collided;
+} */
+
+bool EntityManager::has_collided(SObject* s, Character* p) {
+	sf::Rect<float> collision;
+	if (s->bounds().intersects(p->bounds(), collision)) {
+		if (collision.height < collision.width) {
+			if (collision.top > p->bounds().top) {
+				p->move(sf::Vector2f(0, -collision.height));
+			} else {
+				p->move(sf::Vector2f(0, collision.height));
+			}
+			p->resetGravity();
+		} else {
+			if (collision.left > p->bounds().left) {
+				p->move(sf::Vector2f(-collision.width, 0));
+			} else {
+				p->move(sf::Vector2f(collision.width, 0));
+			}
+		}
+		return true;
+	}
+	return false;
 }
 
 void EntityManager::collide(Weapon* w, Character* c) {
@@ -199,29 +240,26 @@ void EntityManager::collide(Weapon* w, SObject* t) {
 }
 
 void EntityManager::resolveCollisions(float dt) {
-	
-	for (auto t : map) {
-		collide(t, main_player);
-		for (auto p : other_players) {
-			collide(t, p);
+	for (auto tile : map) {
+		if (has_collided(tile, main_player)) {};
+		for (auto player : other_players) {
+			if (has_collided(tile, player)) {}
 		}
 	}
 	
 	for (int i = 0; i < sobjects.size(); i++) {
-		if (collide(sobjects[i], main_player)) {
+		if (has_collided(sobjects[i], main_player)) {
 			sobjects[i]->collide(main_player);
 			if (sobjects[i]->is_destroyed()) {
 				sobjects.erase(sobjects.begin() + i--);
 			}
 		}
 	}
-	/*
-
-	for (auto s : sobjects) {
-	collide(s, main_player);
-	for (auto p : other_players) {
-	collide(s, p);
-	}
-	}
-	*/
+	
+	/* for (auto s : sobjects) {
+		collide(s, main_player);
+		for (auto p : other_players) {
+			collide(s, p);
+		}
+	} */
 }

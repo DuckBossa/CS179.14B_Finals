@@ -21,7 +21,6 @@ TextureLoader tl;
 EntityManager* em;
 sf::RenderWindow* window;
 
-
 bool Init(ID player_id) {
 	sf::Texture* maptex = tl.getTexture("Art/Maps/sample3.png");
 	vector<sf::Vector2f> summon_loc;

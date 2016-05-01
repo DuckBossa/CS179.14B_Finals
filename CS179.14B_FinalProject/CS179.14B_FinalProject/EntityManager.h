@@ -32,10 +32,11 @@ public:
 	void logic(float dt);
 	void render(sf::RenderTarget &g);
 	void resolveCollisions(float dt);
-	void collide(Tile* t, Character* p);
-	bool collide(SObject* t, Character* p);
 	void collide(Weapon* w, Character* p);
 	void collide(Weapon* w, SObject* t);
+	
+	bool has_collided(Tile* t, Character* p);
+	bool has_collided(SObject* t, Character* p);
 };
 
 

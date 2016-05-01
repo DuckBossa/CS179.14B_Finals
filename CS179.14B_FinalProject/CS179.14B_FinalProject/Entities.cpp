@@ -20,11 +20,6 @@ void Entity::setOrigin(const sf::Vector2f &newOrig) {
 	sprt.setOrigin(newOrig);
 }
 
-void Entity::setCollision(const bool &x, const bool &y) {
-	isColliding[0] = x;
-	isColliding[1] = y;
-}
-
 sf::Vector2f Entity::getPosition() const {
 	return sprt.getPosition();
 }

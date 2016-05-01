@@ -79,13 +79,11 @@ void Character::handleInput(){
 	sprt.setTextureRect(sf::Rect<int>(seq*CHARACTERS::SPRITE_WIDTH, frameY, CHARACTERS::SPRITE_WIDTH, CHARACTERS::SPRITE_HEIGHT));
 }
 
-
 void Character::update(float dt) {
-	if (!isColliding[1]) {
-		vel.y += GRAV;
-	}
-	sprt.setPosition(sprt.getPosition() + vel*dt);
+	sprt.move(vel*dt);
 	view.setCenter(sprt.getPosition());
+	
+	vel.y += GRAV;
 }
 
 void Character::resetGravity() {
@@ -105,13 +103,6 @@ void Character::takeDamage(int damage){
 }
 void Character::heal(int heal){
 	currhealth = std::min(maxhealth, currhealth + heal);
-}
-
-sf::Rect<float> Character::bounds() const {
-	sf::Rect<float> toRet(sprt.getGlobalBounds());
-	toRet.width -= 9;
-	toRet.height -= 4;
-	return toRet;
 }
 
 sf::Vector2f Character::getVel() const {
@@ -135,10 +126,18 @@ sf::Rect<float> Character::getYColBox() const {
 void Character::render(sf::RenderTarget &g) {
 	Entity::render(g);
 	g.setView(view);
-	sf::RectangleShape health(sf::Vector2f(currhealth*2.5, CHARACTERS::HEALTHBAR_HEIGHT));
-	health.setPosition(sprt.getPosition() + sf::Vector2f(-bounds().width/2, -bounds().height/2 - 5));
-	health.setFillColor(sf::Color::Green);
-	g.draw(health);
+	
+	sf::RectangleShape health_bar(sf::Vector2f(currhealth*CHARACTERS::HEALTHBAR_WIDTH/maxhealth, CHARACTERS::HEALTHBAR_HEIGHT));
+	health_bar.setPosition(sprt.getPosition());
+	
+	health_bar.move(-CHARACTERS::HEALTHBAR_WIDTH/2, -(health_bar.getGlobalBounds().height + bounds().height)/2 - 5);
+	health_bar.setFillColor(sf::Color::Green);
+	g.draw(health_bar);
+	
+	health_bar.setSize(sf::Vector2f((maxhealth - currhealth)*CHARACTERS::HEALTHBAR_WIDTH/maxhealth, CHARACTERS::HEALTHBAR_HEIGHT));
+	health_bar.move(currhealth*CHARACTERS::HEALTHBAR_WIDTH/maxhealth, 0);
+	health_bar.setFillColor(sf::Color::Red);
+	g.draw(health_bar);
 }
 
 void Character::update(sf::Vector2f pos, sf::Vector2f vel, Face face) {
@@ -157,6 +156,7 @@ Face Character::getFace() const {
 int Character::getHealth() const {
 	return currhealth;
 }
+
 void War::Attack() {}
 void War::SAttack() {}
 

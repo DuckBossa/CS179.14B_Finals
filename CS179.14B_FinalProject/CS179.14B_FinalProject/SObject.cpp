@@ -5,7 +5,7 @@ void HealBarrel::update(float dt) {}
 void HealBarrel::collide(Entity* collided) {
 	--barrelDurability;
 	if (auto e = dynamic_cast<Character*>(collided)) {
-		e->heal(30);
+		e->heal(1);
 	}
 }
 
