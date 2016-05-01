@@ -101,10 +101,10 @@ void Character::slow() {
 }
 
 void Character::takeDamage(int damage){
-	currhealth -= damage;
+	currhealth = std::max(0, currhealth - damage);
 }
 void Character::heal(int heal){
-	currhealth += heal;
+	currhealth = std::min(maxhealth, currhealth + heal);
 }
 
 sf::Rect<float> Character::bounds() const {

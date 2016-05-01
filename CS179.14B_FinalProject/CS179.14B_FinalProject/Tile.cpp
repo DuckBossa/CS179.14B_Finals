@@ -1,7 +1,6 @@
 #include "Tile.h"
 #include "Character.h"
 
-
 //added 9:12 pm 25/03/2016
 void NormalTile::update(float dt) {}
 void NormalTile::DoSomethingOnCollision(Entity* collided) {}

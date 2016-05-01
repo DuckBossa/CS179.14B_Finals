@@ -23,7 +23,6 @@ namespace CHARACTERS {
 	const auto BOOST_JUMP = 2*JUMP_RATE;
 }
 
-
 class Character : public Entity {
 private:
 	ID id;
@@ -33,11 +32,12 @@ private:
 	sf::Vector2f acc;
 	sf::View view;
 	Weapon* weap;
+	
 public:
 	Character(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
-		int currhealth, int maxhealth, const sf::Vector2f &startPos, string file_name,ID id) : 
+		int maxhealth, const sf::Vector2f &startPos, string file_name,ID id) : 
 		Entity(file_name,sf::Vector2i(CHARACTERS::SPRITE_WIDTH,CHARACTERS::SPRITE_HEIGHT)), str(str), agi(agi), intel(intel), pdef(pdef),
-		mdef(mdef), currhealth(currhealth), maxhealth(maxhealth), id(id) {
+		mdef(mdef), currhealth(maxhealth), maxhealth(maxhealth), id(id) {
 		sprt.setPosition(startPos);
 		sprt.setOrigin(sf::Vector2f(CHARACTERS::SPRITE_WIDTH / 2.0f, CHARACTERS::SPRITE_HEIGHT / 2.0f));
 		view.setSize(sf::Vector2f(512, 512));
@@ -72,8 +72,8 @@ public:
 class War : public Character {
 public:
 	War(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
-		int currhealth, int maxhealth, const sf::Vector2f &startPos, string file_name,ID id) : 
-		Character(str, agi, intel, pdef, mdef, currhealth, maxhealth, startPos, file_name,id) {}
+		int maxhealth, const sf::Vector2f &startPos, string file_name,ID id) : 
+		Character(str, agi, intel, pdef, mdef, maxhealth, startPos, file_name, id) {}
 	void Attack() override;
 	void SAttack() override;
 };

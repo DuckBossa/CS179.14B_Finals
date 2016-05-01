@@ -80,7 +80,7 @@ void EntityManager::update(float dt) {
 			cout << "Not sending data" << endl;
 		}
 		else {
-			cout << "sent success!" << endl;
+			// cout << "sent success!" << endl;
 		}
 	}
 
@@ -194,7 +194,7 @@ void EntityManager::collide(Weapon* w, Character* c) {
 
 void EntityManager::collide(Weapon* w, SObject* t) {
 	if (t->bounds().intersects(w->bounds())) {
-		t->barrelDurability--;
+		t->collide(w);
 	}
 }
 
@@ -209,7 +209,10 @@ void EntityManager::resolveCollisions(float dt) {
 	
 	for (int i = 0; i < sobjects.size(); i++) {
 		if (collide(sobjects[i], main_player)) {
-			sobjects.erase(sobjects.begin() + i--);
+			sobjects[i]->collide(main_player);
+			if (sobjects[i]->is_destroyed()) {
+				sobjects.erase(sobjects.begin() + i--);
+			}
 		}
 	}
 	/*

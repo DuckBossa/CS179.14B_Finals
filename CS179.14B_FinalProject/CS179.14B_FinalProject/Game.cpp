@@ -11,7 +11,6 @@
 #include "GameMessage.h"
 #include <boost/asio.hpp>
 
-
 #define FPS 60.0f
 #define SPF sf::seconds(1.0f/FPS)
 
@@ -38,7 +37,11 @@ bool Init(ID player_id) {
 					em->addMapTile(new  NormalTile(TILE_SIZE, sf::Vector2f(x*TILE_SIZE, y*TILE_SIZE), "Art/Tiles/Tar_tile_32.png"));
 				}
 				else if (g == 150 && b == 150) {/*SObjects Spawn*/
-					em->addSObject(new HealBarrel(SOBJECT_SIZE, sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE), "Art/SObjects/HealBarrel.png"));
+					if (x%2 == 0) { // this is temporary
+						em->addSObject(new ExplodingBarrel(SOBJECT_SIZE, sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE), "Art/SObjects/ExplodingBarrel.png"));
+					} else {
+						em->addSObject(new HealBarrel(SOBJECT_SIZE, sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE), "Art/SObjects/HealBarrel.png"));
+					}
 				}
 				else if (temp == sf::Color::Blue) {/*Player Spawn*/
 					summon_loc.push_back(sf::Vector2f(x*TILE_SIZE, y * TILE_SIZE));
@@ -52,7 +55,7 @@ bool Init(ID player_id) {
 	}
 
 	if (!summon_loc.empty()) {
-		em->setMain(new War(10, 7, 2, 7, 3, 10, 10, summon_loc[0], "Art/Characters/1.png", player_id));
+		em->setMain(new War(10, 7, 2, 7, 3, 10, summon_loc[0], "Art/Characters/1.png", player_id));
 	}
 	cout << "Connected. Client id: " << player_id << endl;
 
