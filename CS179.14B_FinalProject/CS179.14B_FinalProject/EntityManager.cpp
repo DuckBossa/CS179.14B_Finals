@@ -151,10 +151,11 @@ bool EntityManager::has_collided(Tile* t, Character* p) {
 		if (collision.height < collision.width) {
 			if (collision.top > p->bounds().top) {
 				p->move(sf::Vector2f(0, -collision.height));
+				p->resetGravity();
 			} else {
 				p->move(sf::Vector2f(0, collision.height));
+				p->hit_head();
 			}
-			p->resetGravity();
 		} else {
 			if (collision.left > p->bounds().left) {
 				p->move(sf::Vector2f(-collision.width, 0));
@@ -207,14 +208,16 @@ bool EntityManager::has_collided(Tile* t, Character* p) {
 
 bool EntityManager::has_collided(SObject* s, Character* p) {
 	sf::Rect<float> collision;
+	
 	if (s->bounds().intersects(p->bounds(), collision)) {
 		if (collision.height < collision.width) {
 			if (collision.top > p->bounds().top) {
 				p->move(sf::Vector2f(0, -collision.height));
+				p->resetGravity();
 			} else {
 				p->move(sf::Vector2f(0, collision.height));
+				p->hit_head();
 			}
-			p->resetGravity();
 		} else {
 			if (collision.left > p->bounds().left) {
 				p->move(sf::Vector2f(-collision.width, 0));
