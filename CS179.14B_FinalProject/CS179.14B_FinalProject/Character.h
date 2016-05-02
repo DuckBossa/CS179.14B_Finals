@@ -8,7 +8,7 @@
 const float GRAV = 10.0f; // 9.8f / FPS;
 
 namespace Keys {
-	const auto JUMP = 0x11;     // W
+	const auto UP = 0x11;     	// W
 	const auto DOWN = 0x1F;		// S
 	const auto LEFT = 0x1E;  	// A
 	const auto RIGHT = 0x20; 	// D
@@ -18,7 +18,7 @@ namespace CHARACTERS {
 	const auto BASE_SPEED = 32.0f;
 	const auto SPRITE_WIDTH = 32;
 	const auto SPRITE_HEIGHT = 48;
-	const auto JUMP_RATE = -400.0f;
+	const auto JUMP_RATE = -300.0f;
 	const auto HEALTHBAR_WIDTH = 40;
 	const auto HEALTHBAR_HEIGHT = 5;
 	const auto BOOST_JUMP = 2*JUMP_RATE;
@@ -33,13 +33,12 @@ private:
 	sf::Vector2f acc;
 	sf::View view;
 	Weapon* weap;
-	bool can_jump;
 	
 public:
 	Character(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
 		int maxhealth, const sf::Vector2f &startPos, string file_name,ID id) : 
 		Entity(file_name, sf::Vector2i(CHARACTERS::SPRITE_WIDTH,CHARACTERS::SPRITE_HEIGHT)), str(str), agi(agi), intel(intel), pdef(pdef),
-		mdef(mdef), currhealth(maxhealth), maxhealth(maxhealth), id(id), can_jump(true) {
+		mdef(mdef), currhealth(maxhealth), maxhealth(maxhealth), id(id) {
 		sprt.setPosition(startPos);
 		sprt.setOrigin(sf::Vector2f(CHARACTERS::SPRITE_WIDTH / 2.0f, CHARACTERS::SPRITE_HEIGHT / 2.0f));
 		view.setSize(sf::Vector2f(512, 512));
@@ -52,7 +51,6 @@ public:
 	bool isKeyDown(const int &key);
 	
 	void resetGravity();
-	void hit_head();
 	
 	void handleInput();
 	void handleMouse(int key, sf::RenderWindow &win);
@@ -67,8 +65,8 @@ public:
 	Face getFace() const;
 	int getHealth() const;
 	sf::Vector2f getVel() const;
-	// sf::Rect<float> getXColBox() const;
-	// sf::Rect<float> getYColBox() const;
+	sf::Rect<float> getXColBox() const;
+	sf::Rect<float> getYColBox() const;
 };
 
 

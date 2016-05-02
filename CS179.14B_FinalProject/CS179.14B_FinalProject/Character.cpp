@@ -7,7 +7,6 @@ bool Character::isKeyDown(const int &key) {
 	auto state = GetAsyncKeyState(MapVirtualKey(key, MAPVK_VSC_TO_VK_EX));
 	return state >> 15 != 0;
 }
-
 void Character::handleMouse(int key,sf::RenderWindow &win) {
 	if (key == 1) {
 		//Attack();
@@ -34,20 +33,18 @@ void Character::handleMouse(int key,sf::RenderWindow &win) {
 void Character::handleInput(){
 	vel.x = 0.0;
 	Face temp = Face::NONE;
-	
-	if (isKeyDown(Keys::JUMP) && can_jump) { // jump
+	if (isKeyDown(Keys::UP)) {/*jump*/
 		temp = Face::FRONT;
 		vel.y = CHARACTERS::JUMP_RATE;
 	}
 	else if (isKeyDown(Keys::DOWN)) {/*drop down?*/ }
-	
 	if (isKeyDown(Keys::LEFT)) {
 		temp = Face::LEFT;
-		vel.x -= CHARACTERS::BASE_SPEED*agi;
+		vel.x = -CHARACTERS::BASE_SPEED * agi;
 	}
-	if (isKeyDown(Keys::RIGHT)) {
+	else if (isKeyDown(Keys::RIGHT)) {
 		temp = Face::RIGHT;
-		vel.x += CHARACTERS::BASE_SPEED*agi;
+		vel.x = CHARACTERS::BASE_SPEED * agi;
 	}
 
 	if (temp == currface) {
@@ -55,13 +52,12 @@ void Character::handleInput(){
 		if (seq > 3) {
 			seq = 0;
 		}
-	} else {
+	}
+	else {
 		currface = temp;
 		seq = 0;
 	}
-	
 	int frameY = 0;
-	
 	switch (currface) {
 	case UP:
 		frameY = 3 * CHARACTERS::SPRITE_HEIGHT;
@@ -80,7 +76,6 @@ void Character::handleInput(){
 		frameY = 2 * CHARACTERS::SPRITE_HEIGHT;
 		break;
 	}
-	
 	sprt.setTextureRect(sf::Rect<int>(seq*CHARACTERS::SPRITE_WIDTH, frameY, CHARACTERS::SPRITE_WIDTH, CHARACTERS::SPRITE_HEIGHT));
 }
 
@@ -89,15 +84,9 @@ void Character::update(float dt) {
 	view.setCenter(sprt.getPosition());
 	
 	vel.y += GRAV;
-	can_jump = false;
 }
 
 void Character::resetGravity() {
-	vel.y = 0;
-	can_jump = true;
-}
-
-void Character::hit_head() {
 	vel.y = 0;
 }
 
@@ -120,7 +109,7 @@ sf::Vector2f Character::getVel() const {
 	return vel;
 }
 
-/* sf::Rect<float> Character::getXColBox() const {
+sf::Rect<float> Character::getXColBox() const {
 	sf::Rect<float> toRet(sprt.getGlobalBounds());
 	toRet.height -= 10;
 	toRet.top += 5;
@@ -132,7 +121,7 @@ sf::Rect<float> Character::getYColBox() const {
 	toRet.width -= 10;
 	toRet.left += 5;
 	return toRet;
-} */
+}
 
 void Character::render(sf::RenderTarget &g) {
 	Entity::render(g);
