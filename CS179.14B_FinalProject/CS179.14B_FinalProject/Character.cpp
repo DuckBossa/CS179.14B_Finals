@@ -85,6 +85,13 @@ void Character::handleInput(){
 }
 
 void Character::update(float dt) {
+	if (poison_timer < CHARACTERS::POISON_MAX_TIME) {
+		if ((int)poison_timer/CHARACTERS::POISON_FREQ < (int)(poison_timer + dt)/CHARACTERS::POISON_FREQ) {
+			takeDamage(CHARACTERS::POISON_DAMAGE);
+		}
+		poison_timer += dt;
+	}
+	
 	sprt.move(vel*dt);
 	view.setCenter(sprt.getPosition());
 	
@@ -107,6 +114,10 @@ void Character::boosted() {
 
 void Character::slow() {
 	vel.x *= .5;
+}
+
+void Character::poison() {
+	poison_timer = 0;
 }
 
 void Character::takeDamage(int damage){

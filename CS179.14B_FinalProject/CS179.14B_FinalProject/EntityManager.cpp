@@ -252,8 +252,9 @@ void EntityManager::resolveCollisions(float dt) {
 	
 	for (int i = 0; i < sobjects.size(); i++) {
 		if (has_collided(sobjects[i], main_player)) {
-			sobjects[i]->collide(main_player);
-			if (sobjects[i]->is_destroyed()) {
+			sobjects[i]->damage();
+			if (sobjects[i]->can_be_destroyed()) {
+				sobjects[i]->collide(main_player);
 				sobjects.erase(sobjects.begin() + i--);
 			}
 		}

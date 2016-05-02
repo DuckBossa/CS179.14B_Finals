@@ -37,9 +37,10 @@ bool Init(ID player_id) {
 				}
 				else if (g == 150 && b == 150) {/*SObjects Spawn*/
 					if (x%2 == 0) { // this is temporary
-						em->addSObject(new ExplodingBarrel(SOBJECT_SIZE, sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE), "Art/SObjects/ExplodingBarrel.png"));
+						// em->addSObject(new ExplodingBarrel(SOBJECT_SIZE, sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE)));
+						em->addSObject(new PoisonousBarrel(SOBJECT_SIZE, sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE)));
 					} else {
-						em->addSObject(new HealBarrel(SOBJECT_SIZE, sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE), "Art/SObjects/HealBarrel.png"));
+						em->addSObject(new HealBarrel(SOBJECT_SIZE, sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE)));
 					}
 				}
 				else if (temp == sf::Color::Blue) {/*Player Spawn*/
