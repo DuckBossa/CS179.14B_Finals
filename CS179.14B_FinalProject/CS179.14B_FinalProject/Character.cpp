@@ -43,11 +43,11 @@ void Character::handleInput(){
 	
 	if (isKeyDown(Keys::LEFT)) {
 		temp = Face::LEFT;
-		vel.x -= CHARACTERS::BASE_SPEED*agi;
+		vel.x -= CHARACTERS::BASE_SPEED*agi*velXMultiplier;
 	}
 	if (isKeyDown(Keys::RIGHT)) {
 		temp = Face::RIGHT;
-		vel.x += CHARACTERS::BASE_SPEED*agi;
+		vel.x += CHARACTERS::BASE_SPEED*agi*velXMultiplier;
 	}
 
 	if (temp == currface) {
@@ -87,7 +87,6 @@ void Character::handleInput(){
 void Character::update(float dt) {
 	sprt.move(vel*dt);
 	view.setCenter(sprt.getPosition());
-	
 	vel.y += GRAV;
 	can_jump = false;
 }
@@ -106,7 +105,7 @@ void Character::boosted() {
 }
 
 void Character::slow() {
-	vel.x = ;
+	velXMultiplier = 0.5f;
 }
 
 void Character::takeDamage(int damage){
@@ -170,6 +169,10 @@ Face Character::getFace() const {
 
 int Character::getHealth() const {
 	return currhealth;
+}
+
+void Character::setCollision(bool tile) {
+	isColTile = tile;
 }
 
 void War::Attack() {}

@@ -29,18 +29,20 @@ class Character : public Entity {
 private:
 	ID id;
 	int str, agi, intel, pdef, mdef, currhealth, maxhealth, seq;
+	float velXMultiplier;
 	Face currface;
 	sf::Vector2f vel;
 	sf::Vector2f acc;
 	sf::View view;
 	Weapon* weap;
 	bool can_jump;
+	bool isColTile;
 	
 public:
 	Character(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
 		int maxhealth, const sf::Vector2f &startPos, string file_name,ID id) : 
 		Entity(file_name, sf::Vector2i(CHARACTERS::SPRITE_WIDTH,CHARACTERS::SPRITE_HEIGHT)), str(str), agi(agi), intel(intel), pdef(pdef),
-		mdef(mdef), currhealth(maxhealth), maxhealth(maxhealth), id(id), can_jump(true) {
+		mdef(mdef), currhealth(maxhealth), maxhealth(maxhealth), id(id), can_jump(true),isColTile(false),velXMultiplier(1) {
 		sprt.setPosition(startPos);
 		sprt.setOrigin(sf::Vector2f(CHARACTERS::SPRITE_WIDTH / 2.0f, CHARACTERS::SPRITE_HEIGHT / 2.0f));
 		view.setSize(sf::Vector2f(512, 512));
@@ -55,7 +57,7 @@ public:
 	
 	void resetGravity();
 	void hit_head();
-	
+	void setCollision(bool col);
 	void handleInput();
 	void handleMouse(int key, sf::RenderWindow &win);
 	void takeDamage(int damage);

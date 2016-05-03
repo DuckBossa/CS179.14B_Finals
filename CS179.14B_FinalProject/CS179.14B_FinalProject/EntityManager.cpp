@@ -152,6 +152,7 @@ bool EntityManager::has_collided(Tile* t, Character* p) {
 			if (collision.top > p->bounds().top) {
 				t->DoSomethingOnCollision(p);
 				p->move(sf::Vector2f(0, -collision.height));
+				p->setCollision(true);
 				p->resetGravity();
 			} else {
 				p->move(sf::Vector2f(0, collision.height));
@@ -166,6 +167,7 @@ bool EntityManager::has_collided(Tile* t, Character* p) {
 		}
 		return true;
 	}
+	p->setCollision(false);
 	return false;
 }
 
