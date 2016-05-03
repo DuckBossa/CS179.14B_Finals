@@ -70,18 +70,75 @@ bool Init(ID player_id) {
 
 
 int main() {
+
+	sf::Font Font;
+	bool isLoggedIn;
+	if (!Font.loadFromFile("font.ttf")) {
+		std::cout << "Can't load font" << std::endl;
+	}
+	sf::RenderWindow loginScreen;
+	string ip;
+	string tempIP;
+	sf::Text displayIP(tempIP, Font, 50);
+	//displayIP.setPosition(200, 150);
+	displayIP.setColor(sf::Color(44, 127, 255));
+	sf::FloatRect textRect = displayIP.getLocalBounds();
+
+	loginScreen.create(sf::VideoMode(400, 60), "ENTER IP ADDRESS:");
+	//loginScreen.setKeyRepeatEnabled(false);
+
+	while (loginScreen.isOpen()) {
+		sf::Event loginEvent;
+		while (loginScreen.pollEvent(loginEvent)) {
+			if (loginEvent.type == sf::Event::Closed) {
+				loginScreen.close();
+			}
+			if (loginEvent.type == sf::Event::TextEntered) {
+				if (loginEvent.text.unicode >= 33 && loginEvent.text.unicode <= 126) {
+					tempIP += static_cast<char>(loginEvent.text.unicode);
+				}
+				displayIP.setString(tempIP);
+
+			}
+			if (loginEvent.type == sf::Event::KeyPressed) {
+				if (loginEvent.key.code == sf::Keyboard::Return)
+				{
+					ip = tempIP;
+					tempIP = "";
+					isLoggedIn = true;
+					loginScreen.close();
+				}
+				if (loginEvent.key.code == sf::Keyboard::Space)
+				{
+					tempIP += " ";
+					displayIP.setString(tempIP);
+				}
+				if (loginEvent.key.code == sf::Keyboard::BackSpace)
+				{
+					if (tempIP.length() >= 1) {
+						tempIP.erase(tempIP.length() - 1);
+					}
+					displayIP.setString(tempIP);
+				}
+			}
+		}
+		displayIP.setPosition(20, 0);
+		loginScreen.draw(displayIP);
+		loginScreen.display();
+		loginScreen.clear();
+	}
+
+
+
 	sf::Clock clock;
 	sf::Time lag = sf::seconds(0);
 	sf::UdpSocket socket;
-	string ip;
-	cout << "IP Address: ";
-	cin >> ip;
 	const unsigned short port = 8080;
 	ID player_id;
 	const unsigned short listen_port = port + 1;
 	sf::IpAddress server_address(ip);
 	socket.bind(listen_port);
-	cout << "Connecting to Server...";
+	std::cout << "Connecting to Server...";
 	{
 		uint8_t buffer[sizeof(Message) + sizeof(ID)];
 		auto msg = reinterpret_cast<Message*>(buffer);
@@ -108,14 +165,14 @@ int main() {
 		assert(msg->size == sizeof(ID));
 		player_id = *reinterpret_cast<ID*>(msg->data);
 	}
-	cout << "Connected to Server!" << endl;
+	std::cout << "Connected to Server!" << endl;
 	socket.setBlocking(false);
 	em = new EntityManager(&socket, ip.c_str(), port);
 	bool success = Init(player_id);
 	
 
 
-	while (window->isOpen() && success) {
+	while (window->isOpen() && success && isLoggedIn) {
 		sf::Event event;
 		while (window->pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
