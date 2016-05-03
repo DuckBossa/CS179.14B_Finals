@@ -12,6 +12,7 @@ public:
 		setPos(init_pos + sf::Vector2f(size / 2.0f, size / 2.0f));
 		setOrigin(sf::Vector2f(size / 2.0f, size / 2.0f));
 	}
+	virtual ~Tile() {}
 	void virtual DoSomethingOnCollision(Entity* collided) = 0;
 };
 

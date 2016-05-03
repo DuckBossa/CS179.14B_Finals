@@ -22,6 +22,7 @@ public:
 	EntityManager(sf::UdpSocket* sock,const char* ip,const unsigned int &port) : socket(sock), address(ip), port(port){
 		bg.setTexture(*tl.getTexture("Art/Maps/bg_temp.png"));
 	}
+	virtual ~EntityManager() {}
 	void addPlayer(Character* p);
 	void setMain(Character* p);
 	void addMapTile(Tile* t);

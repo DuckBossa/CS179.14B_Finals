@@ -16,6 +16,8 @@ public:
 	bool is_destroyed() {
 		return barrelDurability <= 0;
 	}
+
+	virtual ~SObject() {}
 };
 
 class HealBarrel : public SObject {

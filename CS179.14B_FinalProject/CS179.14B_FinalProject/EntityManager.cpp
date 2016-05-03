@@ -100,7 +100,7 @@ void EntityManager::render(sf::RenderTarget &g) {
 		e->render(g);
 	}
 	for (auto e : other_players) {
-		e->render(g);
+		e->renderSprite(g);
 	}
 	for (auto e : sobjects) {
 		e->render(g);
