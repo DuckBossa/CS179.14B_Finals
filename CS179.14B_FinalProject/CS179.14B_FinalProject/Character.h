@@ -2,6 +2,7 @@
 #include "Entities.h"
 #include "Weapon.h"
 #include "GameMessage.h"
+#include "Game.h"
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
@@ -77,8 +78,8 @@ public:
 class War : public Character {
 public:
 	War(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
-		int maxhealth, const sf::Vector2f &startPos, string file_name,ID id) : 
-		Character(str, agi, intel, pdef, mdef, maxhealth, startPos, file_name, id) {}
+		int maxhealth, const sf::Vector2f &startPos, ID id) : 
+		Character(str, agi, intel, pdef, mdef, maxhealth, startPos, GAME::WAR_FILE, id) {}
 	void Attack() override;
 	void SAttack() override;
 };

@@ -16,30 +16,36 @@
 
 
 using namespace std;
-
+using namespace GAME;
 TextureLoader tl;
 EntityManager* em;
 sf::RenderWindow* window;
 
 bool Init(ID player_id) {
-	sf::Texture* maptex = tl.getTexture("Art/Maps/sample3.png");
 	vector<sf::Vector2f> summon_loc;
 	sf::Image map;
-	if (map.loadFromFile("Art/Maps/sample3.png")) {
+	if (map.loadFromFile("Art/Maps/4.png")) {
 		for (int x = 0; x < map.getSize().x; x++) {
 			for (int y = 0; y < map.getSize().y; y++) {
 				const sf::Color temp = map.getPixel(x, y);
-				int b = (int)temp.b;
-				int r = (int)temp.r;
-				int g = (int)temp.g;
-				if (temp == sf::Color::Black) {
-					em->addMapTile(new  NormalTile(TILE_SIZE, sf::Vector2f(x*TILE_SIZE, y*TILE_SIZE), "Art/Tiles/Tar_tile_32.png"));
+				sf::Vector3i rgb((int)temp.r, (int)temp.g, (int)temp.b);
+				if (rgb == NORMAL_RGB) {
+					em->addMapTile(new  NormalTile(sf::Vector2f(x*TILE_SIZE, y*TILE_SIZE)));
 				}
-				else if (g == 150 && b == 150) {/*SObjects Spawn*/
+				else if (rgb == LAVA_RGB) {
+					em->addMapTile(new  LavaTile(sf::Vector2f(x*TILE_SIZE, y*TILE_SIZE),LAVA_TIMER));
+				}
+				else if (rgb == TRAMPOLINE_RGB) {
+					em->addMapTile(new  TrampolineTile(sf::Vector2f(x*TILE_SIZE, y*TILE_SIZE)));
+				}
+				else if (rgb == TAR_RGB) {
+					em->addMapTile(new  TarTile(sf::Vector2f(x*TILE_SIZE, y*TILE_SIZE)));
+				}
+				else if (rgb == SOBJECT_RGB) {/*SObjects Spawn*/
 					if (x%2 == 0) { // this is temporary
-						em->addSObject(new ExplodingBarrel(SOBJECT_SIZE, sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE), "Art/SObjects/ExplodingBarrel.png"));
+						em->addSObject(new ExplodingBarrel(sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE)));
 					} else {
-						em->addSObject(new HealBarrel(SOBJECT_SIZE, sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE), "Art/SObjects/HealBarrel.png"));
+						em->addSObject(new HealBarrel(sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE)));
 					}
 				}
 				else if (temp == sf::Color::Blue) {/*Player Spawn*/
@@ -54,7 +60,7 @@ bool Init(ID player_id) {
 	}
 
 	if (!summon_loc.empty()) {
-		em->setMain(new War(10, 7, 2, 7, 3, 10, summon_loc[0], "Art/Characters/1.png", player_id));
+		em->setMain(new War(10, 7, 2, 7, 3, 10, summon_loc[0], player_id));
 	}
 	cout << "Connected. Client id: " << player_id << endl;
 
@@ -73,8 +79,6 @@ int main() {
 	const unsigned short port = 8080;
 	ID player_id;
 	const unsigned short listen_port = port + 1;
-
-
 	sf::IpAddress server_address(ip);
 	socket.bind(listen_port);
 	cout << "Connecting to Server...";
@@ -103,7 +107,6 @@ int main() {
 		assert(msg->type == MessageType::Connect);
 		assert(msg->size == sizeof(ID));
 		player_id = *reinterpret_cast<ID*>(msg->data);
-
 	}
 	cout << "Connected to Server!" << endl;
 	socket.setBlocking(false);
@@ -151,5 +154,10 @@ int main() {
 	if (!success) {
 		cout << "Failed to connect to server" << endl;
 	}
+	else {
+		delete em;
+		delete window;
+	}
+
 	return 0;
 }

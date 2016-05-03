@@ -106,7 +106,7 @@ void Character::boosted() {
 }
 
 void Character::slow() {
-	vel.x *= .5;
+	vel.x = ;
 }
 
 void Character::takeDamage(int damage){

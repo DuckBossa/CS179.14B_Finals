@@ -39,7 +39,7 @@ void EntityManager::update(float dt) {
 					return p->getId() == pos_data->id;
 				});
 				if (it == other_players.end()) {
-					other_players.emplace_back(new War(10, 7, 2, 7, 3, 10, sf::Vector2f(pos_data->stat.px,pos_data->stat.py), "Art/Characters/1.png", pos_data->id));
+					other_players.emplace_back(new War(10, 7, 2, 7, 3, 10, sf::Vector2f(pos_data->stat.px,pos_data->stat.py), pos_data->id));
 				}
 				else {
 					(*it)->update(sf::Vector2f(pos_data->stat.px, pos_data->stat.py), sf::Vector2f(pos_data->stat.vx, pos_data->stat.vy), pos_data->stat.face);
@@ -150,6 +150,7 @@ bool EntityManager::has_collided(Tile* t, Character* p) {
 	if (t->bounds().intersects(p->bounds(), collision)) {
 		if (collision.height < collision.width) {
 			if (collision.top > p->bounds().top) {
+				t->DoSomethingOnCollision(p);
 				p->move(sf::Vector2f(0, -collision.height));
 				p->resetGravity();
 			} else {

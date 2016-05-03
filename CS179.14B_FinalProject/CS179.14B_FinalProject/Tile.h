@@ -1,16 +1,17 @@
 #pragma once
 
 #include "Entities.h"
+#include "Game.h"
 
-const auto TILE_SIZE = 32;
+using namespace GAME;
 
 class Tile : public Entity {
 protected:
 
 public:
-	Tile(int size, const sf::Vector2f &init_pos, std::string file_name) : Entity(file_name,sf::Vector2i(TILE_SIZE,TILE_SIZE)) {
-		setPos(init_pos + sf::Vector2f(size / 2.0f, size / 2.0f));
-		setOrigin(sf::Vector2f(size / 2.0f, size / 2.0f));
+	Tile(const sf::Vector2f &init_pos, std::string file_name) : Entity(file_name,sf::Vector2i(TILE_SIZE,TILE_SIZE)) {
+		setPos(init_pos + sf::Vector2f(TILE_SIZE / 2.0f, TILE_SIZE / 2.0f));
+		setOrigin(sf::Vector2f(TILE_SIZE / 2.0f, TILE_SIZE / 2.0f));
 	}
 	virtual ~Tile() {}
 	void virtual DoSomethingOnCollision(Entity* collided) = 0;
@@ -19,7 +20,7 @@ public:
 
 class NormalTile : public Tile {
 public:
-	NormalTile(const int &size, const sf::Vector2f &init_pos, string file_name) : Tile(size, init_pos, file_name) {}
+	NormalTile(const sf::Vector2f &init_pos) : Tile(init_pos,GAME::NORMAL_FILE) {}
 	void update(float dt) override;
 	void DoSomethingOnCollision(Entity* collided) override;
 
@@ -30,7 +31,7 @@ protected:
 	float timer;
 	float damageTimer;
 public:
-	LavaTile(const int &size, const sf::Vector2f &init_pos, const string &file_name ,const float &damageTimer) : Tile(size, init_pos, file_name) , damageTimer(damageTimer) {
+	LavaTile(const sf::Vector2f &init_pos, const float &damageTimer) : Tile(init_pos, GAME::LAVA_FILE) , damageTimer(damageTimer) {
 		timer = 0;
 	}
 	void update(float dt) override;
@@ -43,21 +44,21 @@ protected:
 	int tileDurability = 2;
 	bool toDelete;
 public:
-	DestructibleTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "destructible") {}
+	DestructibleTile(const sf::Vector2f &init_pos) : Tile(init_pos, GAME::NORMAL_FILE) {}
 	void update(float dt) override;
 	void DoSomethingOnCollision(Entity* collided) override;
 };
 
 class TrampolineTile : public Tile {
 public:
-	TrampolineTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "trampoline") {}
+	TrampolineTile(const sf::Vector2f &init_pos) : Tile(init_pos, GAME::TRAMPOLINE_FILE) {}
 	void update(float dt) override;
 	void DoSomethingOnCollision(Entity* collided) override;
 };
 
 class TarTile : public Tile {
 public:
-	TarTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "tar") {}
+	TarTile(const sf::Vector2f &init_pos) : Tile(init_pos, GAME::TAR_FILE) {}
 	void update(float dt) override;
 	void DoSomethingOnCollision(Entity* collided) override;
 };
@@ -65,21 +66,21 @@ public:
 
 class TeleportationTile : public Tile {
 public:
-	TeleportationTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "teleport") {}
+	TeleportationTile(const sf::Vector2f &init_pos) : Tile(init_pos, GAME::TELEPORTER_FILE) {}
 	void update(float dt) override;
 	void DoSomethingOnCollision(Entity* collided) override;
 };
 
 class TrapTile : public Tile {
 public:
-	TrapTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "trap") {}
+	TrapTile(const sf::Vector2f &init_pos) : Tile(init_pos, "trap") {}
 	void update(float dt) override;
 	void DoSomethingOnCollision(Entity* collided) override;
 };
 
 class PermeableTile : public Tile {
 public:
-	PermeableTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(size, init_pos, "permeable") {}
+	PermeableTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(init_pos, "permeable") {}
 	void update(float dt) override;
 	void DoSomethingOnCollision(Entity* collided) override;
 };
