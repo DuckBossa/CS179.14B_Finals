@@ -73,10 +73,12 @@ int main() {
 
 	sf::Font Font;
 	bool isLoggedIn;
+	bool charSelected;
 	if (!Font.loadFromFile("font.ttf")) {
 		std::cout << "Can't load font" << std::endl;
 	}
 	sf::RenderWindow loginScreen;
+	sf::RenderWindow characterSelection;
 	string ip;
 	string tempIP;
 	sf::Text displayIP(tempIP, Font, 50);
@@ -127,7 +129,75 @@ int main() {
 		loginScreen.display();
 		loginScreen.clear();
 	}
+//code starts here for char selection
+	characterSelection.create(sf::VideoMode(400, 200), "SELECT CHARACTER");
+	while (characterSelection.isOpen() && isLoggedIn) {
+		sf::Event characterEvent;
+		while (characterSelection.pollEvent(characterEvent)) {
+			if (characterEvent.type == sf::Event::Closed) {
+				characterSelection.close();
+			}
+			if (characterEvent.key.code == sf::Keyboard::BackSpace){
+				characterSelection.close();
+			}
+			if (characterEvent.type == sf::Event::MouseButtonPressed)
+			{
+				if (characterEvent.mouseButton.button == sf::Mouse::Left)
+				{
+					
+					if (characterEvent.mouseButton.y >= 0 && characterEvent.mouseButton.y < 100) {
+						if (characterEvent.mouseButton.x >= 0 && characterEvent.mouseButton.x < 100) {
+							//character1
+							std::cout << "character1" << std::endl;
+							charSelected = true;
+							characterSelection.close();
 
+						}
+						if (characterEvent.mouseButton.x >= 100 && characterEvent.mouseButton.x < 200) {
+							std::cout << "character2" << std::endl;
+							charSelected = true;
+							characterSelection.close();
+						}
+						if (characterEvent.mouseButton.x >= 200 && characterEvent.mouseButton.x < 300) {
+							std::cout << "character3" << std::endl;
+							charSelected = true;
+							characterSelection.close();
+						}
+						if (characterEvent.mouseButton.x >= 300 && characterEvent.mouseButton.x < 400) {
+							std::cout << "character4" << std::endl;
+							charSelected = true;
+							characterSelection.close();
+						}
+					}
+					if (characterEvent.mouseButton.y >= 100 && characterEvent.mouseButton.y < 200) {
+						if (characterEvent.mouseButton.x >= 0 && characterEvent.mouseButton.x < 100) {
+							std::cout << "character5" << std::endl;
+							charSelected = true;
+							characterSelection.close();
+						}
+						if (characterEvent.mouseButton.x >= 100 && characterEvent.mouseButton.x < 200) {
+							std::cout << "character6" << std::endl;
+							charSelected = true;
+							characterSelection.close();
+						}
+						if (characterEvent.mouseButton.x >= 200 && characterEvent.mouseButton.x < 300) {
+							std::cout << "character7" << std::endl;
+							charSelected = true;
+							characterSelection.close();
+						}
+						if (characterEvent.mouseButton.x >= 300 && characterEvent.mouseButton.x < 400) {
+							std::cout << "character8" << std::endl;
+							charSelected = true;
+							characterSelection.close();
+						}
+					}
+					
+				}
+			}
+		}
+		characterSelection.display();
+		characterSelection.clear();
+	}
 
 
 	sf::Clock clock;
@@ -172,7 +242,7 @@ int main() {
 	
 
 
-	while (window->isOpen() && success && isLoggedIn) {
+	while (window->isOpen() && success && isLoggedIn && charSelected) {
 		sf::Event event;
 		while (window->pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
