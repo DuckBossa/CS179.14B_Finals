@@ -6,7 +6,7 @@ void NormalTile::update(float dt) {}
 void NormalTile::DoSomethingOnCollision(Entity* collided) {}
 
 void LavaTile::update(float dt) {
-	if(! timer >= damageTimer){
+	if( timer < damageTimer){
 		timer += dt;
 	}
 }
