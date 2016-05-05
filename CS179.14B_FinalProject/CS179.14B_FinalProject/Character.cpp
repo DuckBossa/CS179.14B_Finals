@@ -13,6 +13,7 @@ void Character::handleMouse(int key,sf::RenderWindow &win) {
 		//Attack();
 		if (sf::Mouse::getPosition(win).x > 0 && sf::Mouse::getPosition(win).x <= GAME::WINDOW_WIDTH/2) {
 			cout << "Left Normal" << endl;
+
 		}
 		else if (sf::Mouse::getPosition(win).x >  GAME::WINDOW_WIDTH/2 && sf::Mouse::getPosition(win).x <= GAME::WINDOW_WIDTH) {
 			cout << "Right Normal" << endl;
@@ -34,7 +35,13 @@ void Character::handleMouse(int key,sf::RenderWindow &win) {
 void Character::handleInput(){
 	vel.x = 0.0;
 	Face temp = Face::NONE;
-	
+	if (!isColTile) {
+		//cout << "reset" << endl;
+		velXMultiplier = 1.0f;
+	}
+	else {
+		//cout << "don't reset" << endl;
+	}
 	if (isKeyDown(Keys::JUMP) && can_jump) { // jump
 		temp = Face::FRONT;
 		vel.y = CHARACTERS::JUMP_RATE;
@@ -87,12 +94,14 @@ void Character::handleInput(){
 void Character::update(float dt) {
 	sprt.move(vel*dt);
 	view.setCenter(sprt.getPosition());
+	
 	vel.y += GRAV;
 	can_jump = false;
 }
 
 void Character::resetGravity() {
 	vel.y = 0;
+	cout << "RESET" << endl;
 	can_jump = true;
 }
 
@@ -101,7 +110,9 @@ void Character::hit_head() {
 }
 
 void Character::boosted() {
-	vel.y = CHARACTERS::BOOST_JUMP;
+	vel.y += CHARACTERS::BOOST_JUMP;
+	cout << "VEL Y" << vel.y << endl;
+	can_jump = true;
 }
 
 void Character::slow() {

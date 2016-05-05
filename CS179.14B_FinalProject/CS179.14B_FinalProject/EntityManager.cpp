@@ -152,7 +152,7 @@ bool EntityManager::has_collided(Tile* t, Character* p) {
 			if (collision.top > p->bounds().top) {
 				t->DoSomethingOnCollision(p);
 				p->move(sf::Vector2f(0, -collision.height));
-				p->setCollision(true);
+				alreadyCollided = true;
 				p->resetGravity();
 			} else {
 				p->move(sf::Vector2f(0, collision.height));
@@ -164,10 +164,11 @@ bool EntityManager::has_collided(Tile* t, Character* p) {
 			} else {
 				p->move(sf::Vector2f(collision.width, 0));
 			}
+			
 		}
 		return true;
 	}
-	p->setCollision(false);
+	p->setCollision(alreadyCollided);
 	return false;
 }
 
@@ -246,6 +247,7 @@ void EntityManager::collide(Weapon* w, SObject* t) {
 }
 
 void EntityManager::resolveCollisions(float dt) {
+	alreadyCollided = false;
 	for (auto tile : map) {
 		if (has_collided(tile, main_player)) {};
 		for (auto player : other_players) {
