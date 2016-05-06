@@ -109,7 +109,6 @@ void Character::update(float dt) {
 
 void Character::resetGravity() {
 	vel.y = 0;
-	cout << "RESET" << endl;
 	can_jump = true;
 }
 
@@ -119,7 +118,6 @@ void Character::hit_head() {
 
 void Character::boosted() {
 	vel.y += CHARACTERS::BOOST_JUMP;
-	cout << "VEL Y" << vel.y << endl;
 	can_jump = false;
 }
 
@@ -184,6 +182,10 @@ void Character::update(sf::Vector2f pos, sf::Vector2f vel, Face face) {
 	this->vel = vel;
 }
 
+void Character::setCollision(bool tile) {
+	isColTile = tile;
+}
+
 ID Character::getId() const{
 	return id;
 }
@@ -195,10 +197,9 @@ int Character::getHealth() const {
 	return currhealth;
 }
 
-void Character::setCollision(bool tile) {
-	isColTile = tile;
+Weapon* Character::get_weapon() const {
+	return weap;
 }
 
 void War::Attack() {}
 void War::SAttack() {}
-

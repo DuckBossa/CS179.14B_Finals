@@ -246,8 +246,6 @@ int main() {
 	em = new EntityManager(&socket, ip.c_str(), port);
 	bool success = Init(player_id);
 	
-
-
 	while (window->isOpen() && success && isLoggedIn && charSelected) {
 		sf::Event event;
 		while (window->pollEvent(event)) {

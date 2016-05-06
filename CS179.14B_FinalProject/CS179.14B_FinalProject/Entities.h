@@ -10,15 +10,18 @@ public:
 		sprt.setTexture(*tl.getTexture(file_name));
 		sprt.setTextureRect(sf::Rect<int>(initPosTex.x, initPosTex.y, texPosSize.x /*width*/, texPosSize.y /*height*/));
 	}
+	virtual ~Entity() {}
+	
+	virtual void move(const sf::Vector2f &amount);
+	
 	virtual void update(float dt) = 0;
 	virtual void render(sf::RenderTarget &g);
-	virtual void move(const sf::Vector2f &amount);
+	
 	virtual void setPos(const sf::Vector2f &newPos); 
 	virtual void setTextRect(const sf::Rect<int> newRekt);
 	virtual	void setOrigin(const sf::Vector2f &newOrig);
+	
 	virtual sf::Vector2f getPosition() const;
+	
 	virtual sf::Rect<float> bounds() const;
-	virtual ~Entity() {}
 };
-
-

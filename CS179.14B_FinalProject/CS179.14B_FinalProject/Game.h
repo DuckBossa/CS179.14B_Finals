@@ -36,4 +36,3 @@ namespace GAME {
 	/*Weapon Filenames*/
 	const auto WAR_SWORD_FILE = "Art/Weapons/WarSword.png";
 }
-

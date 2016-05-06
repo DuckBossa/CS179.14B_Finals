@@ -7,7 +7,6 @@
 #include "SFML/Network.hpp"
 #include <vector>
 
-
 class EntityManager {
 public:
 	std::vector<Tile*> map;
@@ -38,5 +37,3 @@ public:
 	bool has_collided(Tile* t, Character* p);
 	bool has_collided(SObject* t, Character* p);
 };
-
-

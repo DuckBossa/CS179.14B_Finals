@@ -159,6 +159,7 @@ bool EntityManager::has_collided(SObject* s, Character* p) {
 bool EntityManager::has_collided(Weapon* w, Character* c) {
 	if (w->bounds().intersects(w->bounds())) {
 		c->takeDamage(w->power);
+		return true;
 	}
 	return false;
 }
@@ -166,7 +167,7 @@ bool EntityManager::has_collided(Weapon* w, Character* c) {
 bool EntityManager::has_collided(Weapon* w, SObject* t) {
 	if (t->bounds().intersects(w->bounds())) {
 		t->collide(w);
-		cout << "hit the barrel" << endl;
+		return true;
 	}
 	return false;
 }
@@ -186,9 +187,8 @@ void EntityManager::resolveCollisions(float dt) {
 	
 	//checks sobject collision
 	for (int i = 0; i < sobjects.size(); i++) {
-		//if (has_collided(wea, sobjects[i]))
-
-		if (has_collided(sobjects[i], main_player)) {
+		if (has_collided(sobjects[i], main_player)) {}
+		if (has_collided(main_player->get_weapon(), sobjects[i])) {
 			sobjects[i]->damage();
 			if (sobjects[i]->can_be_destroyed()) {
 				sobjects[i]->collide(main_player);
