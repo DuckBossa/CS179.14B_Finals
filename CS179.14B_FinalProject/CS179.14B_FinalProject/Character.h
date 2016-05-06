@@ -85,6 +85,7 @@ public:
 	playerChar getType() const;
 	Face getFace() const;
 	int getHealth() const;
+	int get_strength() const;
 	sf::Vector2f getVel() const;
 	Weapon* get_weapon() const;
 	// sf::Rect<float> getXColBox() const;

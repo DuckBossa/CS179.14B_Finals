@@ -207,6 +207,10 @@ int Character::getHealth() const {
 	return currhealth;
 }
 
+int Character::get_strength() const {
+	return str;
+}
+
 Weapon* Character::get_weapon() const {
 	return weap;
 }

@@ -36,5 +36,4 @@ public:
 	bool has_collided(Weapon* w, SObject* t);
 	bool has_collided(Tile* t, Character* p);
 	bool has_collided(SObject* t, Character* p);
-	bool has_collided(Character* u, Character* o);
 };

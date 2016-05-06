@@ -240,10 +240,6 @@ bool EntityManager::has_collided(Weapon* w, SObject* t) {
 	return false;
 }
 
-bool EntityManager::has_collided(Character* u, Character* i) {
-	
-}
-
 void EntityManager::resolveCollisions(float dt) {
 	//checks map collision
 	for (auto tile : map) {
@@ -266,6 +262,12 @@ void EntityManager::resolveCollisions(float dt) {
 				sobjects[i]->collide(main_player);
 				sobjects.erase(sobjects.begin() + i--);
 			}
+		}
+	}
+	
+	for (auto u : other_players) {
+		if (has_collided(main_player->get_weapon(), u)) {
+			u->takeDamage(main_player->get_strength());
 		}
 	}
 	
