@@ -13,10 +13,11 @@ void Character::handleMouse(int key,sf::RenderWindow &win) {
 		//Attack();
 		if (sf::Mouse::getPosition(win).x > 0 && sf::Mouse::getPosition(win).x <= GAME::WINDOW_WIDTH/2) {
 			cout << "Left Normal" << endl;
-
+			weap->attack(weap->get_right_attack());
 		}
 		else if (sf::Mouse::getPosition(win).x >  GAME::WINDOW_WIDTH/2 && sf::Mouse::getPosition(win).x <= GAME::WINDOW_WIDTH) {
 			cout << "Right Normal" << endl;
+			weap->attack(weap->get_left_attack());
 		}
 		key = 0;
 	}
@@ -105,6 +106,7 @@ void Character::update(float dt) {
 	vel.y += GRAV;
 	can_jump = false;
 	weap->setPos(sprt.getPosition());
+	weap->update(dt);
 }
 
 void Character::resetGravity() {
