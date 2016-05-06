@@ -22,6 +22,7 @@ public:
 	void update(float dt) override;
 	//void handleMouse(int key, sf::RenderWindow &win);
 	void render(sf::RenderTarget &g) override;
+	void attack(sf::Vector2f player_pos);
 };
 
 class Sword : public Weapon {

@@ -82,6 +82,8 @@ public:
 	void update(sf::Vector2f pos, sf::Vector2f vel,Face face);
 	void render(sf::RenderTarget &g) override;
 	void renderSprite(sf::RenderTarget &g);
+
+	//const Weapon* get_weapon()
 	
 	ID getId() const;
 	Face getFace() const;

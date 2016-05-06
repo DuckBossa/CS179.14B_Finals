@@ -156,19 +156,23 @@ bool EntityManager::has_collided(SObject* s, Character* p) {
 	return false;
 }
 
-void EntityManager::collide(Weapon* w, Character* c) {
+bool EntityManager::has_collided(Weapon* w, Character* c) {
 	if (w->bounds().intersects(w->bounds())) {
 		c->takeDamage(w->power);
 	}
+	return false;
 }
 
-void EntityManager::collide(Weapon* w, SObject* t) {
+bool EntityManager::has_collided(Weapon* w, SObject* t) {
 	if (t->bounds().intersects(w->bounds())) {
 		t->collide(w);
+		cout << "hit the barrel" << endl;
 	}
+	return false;
 }
 
 void EntityManager::resolveCollisions(float dt) {
+	//checks map collision
 	for (auto tile : map) {
 		if (has_collided(tile, main_player)) {
 			tile->collide(main_player);
@@ -180,7 +184,10 @@ void EntityManager::resolveCollisions(float dt) {
 		}
 	}
 	
+	//checks sobject collision
 	for (int i = 0; i < sobjects.size(); i++) {
+		//if (has_collided(wea, sobjects[i]))
+
 		if (has_collided(sobjects[i], main_player)) {
 			sobjects[i]->damage();
 			if (sobjects[i]->can_be_destroyed()) {
