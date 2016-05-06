@@ -68,7 +68,7 @@ public:
 	void hit_head();
 	void setCollision(bool col);
 	void handleInput();
-	void handleMouse(int key, sf::RenderWindow &win);
+	int handleMouse(int key, sf::RenderWindow &win);
 	
 	void takeDamage(int damage);
 	void heal(int heal);

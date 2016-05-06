@@ -3,7 +3,7 @@
 #include <cstdint>
 
 enum class MessageType : uint8_t {
-	Connect = 0, Disconnect = 1, Reconnect = 2, Status = 3, Ping = 4, Pong = 5
+	Connect = 0, Disconnect = 1, Reconnect = 2, Status = 3, Ping = 4, Pong = 5, Attack = 6
 };
 
 enum Face : uint8_t {
@@ -36,4 +36,10 @@ struct StatusMessage {
 	uint32_t order;
 	Status stat;
 };
+
+struct AttackMessage {
+	ID id;
+	int attack;
+};
+
 #pragma pack(pop)

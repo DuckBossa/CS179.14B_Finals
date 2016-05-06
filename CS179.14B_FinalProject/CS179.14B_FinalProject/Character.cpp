@@ -8,16 +8,18 @@ bool Character::isKeyDown(const int &key) {
 	return state >> 15 != 0;
 }
 
-void Character::handleMouse(int key,sf::RenderWindow &win) {
+int Character::handleMouse(int key,sf::RenderWindow &win) {
 	if (key == 1) {
 		//Attack();
 		if (sf::Mouse::getPosition(win).x > 0 && sf::Mouse::getPosition(win).x <= GAME::WINDOW_WIDTH/2) {
 			cout << "Left Normal" << endl;
-			weap->attack(weap->get_right_attack());
+			weap->attack(weap->get_left_attack());
+			return 1;
 		}
 		else if (sf::Mouse::getPosition(win).x >  GAME::WINDOW_WIDTH/2 && sf::Mouse::getPosition(win).x <= GAME::WINDOW_WIDTH) {
 			cout << "Right Normal" << endl;
-			weap->attack(weap->get_left_attack());
+			weap->attack(weap->get_right_attack());
+			return 2;
 		}
 		key = 0;
 	}
@@ -31,6 +33,7 @@ void Character::handleMouse(int key,sf::RenderWindow &win) {
 		}
 		key = 0;
 	}
+	return 0;
 }
 
 void Character::handleInput(){

@@ -47,8 +47,8 @@ public:
 	{
 		anim_length = 0.2;
 		curr_anim_length = anim_length;
-		left_attack = 10;
-		right_attack = -10;
+		right_attack = 10;
+		left_attack = -10;
 	}
 
 	void update(float dt);

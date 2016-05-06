@@ -22,7 +22,23 @@ void EntityManager::handleInput() {
 	main_player->handleInput();
 }
 void EntityManager::handleMouse(int key, sf::RenderWindow &g) {
-	main_player->handleMouse(key, g);
+	int command = main_player->handleMouse(key, g);
+	{
+		uint8_t buffer[sizeof(Message) + sizeof(AttackMessage)];
+		auto msg = reinterpret_cast<Message*>(buffer);
+		msg->type = MessageType::Attack;
+		msg->size = sizeof(AttackMessage);
+		auto sm = reinterpret_cast<AttackMessage*>(msg->data);
+		sm->id = main_player->getId();
+		sm->attack = command;
+		if (socket->send(buffer, sizeof(buffer), address, port) == !sf::Socket::Done) {
+			cout << "Not sending data" << endl;
+		}
+		else {
+			// cout << "sent success!" << endl;
+		}
+	}
+
 }
 void EntityManager::update(float dt) {
 	{
@@ -78,6 +94,23 @@ void EntityManager::update(float dt) {
 				else {
 					(*it)->update(sf::Vector2f(pos_data->stat.px, pos_data->stat.py), sf::Vector2f(pos_data->stat.vx, pos_data->stat.vy), pos_data->stat.face);
 				}
+				break;
+			}
+			case MessageType::Attack: {
+				auto pos_data = reinterpret_cast<const AttackMessage*>(msg->data);
+				auto it = std::find_if(other_players.begin(), other_players.end(), [pos_data](const Character *p) {
+					return p->getId() == pos_data->id;
+				});
+				int command = pos_data->attack;
+				switch (command) {
+				case 1:
+					(*it)->get_weapon()->attack((*it)->get_weapon()->get_left_attack());
+					break;
+				case 2:
+					(*it)->get_weapon()->attack((*it)->get_weapon()->get_right_attack());
+					break;
+				}
+				
 				break;
 			}
 			}

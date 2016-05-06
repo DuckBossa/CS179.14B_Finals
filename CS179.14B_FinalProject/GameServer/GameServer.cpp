@@ -92,6 +92,25 @@ int main(int argc, char **argv) {
 				}
 				}
 				break;
+			case MessageType::Attack: {
+				if (msg->size < sizeof(AttackMessage)) {
+					cerr << "error" << endl;
+				}
+				else {
+
+					auto pm = reinterpret_cast<const AttackMessage*> (msg->data);
+					cout << "Recevied Attack Message from: " << pm->id << endl;
+					for (auto &client : clients) {
+						if (client.first != pm->id) {
+							client.second.send(MessageType::Attack, msg->data, msg->size);
+						}
+						else {
+							client.second.last_packet = Clock::now();
+							client.second.endpoint = source;
+						}
+					}
+				}
+			}
 			}
 			socket.async_receive_from(boost::asio::buffer(recv_buffer.data(), recv_buffer.size()), source, handler);
 		};
