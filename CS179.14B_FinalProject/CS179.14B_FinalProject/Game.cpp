@@ -130,6 +130,14 @@ int main() {
 	characterSelection.create(sf::VideoMode(400, 200), "SELECT CHARACTER");
 	while (characterSelection.isOpen() && isLoggedIn) {
 		sf::Event characterEvent;
+		sf::Texture texture;
+		sf::Sprite sprite;
+
+		if (!texture.loadFromFile("Art/Characters/charselection.png")) {
+			std::cout << "Ooops" << std::endl;
+		}
+		sprite.setTexture(texture);
+		sprite.setPosition(sf::Vector2f(0, 0));
 		while (characterSelection.pollEvent(characterEvent)) {
 			if (characterEvent.type == sf::Event::Closed) {
 				characterSelection.close();
@@ -192,6 +200,7 @@ int main() {
 				}
 			}
 		}
+		characterSelection.draw(sprite);
 		characterSelection.display();
 		characterSelection.clear();
 	}
