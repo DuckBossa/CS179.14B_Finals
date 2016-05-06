@@ -176,6 +176,7 @@ void Character::render(sf::RenderTarget &g) {
 
 void Character::renderSprite(sf::RenderTarget &g) {
 	Entity::render(g);
+	weap->render(g);
 }
 
 void Character::update(sf::Vector2f pos, sf::Vector2f vel, Face face) {
