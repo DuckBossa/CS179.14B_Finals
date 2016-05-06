@@ -89,6 +89,7 @@ void Character::update(float dt) {
 	view.setCenter(sprt.getPosition());
 	vel.y += GRAV;
 	can_jump = false;
+	weap->setPos(sprt.getPosition());
 }
 
 void Character::resetGravity() {
@@ -135,6 +136,7 @@ sf::Rect<float> Character::getYColBox() const {
 
 void Character::render(sf::RenderTarget &g) {
 	Entity::render(g);
+	weap->render(g);
 	g.setView(view);
 	
 	sf::RectangleShape health_bar(sf::Vector2f(currhealth*CHARACTERS::HEALTHBAR_WIDTH/maxhealth, CHARACTERS::HEALTHBAR_HEIGHT));

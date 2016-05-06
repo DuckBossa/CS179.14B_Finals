@@ -40,15 +40,18 @@ private:
 	
 public:
 	Character(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
-		int maxhealth, const sf::Vector2f &startPos, string file_name,ID id) : 
+		int maxhealth, const sf::Vector2f &startPos, string file_name,ID id, Weapon *weap_in) : 
 		Entity(file_name, sf::Vector2i(CHARACTERS::SPRITE_WIDTH,CHARACTERS::SPRITE_HEIGHT)), str(str), agi(agi), intel(intel), pdef(pdef),
-		mdef(mdef), currhealth(maxhealth), maxhealth(maxhealth), id(id), can_jump(true),isColTile(false),velXMultiplier(1) {
+		mdef(mdef), currhealth(maxhealth), maxhealth(maxhealth), id(id), can_jump(true),isColTile(false),velXMultiplier(1), weap(weap_in)
+	{
 		sprt.setPosition(startPos);
 		sprt.setOrigin(sf::Vector2f(CHARACTERS::SPRITE_WIDTH / 2.0f, CHARACTERS::SPRITE_HEIGHT / 2.0f));
 		view.setSize(sf::Vector2f(512, 512));
 		view.setCenter(sprt.getPosition());
 		currface = Face::NONE;
 		seq;
+
+		
 	}
 	virtual ~Character() {}
 	virtual void Attack() = 0;
@@ -78,10 +81,11 @@ public:
 
 
 class War : public Character {
+
 public:
 	War(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
 		int maxhealth, const sf::Vector2f &startPos, ID id) : 
-		Character(str, agi, intel, pdef, mdef, maxhealth, startPos, GAME::WAR_FILE, id) {}
+		Character(str, agi, intel, pdef, mdef, maxhealth, startPos, GAME::WAR_FILE, id, new Sword()){}
 	void Attack() override;
 	void SAttack() override;
 };

@@ -33,6 +33,8 @@ namespace GAME {
 	/*Character Filenames*/
 	const auto WAR_FILE = "Art/Characters/2.png";
 
+	/*Weapon Filenames*/
+	const auto WAR_SWORD_FILE = "Art/Weapons/WarSword.png";
 
 
 }
