@@ -23,18 +23,26 @@ namespace CHARACTERS {
 	const auto HEALTHBAR_WIDTH = 40;
 	const auto HEALTHBAR_HEIGHT = 5;
 	const auto BOOST_JUMP = 2*JUMP_RATE;
+	const auto POISON_DAMAGE = 1;
+	const auto POISON_MAX_TIME = 5;
+	const auto POISON_FREQ = 1.5;
 }
 
 class Character : public Entity {
 private:
 	ID id;
+	
 	int str, agi, intel, pdef, mdef, currhealth, maxhealth, seq;
+	float poison_timer;
 	float velXMultiplier;
 	Face currface;
 	sf::Vector2f vel;
 	sf::Vector2f acc;
+	
 	sf::View view;
+	
 	Weapon* weap;
+	
 	bool can_jump;
 	bool isColTile;
 	
@@ -42,8 +50,7 @@ public:
 	Character(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
 		int maxhealth, const sf::Vector2f &startPos, string file_name,ID id, Weapon *weap_in) : 
 		Entity(file_name, sf::Vector2i(CHARACTERS::SPRITE_WIDTH,CHARACTERS::SPRITE_HEIGHT)), str(str), agi(agi), intel(intel), pdef(pdef),
-		mdef(mdef), currhealth(maxhealth), maxhealth(maxhealth), id(id), can_jump(true),isColTile(false),velXMultiplier(1), weap(weap_in)
-	{
+		mdef(mdef), currhealth(maxhealth), maxhealth(maxhealth), id(id), can_jump(true), poison_timer(CHARACTERS::POISON_MAX_TIME), isColTile(false),velXMultiplier(1), weap(weap_in) {
 		sprt.setPosition(startPos);
 		sprt.setOrigin(sf::Vector2f(CHARACTERS::SPRITE_WIDTH / 2.0f, CHARACTERS::SPRITE_HEIGHT / 2.0f));
 		view.setSize(sf::Vector2f(512, 512));
@@ -54,6 +61,7 @@ public:
 		
 	}
 	virtual ~Character() {}
+
 	virtual void Attack() = 0;
 	virtual void SAttack() = 0;
 	bool isKeyDown(const int &key);
@@ -63,14 +71,18 @@ public:
 	void setCollision(bool col);
 	void handleInput();
 	void handleMouse(int key, sf::RenderWindow &win);
+	
 	void takeDamage(int damage);
 	void heal(int heal);
 	void slow();
 	void boosted();
+	void poison();
+	
 	void update(float dt) override;
 	void update(sf::Vector2f pos, sf::Vector2f vel,Face face);
 	void render(sf::RenderTarget &g) override;
 	void renderSprite(sf::RenderTarget &g);
+	
 	ID getId() const;
 	Face getFace() const;
 	int getHealth() const;
