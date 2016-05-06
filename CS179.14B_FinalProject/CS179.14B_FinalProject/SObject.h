@@ -13,12 +13,11 @@ public:
 		setPos(init_pos + sf::Vector2f(SOBJECT_SIZE / 2.0f, SOBJECT_SIZE / 2.0f));
 		setOrigin(sf::Vector2f(SOBJECT_SIZE / 2.0f, SOBJECT_SIZE / 2.0f));
 	}
-	void virtual collide(Entity* collided) = 0;
-	bool is_destroyed() {
-		return barrelDurability <= 0;
-	}
-
 	virtual ~SObject() {}
+	
+	void virtual collide(Entity* collided) = 0;
+	bool can_be_destroyed();
+	void damage();
 };
 
 class HealBarrel : public SObject {
@@ -32,6 +31,13 @@ public:
 class ExplodingBarrel : public SObject {
 public:
 	ExplodingBarrel(const sf::Vector2f &init_pos) : SObject(init_pos, GAME::EXPLODEB_FILE, 10) {}
+	void update(float dt) override;
+	void collide(Entity* collided) override;
+};
+
+class PoisonousBarrel : public SObject {
+public:
+	PoisonousBarrel(const sf::Vector2f &init_pos) : SObject(init_pos, GAME::EXPLODEB_FILE, 10) {}
 	void update(float dt) override;
 	void collide(Entity* collided) override;
 };

@@ -14,7 +14,10 @@
 using namespace std;
 
 typedef chrono::steady_clock Clock;
+const auto time_beforeDC = 6.0f;
+
 atomic<ID> id_counter(0);
+
 
 
 struct Client{
@@ -93,9 +96,10 @@ int main(int argc, char **argv) {
 			socket.async_receive_from(boost::asio::buffer(recv_buffer.data(), recv_buffer.size()), source, handler);
 		};
 
+
+
 		socket.async_receive_from(boost::asio::buffer(recv_buffer.data(), recv_buffer.size()), source, handler);
 		service.run();
-
 	}
 	catch (exception e) {
 		cerr << e.what() << endl;

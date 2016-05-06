@@ -14,7 +14,8 @@ public:
 		setOrigin(sf::Vector2f(TILE_SIZE / 2.0f, TILE_SIZE / 2.0f));
 	}
 	virtual ~Tile() {}
-	void virtual DoSomethingOnCollision(Entity* collided) = 0;
+	
+	void virtual collide(Entity* collided) = 0;
 };
 
 
@@ -22,8 +23,7 @@ class NormalTile : public Tile {
 public:
 	NormalTile(const sf::Vector2f &init_pos) : Tile(init_pos,GAME::NORMAL_FILE) {}
 	void update(float dt) override;
-	void DoSomethingOnCollision(Entity* collided) override;
-
+	void collide(Entity* collided) override;
 };
 
 class LavaTile : public Tile {
@@ -35,7 +35,7 @@ public:
 		timer = 0;
 	}
 	void update(float dt) override;
-	void DoSomethingOnCollision(Entity* collided) override;
+	void collide(Entity* collided) override;
 };
 
 //added 3:12 25/03/2016
@@ -46,21 +46,21 @@ protected:
 public:
 	DestructibleTile(const sf::Vector2f &init_pos) : Tile(init_pos, GAME::NORMAL_FILE) {}
 	void update(float dt) override;
-	void DoSomethingOnCollision(Entity* collided) override;
+	void collide(Entity* collided) override;
 };
 
 class TrampolineTile : public Tile {
 public:
 	TrampolineTile(const sf::Vector2f &init_pos) : Tile(init_pos, GAME::TRAMPOLINE_FILE) {}
 	void update(float dt) override;
-	void DoSomethingOnCollision(Entity* collided) override;
+	void collide(Entity* collided) override;
 };
 
 class TarTile : public Tile {
 public:
 	TarTile(const sf::Vector2f &init_pos) : Tile(init_pos, GAME::TAR_FILE) {}
 	void update(float dt) override;
-	void DoSomethingOnCollision(Entity* collided) override;
+	void collide(Entity* collided) override;
 };
 
 
@@ -68,20 +68,19 @@ class TeleportationTile : public Tile {
 public:
 	TeleportationTile(const sf::Vector2f &init_pos) : Tile(init_pos, GAME::TELEPORTER_FILE) {}
 	void update(float dt) override;
-	void DoSomethingOnCollision(Entity* collided) override;
+	void collide(Entity* collided) override;
 };
 
 class TrapTile : public Tile {
 public:
 	TrapTile(const sf::Vector2f &init_pos) : Tile(init_pos, "trap") {}
 	void update(float dt) override;
-	void DoSomethingOnCollision(Entity* collided) override;
+	void collide(Entity* collided) override;
 };
 
 class PermeableTile : public Tile {
 public:
 	PermeableTile(const int &size, const sf::Color &color, const sf::Vector2f &init_pos) : Tile(init_pos, "permeable") {}
 	void update(float dt) override;
-	void DoSomethingOnCollision(Entity* collided) override;
+	void collide(Entity* collided) override;
 };
-

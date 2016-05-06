@@ -13,6 +13,7 @@ void Character::handleMouse(int key,sf::RenderWindow &win) {
 		//Attack();
 		if (sf::Mouse::getPosition(win).x > 0 && sf::Mouse::getPosition(win).x <= GAME::WINDOW_WIDTH/2) {
 			cout << "Left Normal" << endl;
+
 		}
 		else if (sf::Mouse::getPosition(win).x >  GAME::WINDOW_WIDTH/2 && sf::Mouse::getPosition(win).x <= GAME::WINDOW_WIDTH) {
 			cout << "Right Normal" << endl;
@@ -34,7 +35,13 @@ void Character::handleMouse(int key,sf::RenderWindow &win) {
 void Character::handleInput(){
 	vel.x = 0.0;
 	Face temp = Face::NONE;
-	
+	if (!isColTile) {
+		//cout << "reset" << endl;
+		velXMultiplier = 1.0f;
+	}
+	else {
+		//cout << "don't reset" << endl;
+	}
 	if (isKeyDown(Keys::JUMP) && can_jump) { // jump
 		temp = Face::FRONT;
 		vel.y = CHARACTERS::JUMP_RATE;
@@ -85,8 +92,16 @@ void Character::handleInput(){
 }
 
 void Character::update(float dt) {
+	if (poison_timer < CHARACTERS::POISON_MAX_TIME) {
+		if ((int)poison_timer/CHARACTERS::POISON_FREQ < (int)(poison_timer + dt)/CHARACTERS::POISON_FREQ) {
+			takeDamage(CHARACTERS::POISON_DAMAGE);
+		}
+		poison_timer += dt;
+	}
+	
 	sprt.move(vel*dt);
 	view.setCenter(sprt.getPosition());
+	
 	vel.y += GRAV;
 	can_jump = false;
 	weap->setPos(sprt.getPosition());
@@ -94,6 +109,7 @@ void Character::update(float dt) {
 
 void Character::resetGravity() {
 	vel.y = 0;
+	cout << "RESET" << endl;
 	can_jump = true;
 }
 
@@ -102,11 +118,17 @@ void Character::hit_head() {
 }
 
 void Character::boosted() {
-	vel.y = CHARACTERS::BOOST_JUMP;
+	vel.y += CHARACTERS::BOOST_JUMP;
+	cout << "VEL Y" << vel.y << endl;
+	can_jump = false;
 }
 
 void Character::slow() {
 	velXMultiplier = 0.5f;
+}
+
+void Character::poison() {
+	poison_timer = 0;
 }
 
 void Character::takeDamage(int damage){
