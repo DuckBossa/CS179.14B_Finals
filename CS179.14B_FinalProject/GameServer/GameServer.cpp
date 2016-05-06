@@ -96,8 +96,6 @@ int main(int argc, char **argv) {
 			socket.async_receive_from(boost::asio::buffer(recv_buffer.data(), recv_buffer.size()), source, handler);
 		};
 
-
-
 		socket.async_receive_from(boost::asio::buffer(recv_buffer.data(), recv_buffer.size()), source, handler);
 		service.run();
 	}

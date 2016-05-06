@@ -124,7 +124,7 @@ void Character::boosted() {
 }
 
 void Character::slow() {
-	velXMultiplier = 0.5f;
+	velXMultiplier = 0.1f;
 }
 
 void Character::poison() {
