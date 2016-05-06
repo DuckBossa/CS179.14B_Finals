@@ -119,7 +119,7 @@ void Character::hit_head() {
 void Character::boosted() {
 	vel.y += CHARACTERS::BOOST_JUMP;
 	cout << "VEL Y" << vel.y << endl;
-	can_jump = true;
+	can_jump = false;
 }
 
 void Character::slow() {

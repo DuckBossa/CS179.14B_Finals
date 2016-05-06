@@ -32,8 +32,5 @@ namespace GAME {
 
 	/*Character Filenames*/
 	const auto WAR_FILE = "Art/Characters/2.png";
-
-
-
 }
 

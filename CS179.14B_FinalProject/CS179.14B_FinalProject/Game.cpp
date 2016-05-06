@@ -67,10 +67,7 @@ bool Init(ID player_id) {
 	return true;
 }
 
-
-
 int main() {
-
 	sf::Font Font;
 	bool isLoggedIn;
 	bool charSelected;
