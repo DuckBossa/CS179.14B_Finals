@@ -240,6 +240,10 @@ bool EntityManager::has_collided(Weapon* w, SObject* t) {
 	return false;
 }
 
+bool EntityManager::has_collided(Character* u, Character* i) {
+	
+}
+
 void EntityManager::resolveCollisions(float dt) {
 	//checks map collision
 	for (auto tile : map) {

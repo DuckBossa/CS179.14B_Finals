@@ -37,7 +37,7 @@ public:
 
 class PoisonousBarrel : public SObject {
 public:
-	PoisonousBarrel(const sf::Vector2f &init_pos) : SObject(init_pos, GAME::EXPLODEB_FILE, 10) {}
+	PoisonousBarrel(const sf::Vector2f &init_pos) : SObject(init_pos, GAME::POISONB_FILE, 10) {}
 	void update(float dt) override;
 	void collide(Entity* collided) override;
 };

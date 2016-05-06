@@ -29,6 +29,7 @@ namespace GAME {
 	const auto SOBJECT_RGB = sf::Vector3i(0, 225, 75);
 	const auto EXPLODEB_FILE = "Art/SObjects/ExplodingBarrel.png";
 	const auto HEALB_FILE = "Art/SObjects/HealBarrel.png";
+	const auto POISONB_FILE = "Art/SObjects/PoisonBarrel.png";
 
 	/*Character Filenames*/
 	const auto WAR_FILE = "Art/Characters/2.png";

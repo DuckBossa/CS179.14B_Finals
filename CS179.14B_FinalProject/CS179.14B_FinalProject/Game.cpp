@@ -45,10 +45,11 @@ bool Init(ID player_id, playerChar player) {
 					em->addMapTile(new  TarTile(sf::Vector2f(x*TILE_SIZE, y*TILE_SIZE)));
 				}
 				else if (rgb == SOBJECT_RGB) {/*SObjects Spawn*/
-					if (x % 2 == 0) { // this is temporary
+					if (x%3 == 2) { // this is temporary
 						em->addSObject(new ExplodingBarrel(sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE)));
-					}
-					else {
+					} else if (x%3 == 1) {
+						em->addSObject(new PoisonousBarrel(sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE)));
+					} else if (x%3 == 0) {
 						em->addSObject(new HealBarrel(sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE)));
 					}
 				}
