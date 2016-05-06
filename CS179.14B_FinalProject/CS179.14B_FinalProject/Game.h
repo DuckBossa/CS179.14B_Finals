@@ -32,6 +32,14 @@ namespace GAME {
 
 	/*Character Filenames*/
 	const auto WAR_FILE = "Art/Characters/2.png";
+	const auto MATTHEW_FILE = "Art/Characters/1.png";
+	const auto PESTE_FILE = "Art/Characters/3.png";
+	const auto FAM_FILE = "Art/Characters/65.png";
+	const auto DEATH_FILE = "Art/Characters/6.png";
+	const auto MARK_FILE = "Art/Characters/18.png";
+	const auto LUKE_FILE = "Art/Characters/19.png";
+	const auto JOHN_FILE = "Art/Characters/38.png";
+
 
 	/*Weapon Filenames*/
 	const auto WAR_SWORD_FILE = "Art/Weapons/WarSword.png";

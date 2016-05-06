@@ -28,7 +28,7 @@ struct Status {
 	float vx, vy;
 	Face face;
 	int hp;
-	//playerChar unit;
+	playerChar unit;
 };
 
 struct StatusMessage {

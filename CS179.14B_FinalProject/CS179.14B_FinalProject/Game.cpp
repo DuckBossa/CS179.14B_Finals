@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <algorithm>
 #include <string>
@@ -21,8 +22,10 @@ TextureLoader tl;
 EntityManager* em;
 sf::RenderWindow* window;
 
-bool Init(ID player_id) {
+ID player_id;
+bool Init(ID player_id, playerChar player) {
 	vector<sf::Vector2f> summon_loc;
+	cout << "Initializing " <<  player <<endl;
 	sf::Image map;
 	if (map.loadFromFile("Art/Maps/4.png")) {
 		for (int x = 0; x < map.getSize().x; x++) {
@@ -33,7 +36,7 @@ bool Init(ID player_id) {
 					em->addMapTile(new  NormalTile(sf::Vector2f(x*TILE_SIZE, y*TILE_SIZE)));
 				}
 				else if (rgb == LAVA_RGB) {
-					em->addMapTile(new  LavaTile(sf::Vector2f(x*TILE_SIZE, y*TILE_SIZE),LAVA_TIMER));
+					em->addMapTile(new  LavaTile(sf::Vector2f(x*TILE_SIZE, y*TILE_SIZE), LAVA_TIMER));
 				}
 				else if (rgb == TRAMPOLINE_RGB) {
 					em->addMapTile(new  TrampolineTile(sf::Vector2f(x*TILE_SIZE, y*TILE_SIZE)));
@@ -42,9 +45,10 @@ bool Init(ID player_id) {
 					em->addMapTile(new  TarTile(sf::Vector2f(x*TILE_SIZE, y*TILE_SIZE)));
 				}
 				else if (rgb == SOBJECT_RGB) {/*SObjects Spawn*/
-					if (x%2 == 0) { // this is temporary
+					if (x % 2 == 0) { // this is temporary
 						em->addSObject(new ExplodingBarrel(sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE)));
-					} else {
+					}
+					else {
 						em->addSObject(new HealBarrel(sf::Vector2f(TILE_SIZE*x - SOBJECT_SIZE, TILE_SIZE*y - SOBJECT_SIZE)));
 					}
 				}
@@ -53,14 +57,48 @@ bool Init(ID player_id) {
 				}
 			}
 		}
+
 		window = new sf::RenderWindow(sf::VideoMode(GAME::WINDOW_WIDTH, GAME::WINDOW_HEIGHT), "Fight Me");
 	}
 	else {
 		cout << "ERROR" << "\n";
 	}
-
 	if (!summon_loc.empty()) {
-		em->setMain(new War(10, 7, 2, 7, 3, 10, summon_loc[0], player_id));
+		switch (player) {
+		case playerChar::WAR: {
+			em->setMain(new War(10, 7, 2, 7, 3, 20, summon_loc[0], player_id));
+			break;
+		}
+	
+		case playerChar::PESTILENCE: {
+			em->setMain(new Pestilence(7, 10, 2, 5, 5, 20, summon_loc[0], player_id));
+			break;
+		}
+		case playerChar::FAMINE: {
+			em->setMain(new Famine(2, 7, 10, 3, 7, 20, summon_loc[0], player_id));
+			break;
+		}
+		case playerChar::DEATH: {
+			em->setMain(new Death(10, 2, 7, 3, 7, 20, summon_loc[0], player_id));
+			break;
+		}
+		case playerChar::MATTHEW: {
+			em->setMain(new Matthew(2, 7, 10, 3, 7, 20, summon_loc[0], player_id));
+			break;
+		}
+		case playerChar::MARK: {
+			em->setMain(new Mark(10, 7, 2, 7, 3, 20, summon_loc[0], player_id));
+			break;
+		}
+		case playerChar::LUKE: {
+			em->setMain(new Luke(10, 7, 2, 7, 3, 20, summon_loc[0], player_id));
+			break;
+		}
+		case playerChar::JOHN: {
+			em->setMain(new John(7, 10, 2, 7, 3, 20, summon_loc[0], player_id));
+			break;
+		}
+		}
 	}
 	cout << "Connected. Client id: " << player_id << endl;
 
@@ -69,8 +107,9 @@ bool Init(ID player_id) {
 
 int main() {
 	sf::Font Font;
-	bool isLoggedIn;
-	bool charSelected;
+	bool isLoggedIn = false;
+	bool charSelected = false;
+	playerChar player = playerChar::PESTILENCE;
 	if (!Font.loadFromFile("font.ttf")) {
 		std::cout << "Can't load font" << std::endl;
 	}
@@ -126,9 +165,9 @@ int main() {
 		loginScreen.display();
 		loginScreen.clear();
 	}
-//code starts here for char selection
+	//code starts here for char selection
 	characterSelection.create(sf::VideoMode(400, 200), "SELECT CHARACTER");
-	while (characterSelection.isOpen() && isLoggedIn) {
+	while (characterSelection.isOpen() && isLoggedIn && !charSelected) {
 		sf::Event characterEvent;
 		sf::Texture texture;
 		sf::Sprite sprite;
@@ -142,75 +181,84 @@ int main() {
 			if (characterEvent.type == sf::Event::Closed) {
 				characterSelection.close();
 			}
-			if (characterEvent.key.code == sf::Keyboard::BackSpace){
+			if (characterEvent.key.code == sf::Keyboard::BackSpace) {
 				characterSelection.close();
 			}
 			if (characterEvent.type == sf::Event::MouseButtonPressed)
 			{
 				if (characterEvent.mouseButton.button == sf::Mouse::Left)
 				{
-					
+
 					if (characterEvent.mouseButton.y >= 0 && characterEvent.mouseButton.y < 100) {
 						if (characterEvent.mouseButton.x >= 0 && characterEvent.mouseButton.x < 100) {
 							//character1
-							std::cout << "character1" << std::endl;
+							std::cout << "WAR" << std::endl;
+							player = playerChar::WAR;
 							charSelected = true;
-							characterSelection.close();
-
+							break;
 						}
 						if (characterEvent.mouseButton.x >= 100 && characterEvent.mouseButton.x < 200) {
-							std::cout << "character2" << std::endl;
+							std::cout << "FAMINE" << std::endl;
+							player = playerChar::FAMINE;
 							charSelected = true;
-							characterSelection.close();
+							break;
 						}
 						if (characterEvent.mouseButton.x >= 200 && characterEvent.mouseButton.x < 300) {
-							std::cout << "character3" << std::endl;
-							charSelected = true;
-							characterSelection.close();
+							std::cout << "PESTILENCE" << std::endl;
+							player = playerChar::PESTILENCE;
+							charSelected = true; 
+							break;
 						}
 						if (characterEvent.mouseButton.x >= 300 && characterEvent.mouseButton.x < 400) {
-							std::cout << "character4" << std::endl;
-							charSelected = true;
-							characterSelection.close();
+							std::cout << "DEATH" << std::endl;
+							player = playerChar::DEATH;
+							charSelected = true; 
+							break;
 						}
 					}
 					if (characterEvent.mouseButton.y >= 100 && characterEvent.mouseButton.y < 200) {
 						if (characterEvent.mouseButton.x >= 0 && characterEvent.mouseButton.x < 100) {
-							std::cout << "character5" << std::endl;
+							std::cout << "MATTHEW" << std::endl;
+							player = playerChar::MATTHEW;
 							charSelected = true;
-							characterSelection.close();
+							break;
 						}
 						if (characterEvent.mouseButton.x >= 100 && characterEvent.mouseButton.x < 200) {
-							std::cout << "character6" << std::endl;
-							charSelected = true;
-							characterSelection.close();
+							std::cout << "MARK" << std::endl;
+							player = playerChar::MARK;
+							charSelected = true; 
+							break;
 						}
 						if (characterEvent.mouseButton.x >= 200 && characterEvent.mouseButton.x < 300) {
-							std::cout << "character7" << std::endl;
+							std::cout << "LUKE" << std::endl;
+							player = playerChar::LUKE;
 							charSelected = true;
-							characterSelection.close();
+							break;
 						}
 						if (characterEvent.mouseButton.x >= 300 && characterEvent.mouseButton.x < 400) {
-							std::cout << "character8" << std::endl;
+							std::cout << "JOHN" << std::endl;
+							player = playerChar::JOHN;
 							charSelected = true;
-							characterSelection.close();
+							break;
 						}
 					}
-					
+
 				}
 			}
 		}
+
 		characterSelection.draw(sprite);
 		characterSelection.display();
 		characterSelection.clear();
+
 	}
 
-
+	characterSelection.close();
 	sf::Clock clock;
 	sf::Time lag = sf::seconds(0);
 	sf::UdpSocket socket;
 	const unsigned short port = 8080;
-	ID player_id;
+
 	const unsigned short listen_port = port + 1;
 	sf::IpAddress server_address(ip);
 	socket.bind(listen_port);
@@ -244,8 +292,7 @@ int main() {
 	std::cout << "Connected to Server!" << endl;
 	socket.setBlocking(false);
 	em = new EntityManager(&socket, ip.c_str(), port);
-	bool success = Init(player_id);
-	
+	bool success = Init(player_id, player);
 	while (window->isOpen() && success && isLoggedIn && charSelected) {
 		sf::Event event;
 		while (window->pollEvent(event)) {
@@ -292,3 +339,8 @@ int main() {
 
 	return 0;
 }
+
+
+
+
+

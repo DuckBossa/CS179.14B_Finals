@@ -191,6 +191,10 @@ void Character::setCollision(bool tile) {
 ID Character::getId() const{
 	return id;
 }
+playerChar Character::getType() const {
+	return type;
+}
+
 Face Character::getFace() const {
 	return currface;
 }
@@ -205,3 +209,24 @@ Weapon* Character::get_weapon() const {
 
 void War::Attack() {}
 void War::SAttack() {}
+
+void Famine::Attack() {}
+void Famine::SAttack() {}
+
+void Death::Attack() {}
+void Death::SAttack() {}
+
+void Pestilence::Attack() {}
+void Pestilence::SAttack() {}
+
+void John::Attack() {}
+void John::SAttack() {}
+
+void Luke::Attack() {}
+void Luke::SAttack() {}
+
+void Matthew::Attack() {}
+void Matthew::SAttack() {}
+
+void Mark::Attack() {}
+void Mark::SAttack() {}

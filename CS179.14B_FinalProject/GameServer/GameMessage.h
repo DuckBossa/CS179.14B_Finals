@@ -2,16 +2,19 @@
 #include <cstdlib>
 #include <cstdint>
 
-typedef uint32_t ID;
-
 enum class MessageType : uint8_t {
 	Connect = 0, Disconnect = 1, Reconnect = 2, Status = 3, Ping = 4, Pong = 5
 };
 
-
 enum Face : uint8_t {
 	UP = 0, FRONT = 1, LEFT = 2, RIGHT = 3, NONE = 4
 };
+
+enum playerChar : uint8_t {
+	WAR = 0, PESTILENCE = 1, FAMINE = 2, DEATH = 3, MATTHEW = 4, MARK = 5, LUKE = 6, JOHN = 7
+};
+
+typedef uint32_t ID;
 
 #pragma pack(push, 1)
 struct Message {
@@ -25,6 +28,7 @@ struct Status {
 	float vx, vy;
 	Face face;
 	int hp;
+	playerChar unit;
 };
 
 struct StatusMessage {

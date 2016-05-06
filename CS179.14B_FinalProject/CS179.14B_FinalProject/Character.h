@@ -31,7 +31,7 @@ namespace CHARACTERS {
 class Character : public Entity {
 private:
 	ID id;
-	
+	playerChar type;
 	int str, agi, intel, pdef, mdef, currhealth, maxhealth, seq;
 	float poison_timer;
 	float velXMultiplier;
@@ -48,9 +48,9 @@ private:
 	
 public:
 	Character(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
-		int maxhealth, const sf::Vector2f &startPos, string file_name,ID id, Weapon *weap_in) : 
+		int maxhealth, const sf::Vector2f &startPos, string file_name,ID id, Weapon *weap_in, playerChar type) : 
 		Entity(file_name, sf::Vector2i(CHARACTERS::SPRITE_WIDTH,CHARACTERS::SPRITE_HEIGHT)), str(str), agi(agi), intel(intel), pdef(pdef),
-		mdef(mdef), currhealth(maxhealth), maxhealth(maxhealth), id(id), can_jump(true), poison_timer(CHARACTERS::POISON_MAX_TIME), isColTile(false),velXMultiplier(1), weap(weap_in) {
+		mdef(mdef), currhealth(maxhealth), maxhealth(maxhealth), id(id), can_jump(true), poison_timer(CHARACTERS::POISON_MAX_TIME), isColTile(false),velXMultiplier(1), weap(weap_in),type(type) {
 		sprt.setPosition(startPos);
 		sprt.setOrigin(sf::Vector2f(CHARACTERS::SPRITE_WIDTH / 2.0f, CHARACTERS::SPRITE_HEIGHT / 2.0f));
 		view.setSize(sf::Vector2f(512, 512));
@@ -82,6 +82,7 @@ public:
 	void renderSprite(sf::RenderTarget &g);
 	
 	ID getId() const;
+	playerChar getType() const;
 	Face getFace() const;
 	int getHealth() const;
 	sf::Vector2f getVel() const;
@@ -96,7 +97,97 @@ class War : public Character {
 public:
 	War(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
 		int maxhealth, const sf::Vector2f &startPos, ID id) : 
-		Character(str, agi, intel, pdef, mdef, maxhealth, startPos, GAME::WAR_FILE, id, new Sword()){}
+		Character(str, agi, intel, pdef, mdef, maxhealth, startPos, GAME::WAR_FILE, id, new Sword(),playerChar::WAR){}
 	void Attack() override;
 	void SAttack() override;
 };
+
+
+
+class Famine : public Character {
+public:
+	Famine(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
+		int maxhealth, const sf::Vector2f &startPos, ID id) :
+		Character(str, agi, intel, pdef, mdef, maxhealth, startPos, GAME::FAM_FILE, id, new Sword(), playerChar::FAMINE) {}
+	void Attack() override;
+	void SAttack() override;
+};
+
+
+
+class Pestilence : public Character {
+
+public:
+	Pestilence(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
+		int maxhealth, const sf::Vector2f &startPos, ID id) :
+		Character(str, agi, intel, pdef, mdef, maxhealth, startPos, GAME::PESTE_FILE, id, new Sword(), playerChar::PESTILENCE) {}
+	void Attack() override;
+	void SAttack() override;
+};
+
+
+
+class Death : public Character {
+
+public:
+	Death(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
+		int maxhealth, const sf::Vector2f &startPos, ID id) :
+		Character(str, agi, intel, pdef, mdef, maxhealth, startPos, GAME::DEATH_FILE, id, new Sword(), playerChar::DEATH) {}
+	void Attack() override;
+	void SAttack() override;
+};
+
+
+class Matthew : public Character {
+
+public:
+	Matthew(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
+		int maxhealth, const sf::Vector2f &startPos, ID id) :
+		Character(str, agi, intel, pdef, mdef, maxhealth, startPos, GAME::MATTHEW_FILE, id, new Sword(), playerChar::MATTHEW) {}
+	void Attack() override;
+	void SAttack() override;
+};
+
+
+class Mark : public Character {
+
+public:
+	Mark(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
+		int maxhealth, const sf::Vector2f &startPos, ID id) :
+		Character(str, agi, intel, pdef, mdef, maxhealth, startPos, GAME::MARK_FILE, id, new Sword(), playerChar::MARK) {}
+	void Attack() override;
+	void SAttack() override;
+};
+
+
+class Luke : public Character {
+
+public:
+	Luke(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
+		int maxhealth, const sf::Vector2f &startPos, ID id) :
+		Character(str, agi, intel, pdef, mdef, maxhealth, startPos, GAME::LUKE_FILE, id, new Sword(), playerChar::LUKE) {}
+	void Attack() override;
+	void SAttack() override;
+};
+
+
+class John : public Character {
+
+public:
+	John(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
+		int maxhealth, const sf::Vector2f &startPos, ID id) :
+		Character(str, agi, intel, pdef, mdef, maxhealth, startPos, GAME::JOHN_FILE, id, new Sword(), playerChar::JOHN) {}
+	void Attack() override;
+	void SAttack() override;
+};
+
+
+
+
+
+
+
+
+
+
+

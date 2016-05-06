@@ -39,7 +39,41 @@ void EntityManager::update(float dt) {
 					return p->getId() == pos_data->id;
 				});
 				if (it == other_players.end()) {
-					other_players.emplace_back(new War(10, 7, 2, 7, 3, 10, sf::Vector2f(pos_data->stat.px,pos_data->stat.py), pos_data->id));
+					switch (pos_data->stat.unit) {
+					case playerChar::WAR: {
+						other_players.emplace_back(new War(10, 7, 2, 7, 3, 10, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
+						break;
+					}
+
+					case playerChar::PESTILENCE: {
+						other_players.emplace_back(new Pestilence(7, 10, 2, 5, 5, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
+						break;
+					}
+					case playerChar::FAMINE: {
+						other_players.emplace_back(new Famine(2, 7, 10, 3, 7, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
+						break;
+					}
+					case playerChar::DEATH: {
+						other_players.emplace_back(new Death(10, 2, 7, 3, 7, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
+						break;
+					}
+					case playerChar::MATTHEW: {
+						other_players.emplace_back(new Matthew(2, 7, 10, 3, 7, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
+						break;
+					}
+					case playerChar::MARK: {
+						other_players.emplace_back(new Mark(10, 7, 2, 7, 3, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
+						break;
+					}
+					case playerChar::LUKE: {
+						other_players.emplace_back(new Luke(10, 7, 2, 7, 3, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
+						break;
+					}
+					case playerChar::JOHN: {
+						other_players.emplace_back(new John(7, 10, 2, 7, 3, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
+						break;
+					}
+					}
 				}
 				else {
 					(*it)->update(sf::Vector2f(pos_data->stat.px, pos_data->stat.py), sf::Vector2f(pos_data->stat.vx, pos_data->stat.vy), pos_data->stat.face);
@@ -76,6 +110,7 @@ void EntityManager::update(float dt) {
 		sm->id = main_player->getId();
 		sm->stat.hp = main_player->getHealth();
 		sm->order = -1; //CHANGE THIS
+		sm->stat.unit = main_player->getType();
 		if (socket->send(buffer, sizeof(buffer), address, port) == !sf::Socket::Done) {
 			cout << "Not sending data" << endl;
 		}

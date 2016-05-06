@@ -32,7 +32,6 @@ int Weapon::get_right_attack()
 void Sword::update(float dt)
 {
 	curr_anim_length += dt;
-	cout << anim_length << endl;
 	if (curr_anim_length < anim_length)
 	{
 		sprt.rotate(curr_attack);
