@@ -11,6 +11,11 @@ void Weapon::render(sf::RenderTarget &g)
 	Entity::render(g);
 }
 
+void Weapon::attack(sf::Vector2f player_pos)
+{
+
+}
+
 /*
 void Weapon::handleMouse(int key, sf::RenderWindow &win) {
 	if (key == 1) {
