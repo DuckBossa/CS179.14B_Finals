@@ -18,9 +18,8 @@ public:
 	sf::UdpSocket* socket;
 	sf::IpAddress address;
 	unsigned int port;
-	bool alreadyCollided;
 	//    socket.send(buffer, sizeof(buffer), server_address, port);
-	EntityManager(sf::UdpSocket* sock,const char* ip,const unsigned int &port) : socket(sock), address(ip), port(port),alreadyCollided(false){
+	EntityManager(sf::UdpSocket* sock,const char* ip,const unsigned int &port) : socket(sock), address(ip), port(port) {
 		//bg.setTexture(*tl.getTexture("Art/Maps/bg_temp.png"));
 	}
 	virtual ~EntityManager() {}

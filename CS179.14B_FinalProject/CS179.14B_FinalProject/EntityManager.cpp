@@ -107,53 +107,15 @@ void EntityManager::render(sf::RenderTarget &g) {
 	}
 }
 
-
-/* void EntityManager::collide(Tile* t, Character* p) {
-	sf::Rect<float> interX;
-	sf::Rect<float> interY;
-	bool colX = false;
-	bool colY = false;
-	bool colYTop = false;
-	//Y
-	if (t->bounds().intersects(p->getYColBox(), interY)) {
-		if (t->getPosition().y > interY.top) {
-			p->move(sf::Vector2f(0, -interY.height));
-			colYTop = true;
-			p->resetGravity();
-		}
-		else if (t->getPosition().y <= interY.top) {
-			p->move(sf::Vector2f(0, interY.height));
-		}
-		colY = true;
-	}
-
-	//X
-	if (t->bounds().intersects(p->getXColBox(), interX)) {
-		if (t->getPosition().x > interX.left + interX.width) {
-			p->move(sf::Vector2f(-interX.width, 0));
-		}
-		else if (t->getPosition().x < interX.left) {
-			p->move(sf::Vector2f(interX.width, 0));
-		}
-		colX = true;
-	}
-
-	if (colYTop) {
-		t->DoSomethingOnCollision(p);
-	}
-
-	p->setCollision(colX, colY);
-} */
-
 bool EntityManager::has_collided(Tile* t, Character* p) {
 	sf::Rect<float> collision;
+	
 	if (t->bounds().intersects(p->bounds(), collision)) {
 		if (collision.height < collision.width) {
 			if (collision.top > p->bounds().top) {
-				t->DoSomethingOnCollision(p);
 				p->move(sf::Vector2f(0, -collision.height));
-				alreadyCollided = true;
 				p->resetGravity();
+				return true;
 			} else {
 				p->move(sf::Vector2f(0, collision.height));
 				p->hit_head();
@@ -166,49 +128,9 @@ bool EntityManager::has_collided(Tile* t, Character* p) {
 			}
 			
 		}
-		return true;
 	}
-	p->setCollision(alreadyCollided);
 	return false;
 }
-
-/* bool EntityManager::collide(SObject* t, Character* p) {
-	sf::Rect<float> interX;
-	sf::Rect<float> interY;
-	bool colX = false;
-	bool colY = false;
-	bool collided = false;
-	//Y
-	if (t->bounds().intersects(p->getYColBox(), interY)) {
-		if (t->getPosition().y > interY.top) {
-			p->move(sf::Vector2f(0, -interY.height));
-			p->resetGravity();
-			//delete t;
-		}
-		else if (t->getPosition().y <= interY.top) {
-			p->move(sf::Vector2f(0, interY.height));
-			//delete t;
-		}
-		collided = true;
-		colY = true;
-	}
-
-	//X
-	if (t->bounds().intersects(p->getXColBox(), interX)) {
-		if (t->getPosition().x > interX.left + interX.width) {
-			p->move(sf::Vector2f(-interX.width, 0));
-			//delete t;
-		}
-		else if (t->getPosition().x < interX.left) {
-			p->move(sf::Vector2f(interX.width, 0));
-			//delete t;
-		}
-		colX = true;
-	}
-
-	p->setCollision(colX, colY);
-	return collided;
-} */
 
 bool EntityManager::has_collided(SObject* s, Character* p) {
 	sf::Rect<float> collision;
@@ -247,11 +169,14 @@ void EntityManager::collide(Weapon* w, SObject* t) {
 }
 
 void EntityManager::resolveCollisions(float dt) {
-	alreadyCollided = false;
 	for (auto tile : map) {
-		if (has_collided(tile, main_player)) {};
+		if (has_collided(tile, main_player)) {
+			tile->collide(main_player);
+		}
 		for (auto player : other_players) {
-			if (has_collided(tile, player)) {}
+			if (has_collided(tile, player)) {
+				tile->collide(player);
+			}
 		}
 	}
 	

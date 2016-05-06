@@ -3,15 +3,14 @@
 
 //added 9:12 pm 25/03/2016
 void NormalTile::update(float dt) {}
-void NormalTile::DoSomethingOnCollision(Entity* collided) {}
+void NormalTile::collide(Entity* collided) {}
 
 void LavaTile::update(float dt) {
 	if( timer < damageTimer){
 		timer += dt;
 	}
 }
-void LavaTile::DoSomethingOnCollision(Entity* collided){
-
+void LavaTile::collide(Entity* collided){
 	if (auto e = dynamic_cast<Character*>(collided)) {
 		cout << "Do Damage\n";
 		if (timer >= damageTimer){
@@ -22,7 +21,8 @@ void LavaTile::DoSomethingOnCollision(Entity* collided){
 }
 
 void DestructibleTile::update(float dt) {}
-void DestructibleTile::DoSomethingOnCollision(Entity* collided){
+
+void DestructibleTile::collide(Entity* collided){
 	tileDurability--;
 	if(tileDurability <= 0){
 		toDelete = true;
@@ -30,8 +30,8 @@ void DestructibleTile::DoSomethingOnCollision(Entity* collided){
 }
 
 void TrampolineTile::update(float dt) {}
-void TrampolineTile::DoSomethingOnCollision(Entity* collided){
-	
+
+void TrampolineTile::collide(Entity* collided){
 	if (auto e = dynamic_cast<Character*>(collided)) {
 		cout << "Jump Higher\n";
 		e->boosted();
@@ -39,21 +39,21 @@ void TrampolineTile::DoSomethingOnCollision(Entity* collided){
 }
 
 void TarTile::update(float dt) {}
-void TarTile::DoSomethingOnCollision(Entity* collided){
-	
+
+void TarTile::collide(Entity* collided){
 	if (auto e = dynamic_cast<Character*>(collided)) {
 		cout << "slow " << endl;
 		e->slow();
 	}
 }
+
 /*
 void TeleportationTile::update(float dt) {}
-void TeleportationTile::DoSomethingOnCollision(Entity* collided){}
+void TeleportationTile::collide(Entity* collided){}
 
 void TrapTile::update(float dt) {}
-void TrapTile::DoSomethingOnCollision(Entity* collided){}
+void TrapTile::collide(Entity* collided){}
 
 void PermeableTile::update(float dt) {}
-void PermeableTile::DoSomethingOnCollision(Entity* collided){}
+void PermeableTile::collide(Entity* collided){}
 */
-
