@@ -1,19 +1,46 @@
 #include "Weapon.h"
 #include "Game.h"
 
+/*
 void Weapon::update(float dt)
 {
 
 }
+*/
 
 void Weapon::render(sf::RenderTarget &g)
 {
 	Entity::render(g);
 }
 
-void Weapon::attack(sf::Vector2f player_pos)
+void Weapon::attack(int attack)
 {
+	curr_anim_length = 0;
+	curr_attack = attack;
+}
 
+int Weapon::get_left_attack()
+{
+	return left_attack;
+}
+
+int Weapon::get_right_attack()
+{
+	return right_attack;
+}
+
+void Sword::update(float dt)
+{
+	curr_anim_length += dt;
+	cout << anim_length << endl;
+	if (curr_anim_length < anim_length)
+	{
+		sprt.rotate(curr_attack);
+	}
+	else
+	{
+		sprt.setRotation(270);
+	}
 }
 
 /*
