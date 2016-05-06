@@ -6,13 +6,14 @@ void NormalTile::update(float dt) {}
 void NormalTile::DoSomethingOnCollision(Entity* collided) {}
 
 void LavaTile::update(float dt) {
-	
-	if(! timer >= damageTimer){
+	if( timer < damageTimer){
 		timer += dt;
 	}
 }
 void LavaTile::DoSomethingOnCollision(Entity* collided){
+
 	if (auto e = dynamic_cast<Character*>(collided)) {
+		cout << "Do Damage\n";
 		if (timer >= damageTimer){
 			timer = 0;
 			e->takeDamage(5);
@@ -30,15 +31,19 @@ void DestructibleTile::DoSomethingOnCollision(Entity* collided){
 
 void TrampolineTile::update(float dt) {}
 void TrampolineTile::DoSomethingOnCollision(Entity* collided){
+	
 	if (auto e = dynamic_cast<Character*>(collided)) {
-			e->boosted();
-		}
+		cout << "Jump Higher\n";
+		e->boosted();
+	}
 }
 
 void TarTile::update(float dt) {}
 void TarTile::DoSomethingOnCollision(Entity* collided){
+	
 	if (auto e = dynamic_cast<Character*>(collided)) {
-			e->slow();
+		cout << "slow " << endl;
+		e->slow();
 	}
 }
 /*

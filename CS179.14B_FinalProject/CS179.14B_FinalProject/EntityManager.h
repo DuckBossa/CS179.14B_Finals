@@ -18,10 +18,12 @@ public:
 	sf::UdpSocket* socket;
 	sf::IpAddress address;
 	unsigned int port;
+	bool alreadyCollided;
 	//    socket.send(buffer, sizeof(buffer), server_address, port);
-	EntityManager(sf::UdpSocket* sock,const char* ip,const unsigned int &port) : socket(sock), address(ip), port(port){
-		bg.setTexture(*tl.getTexture("Art/Maps/bg_temp.png"));
+	EntityManager(sf::UdpSocket* sock,const char* ip,const unsigned int &port) : socket(sock), address(ip), port(port),alreadyCollided(false){
+		//bg.setTexture(*tl.getTexture("Art/Maps/bg_temp.png"));
 	}
+	virtual ~EntityManager() {}
 	void addPlayer(Character* p);
 	void setMain(Character* p);
 	void addMapTile(Tile* t);
@@ -34,7 +36,6 @@ public:
 	void resolveCollisions(float dt);
 	void collide(Weapon* w, Character* p);
 	void collide(Weapon* w, SObject* t);
-	
 	bool has_collided(Tile* t, Character* p);
 	bool has_collided(SObject* t, Character* p);
 };

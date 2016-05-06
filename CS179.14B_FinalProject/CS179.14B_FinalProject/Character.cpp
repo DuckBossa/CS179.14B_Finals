@@ -13,6 +13,7 @@ void Character::handleMouse(int key,sf::RenderWindow &win) {
 		//Attack();
 		if (sf::Mouse::getPosition(win).x > 0 && sf::Mouse::getPosition(win).x <= GAME::WINDOW_WIDTH/2) {
 			cout << "Left Normal" << endl;
+
 		}
 		else if (sf::Mouse::getPosition(win).x >  GAME::WINDOW_WIDTH/2 && sf::Mouse::getPosition(win).x <= GAME::WINDOW_WIDTH) {
 			cout << "Right Normal" << endl;
@@ -34,7 +35,13 @@ void Character::handleMouse(int key,sf::RenderWindow &win) {
 void Character::handleInput(){
 	vel.x = 0.0;
 	Face temp = Face::NONE;
-	
+	if (!isColTile) {
+		//cout << "reset" << endl;
+		velXMultiplier = 1.0f;
+	}
+	else {
+		//cout << "don't reset" << endl;
+	}
 	if (isKeyDown(Keys::JUMP) && can_jump) { // jump
 		temp = Face::FRONT;
 		vel.y = CHARACTERS::JUMP_RATE;
@@ -43,11 +50,11 @@ void Character::handleInput(){
 	
 	if (isKeyDown(Keys::LEFT)) {
 		temp = Face::LEFT;
-		vel.x -= CHARACTERS::BASE_SPEED*agi;
+		vel.x -= CHARACTERS::BASE_SPEED*agi*velXMultiplier;
 	}
 	if (isKeyDown(Keys::RIGHT)) {
 		temp = Face::RIGHT;
-		vel.x += CHARACTERS::BASE_SPEED*agi;
+		vel.x += CHARACTERS::BASE_SPEED*agi*velXMultiplier;
 	}
 
 	if (temp == currface) {
@@ -101,6 +108,7 @@ void Character::update(float dt) {
 
 void Character::resetGravity() {
 	vel.y = 0;
+	cout << "RESET" << endl;
 	can_jump = true;
 }
 
@@ -109,11 +117,13 @@ void Character::hit_head() {
 }
 
 void Character::boosted() {
-	vel.y = CHARACTERS::BOOST_JUMP;
+	vel.y += CHARACTERS::BOOST_JUMP;
+	cout << "VEL Y" << vel.y << endl;
+	can_jump = true;
 }
 
 void Character::slow() {
-	vel.x *= .5;
+	velXMultiplier = 0.5f;
 }
 
 void Character::poison() {
@@ -162,6 +172,10 @@ void Character::render(sf::RenderTarget &g) {
 	g.draw(health_bar);
 }
 
+void Character::renderSprite(sf::RenderTarget &g) {
+	Entity::render(g);
+}
+
 void Character::update(sf::Vector2f pos, sf::Vector2f vel, Face face) {
 	setPos(pos);
 	// currface = face;
@@ -177,6 +191,10 @@ Face Character::getFace() const {
 
 int Character::getHealth() const {
 	return currhealth;
+}
+
+void Character::setCollision(bool tile) {
+	isColTile = tile;
 }
 
 void War::Attack() {}

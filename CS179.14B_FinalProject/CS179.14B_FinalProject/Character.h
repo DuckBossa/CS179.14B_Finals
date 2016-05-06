@@ -2,6 +2,7 @@
 #include "Entities.h"
 #include "Weapon.h"
 #include "GameMessage.h"
+#include "Game.h"
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
@@ -33,7 +34,7 @@ private:
 	
 	int str, agi, intel, pdef, mdef, currhealth, maxhealth, seq;
 	float poison_timer;
-	
+	float velXMultiplier;
 	Face currface;
 	sf::Vector2f vel;
 	sf::Vector2f acc;
@@ -43,12 +44,13 @@ private:
 	Weapon* weap;
 	
 	bool can_jump;
+	bool isColTile;
 	
 public:
 	Character(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
 		int maxhealth, const sf::Vector2f &startPos, string file_name,ID id) : 
 		Entity(file_name, sf::Vector2i(CHARACTERS::SPRITE_WIDTH,CHARACTERS::SPRITE_HEIGHT)), str(str), agi(agi), intel(intel), pdef(pdef),
-		mdef(mdef), currhealth(maxhealth), maxhealth(maxhealth), id(id), can_jump(true), poison_timer(CHARACTERS::POISON_MAX_TIME) {
+		mdef(mdef), currhealth(maxhealth), maxhealth(maxhealth), id(id), can_jump(true), poison_timer(CHARACTERS::POISON_MAX_TIME), isColTile(false),velXMultiplier(1) {
 		sprt.setPosition(startPos);
 		sprt.setOrigin(sf::Vector2f(CHARACTERS::SPRITE_WIDTH / 2.0f, CHARACTERS::SPRITE_HEIGHT / 2.0f));
 		view.setSize(sf::Vector2f(512, 512));
@@ -56,14 +58,15 @@ public:
 		currface = Face::NONE;
 		seq;
 	}
-	
+	virtual ~Character() {}
+
 	virtual void Attack() = 0;
 	virtual void SAttack() = 0;
 	bool isKeyDown(const int &key);
 	
 	void resetGravity();
 	void hit_head();
-	
+	void setCollision(bool col);
 	void handleInput();
 	void handleMouse(int key, sf::RenderWindow &win);
 	
@@ -76,6 +79,7 @@ public:
 	void update(float dt) override;
 	void update(sf::Vector2f pos, sf::Vector2f vel,Face face);
 	void render(sf::RenderTarget &g) override;
+	void renderSprite(sf::RenderTarget &g);
 	
 	ID getId() const;
 	Face getFace() const;
@@ -89,8 +93,8 @@ public:
 class War : public Character {
 public:
 	War(const int &str, const int &agi, const int &intel, const int &pdef, const int &mdef,
-		int maxhealth, const sf::Vector2f &startPos, string file_name,ID id) : 
-		Character(str, agi, intel, pdef, mdef, maxhealth, startPos, file_name, id) {}
+		int maxhealth, const sf::Vector2f &startPos, ID id) : 
+		Character(str, agi, intel, pdef, mdef, maxhealth, startPos, GAME::WAR_FILE, id) {}
 	void Attack() override;
 	void SAttack() override;
 };
