@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cstdlib>
 #include <cstdint>
 
@@ -17,6 +18,7 @@ enum playerChar : uint8_t {
 typedef uint32_t ID;
 
 #pragma pack(push, 1)
+
 struct Message {
 	MessageType type;
 	uint16_t size;

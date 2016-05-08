@@ -1,7 +1,9 @@
 #include "EntityManager.h"
 #include "GameMessage.h"
+
 #include <cassert>
 #include <algorithm>
+
 void EntityManager::addPlayer(Character* p) {
 	other_players.push_back(p);
 }
@@ -38,7 +40,6 @@ void EntityManager::handleMouse(int key, sf::RenderWindow &g) {
 			// cout << "sent success!" << endl;
 		}
 	}
-
 }
 void EntityManager::update(float dt) {
 	{
@@ -49,73 +50,71 @@ void EntityManager::update(float dt) {
 			assert(packet.getDataSize() >= sizeof(Message));
 			auto msg = reinterpret_cast<const Message*>(packet.getData());
 			switch (msg->type) {
-			case MessageType::Status: {
-				auto pos_data = reinterpret_cast<const StatusMessage*>(msg->data);
-				auto it = std::find_if(other_players.begin(), other_players.end(), [pos_data](const Character *p) {
-					return p->getId() == pos_data->id;
-				});
-				if (it == other_players.end()) {
-					switch (pos_data->stat.unit) {
-					case playerChar::WAR: {
-						other_players.emplace_back(new War(10, 7, 2, 7, 3, 10, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
-						break;
+				case MessageType::Status: {
+					auto pos_data = reinterpret_cast<const StatusMessage*>(msg->data);
+					auto it = std::find_if(other_players.begin(), other_players.end(), [pos_data](const Character *p) {
+						return p->getId() == pos_data->id;
+					});
+					if (it == other_players.end()) {
+						switch (pos_data->stat.unit) {
+							case playerChar::WAR: {
+								other_players.emplace_back(new War(10, 7, 2, 7, 3, 10, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
+								break;
+							}
+							case playerChar::PESTILENCE: {
+								other_players.emplace_back(new Pestilence(7, 10, 2, 5, 5, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
+								break;
+							}
+							case playerChar::FAMINE: {
+								other_players.emplace_back(new Famine(2, 7, 10, 3, 7, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
+								break;
+							}
+							case playerChar::DEATH: {
+								other_players.emplace_back(new Death(10, 2, 7, 3, 7, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
+								break;
+							}
+							case playerChar::MATTHEW: {
+								other_players.emplace_back(new Matthew(2, 7, 10, 3, 7, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
+								break;
+							}
+							case playerChar::MARK: {
+								other_players.emplace_back(new Mark(10, 7, 2, 7, 3, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
+								break;
+							}
+							case playerChar::LUKE: {
+								other_players.emplace_back(new Luke(10, 7, 2, 7, 3, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
+								break;
+							}
+							case playerChar::JOHN: {
+								other_players.emplace_back(new John(7, 10, 2, 7, 3, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
+								break;
+							}
+						}
+					} else {
+						(*it)->update(sf::Vector2f(pos_data->stat.px, pos_data->stat.py), sf::Vector2f(pos_data->stat.vx, pos_data->stat.vy), pos_data->stat.face);
 					}
-
-					case playerChar::PESTILENCE: {
-						other_players.emplace_back(new Pestilence(7, 10, 2, 5, 5, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
-						break;
-					}
-					case playerChar::FAMINE: {
-						other_players.emplace_back(new Famine(2, 7, 10, 3, 7, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
-						break;
-					}
-					case playerChar::DEATH: {
-						other_players.emplace_back(new Death(10, 2, 7, 3, 7, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
-						break;
-					}
-					case playerChar::MATTHEW: {
-						other_players.emplace_back(new Matthew(2, 7, 10, 3, 7, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
-						break;
-					}
-					case playerChar::MARK: {
-						other_players.emplace_back(new Mark(10, 7, 2, 7, 3, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
-						break;
-					}
-					case playerChar::LUKE: {
-						other_players.emplace_back(new Luke(10, 7, 2, 7, 3, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
-						break;
-					}
-					case playerChar::JOHN: {
-						other_players.emplace_back(new John(7, 10, 2, 7, 3, 20, sf::Vector2f(pos_data->stat.px, pos_data->stat.py), pos_data->id));
-						break;
-					}
-					}
-				}
-				else {
-					(*it)->update(sf::Vector2f(pos_data->stat.px, pos_data->stat.py), sf::Vector2f(pos_data->stat.vx, pos_data->stat.vy), pos_data->stat.face);
-				}
-				break;
-			}
-			case MessageType::Attack: {
-				auto pos_data = reinterpret_cast<const AttackMessage*>(msg->data);
-				auto it = std::find_if(other_players.begin(), other_players.end(), [pos_data](const Character *p) {
-					return p->getId() == pos_data->id;
-				});
-				int command = pos_data->attack;
-				switch (command) {
-				case 1:
-					(*it)->get_weapon()->attack((*it)->get_weapon()->get_left_attack());
-					break;
-				case 2:
-					(*it)->get_weapon()->attack((*it)->get_weapon()->get_right_attack());
 					break;
 				}
-				
-				break;
-			}
+				case MessageType::Attack: {
+					auto pos_data = reinterpret_cast<const AttackMessage*>(msg->data);
+					auto it = std::find_if(other_players.begin(), other_players.end(), [pos_data](const Character *p) {
+						return p->getId() == pos_data->id;
+					});
+					int command = pos_data->attack;
+					switch (command) {
+						case 1: {
+							(*it)->get_weapon()->attack((*it)->get_weapon()->get_left_attack());
+							break;
+						}
+						case 2: {
+							(*it)->get_weapon()->attack((*it)->get_weapon()->get_right_attack());
+							break;
+						}
+					}
+					break;
+				}
 			}
 		}
-
 	}
 
 	main_player->update(dt);
@@ -146,8 +145,7 @@ void EntityManager::update(float dt) {
 		sm->stat.unit = main_player->getType();
 		if (socket->send(buffer, sizeof(buffer), address, port) == !sf::Socket::Done) {
 			cout << "Not sending data" << endl;
-		}
-		else {
+		} else {
 			// cout << "sent success!" << endl;
 		}
 	}
@@ -163,12 +161,16 @@ void EntityManager::render(sf::RenderTarget &g) {
 	sf::RectangleShape x(sf::Vector2f(2000,2000));
 	x.setFillColor(sf::Color::White);
 	g.draw(x);
+	
 	main_player->render(g);
+	view.setCenter(main_player->getPosition());
+	g.setView(view);
+	
 	for (auto e : map) {
 		e->render(g);
 	}
 	for (auto e : other_players) {
-		e->renderSprite(g);
+		e->render(g);
 	}
 	for (auto e : sobjects) {
 		e->render(g);
@@ -225,8 +227,8 @@ bool EntityManager::has_collided(SObject* s, Character* p) {
 }
 
 bool EntityManager::has_collided(Weapon* w, Character* c) {
-	if (w->bounds().intersects(w->bounds())) {
-		c->takeDamage(w->power);
+	if (w->bounds().intersects(c->bounds())) {
+		// c->takeDamage(w->power);
 		return true;
 	}
 	return false;
@@ -266,15 +268,13 @@ void EntityManager::resolveCollisions(float dt) {
 	}
 	
 	for (auto u : other_players) {
-		if (has_collided(main_player->get_weapon(), u)) {
-			u->takeDamage(main_player->get_strength());
+		if (u->get_weapon()->is_attacking() && has_collided(u->get_weapon(), main_player)) {
+			u->get_weapon()->hit();
+			main_player->takeDamage(1);
+		}
+		if (main_player->get_weapon()->is_attacking() && has_collided(main_player->get_weapon(), u)) {
+			main_player->get_weapon()->hit();
+			u->takeDamage(1);
 		}
 	}
-	
-	/* for (auto s : sobjects) {
-		collide(s, main_player);
-		for (auto p : other_players) {
-			collide(s, p);
-		}
-	} */
 }
