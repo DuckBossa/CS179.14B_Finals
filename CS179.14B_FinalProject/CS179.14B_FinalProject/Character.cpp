@@ -105,7 +105,7 @@ void Character::update(float dt) {
 	
 	sprt.move(vel*dt);
 	
-	vel.y += GRAV;
+	vel.y += 100*GRAV; // feel the weight on your shoudlers you scrub trash
 	can_jump = false;
 	weap->setPos(sprt.getPosition());
 	weap->update(dt);
